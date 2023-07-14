@@ -96,10 +96,7 @@ for ch_name, ch_Id in wanted_channels_info.items():
     wanted_channels_upload_playlists.update(desired_playlists_partial)
 # try to use dict comprehension here
 
-# Gives yesterday's date#
-yesterday = str(dt.date.today() - dt.timedelta(days=1))
-
-# Check if videos were uploaded yesterday in the playlist#
+# Gives a dictionnary of the latest videos from the selected channels#
 latest_videos = {}
 for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
     try:
@@ -113,15 +110,34 @@ for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
             playlist_Id,
         )
         pass
-    for k, v in latest_partial.items():
-        if k in latest_videos.keys():
-            latest_videos[k] += v
-        else:
-            temp = {k: v}
-            latest_videos.update(temp)
+    
+    for vid_info in latest_partial.values():
+        vid_info.update({"channel name":ch_name,"upload playlist":playlist_Id})
+    #latest_partial.update()
 
-# Gives a list of the IDs of the videos that were uploaded yesterday#
-videos_to_add = latest_videos.get(yesterday)
+    latest_videos.update(latest_partial)
+
+# Gives yesterday's date#
+yesterday = str(dt.date.today() - dt.timedelta(days=1))
+
+# Checks if videos were uploaded yesterday#
+videos_to_add = {}
+for ID, vid_info in latest_videos.items():
+    upload_day =  vid_info["upload day"]
+    if upload_day==yesterday:
+        videos_to_add.update({ID: vid_info})
+    else:
+        pass
+
+# Adds tags to the info dictionnary for each video
+for ID,vid_info in videos_to_add.items():
+    try:
+        tags=get_tags(youtube,ID)
+        tags_dict={"tags":tags}
+    except:
+        tags_dict={"tags":["No tags"]}
+
+    vid_info.update(tags_dict)
 
 # Adds the videos to a playlist#
 playlist_ID = user_param_dict["upload_playlist_ID"]
@@ -130,7 +146,7 @@ if videos_to_add is not None:  # Checks if there's actually videos to add
     print("\n")
     print("Number of videos added: ", len(videos_to_add))
     print("The videos added to the specified playlist are: \n")
-    for vid_ID in videos_to_add:
+    for vid_ID in videos_to_add.keys():
         add_to_playlist(youtube, playlist_ID, vid_ID)
 
         print(get_title(youtube, vid_ID) + " (ID: " + vid_ID + ")")

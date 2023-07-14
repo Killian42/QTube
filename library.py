@@ -88,7 +88,7 @@ def get_recent_videos(youtube, playlist_Id):
     playlist_Id: ID of the playlist, type=str
 
     Returns:
-    recent_vids: Dictionnary containing the upload date (key) and ID (values) of the last 5 videos in the playlist, type=dict
+    recent_vids: Dictionnary containing the ID (key) and upload date (values) of the last 5 videos in the playlist, type=dict
     """
     response = (
         youtube.playlistItems()
@@ -101,14 +101,9 @@ def get_recent_videos(youtube, playlist_Id):
     for i in range(nb_vids):
         date = response["items"][i]["contentDetails"]["videoPublishedAt"].split("T")[0]
         vid_id = response["items"][i]["contentDetails"]["videoId"]
-        b = {date: [vid_id]}
+        temp = {vid_id:{"upload day":date}}
 
-        for k, v in b.items():
-            if k in recent_vids.keys():
-                recent_vids[k] += v
-            else:
-                z = {k: v}
-                recent_vids.update(z)
+        recent_vids.update(temp)
     return recent_vids
 
 
@@ -157,3 +152,37 @@ def get_title(youtube, video_Id):
     response = youtube.videos().list(part="snippet", id=video_Id).execute()
     title = response["items"][0]["snippet"]["title"]
     return title
+
+
+# Returns the tags of a video#
+def get_tags(youtube, video_Id):
+    """
+    Retrieves the tags of a YT video
+
+    Inputs:
+    param youtube: Youtube API ressource
+    video_Id: ID of the video, type=str
+
+    Returns:
+    title: Tags of the YT video, type=lst
+    """
+    response = youtube.videos().list(part="snippet", id=video_Id).execute()
+    tags = response["items"][0]["snippet"]["tags"]
+    return tags
+
+
+# Returns the description of a video#
+def get_description(youtube, video_Id):
+    """
+    Retrieves the description of a YT video
+
+    Inputs:
+    param youtube: Youtube API ressource
+    video_Id: ID of the video, type=str
+
+    Returns:
+    title: Description of the YT video, type=str
+    """
+    response = youtube.videos().list(part="snippet", id=video_Id).execute()
+    description = response["items"][0]["snippet"]["description"]
+    return description

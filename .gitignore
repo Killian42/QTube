@@ -2,3 +2,7 @@ client_secrets.json
 user_params.json
 
 token.pickle
+
+dev_tests.py
+
+__pycache__/
