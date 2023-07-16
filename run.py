@@ -1,16 +1,4 @@
-### Librairies ###
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-
-import os
-import pickle
-import datetime as dt
-import time
-import json
-
+### Librairy importation ###
 from library import *
 
 ### User parameters loading ###
@@ -66,6 +54,7 @@ for t in tries:
     try:
         tokens = get_tokens(youtube)
     except HttpError as err:
+        print("Error " + str(err.status_code) + " occured:" + err.reason)
         print(
             "Could not get subscription tokens, retrying in 5 seconds. This was attempt number "
             + t
@@ -97,7 +86,7 @@ for ch_name, ch_Id in wanted_channels_info.items():
 # try to use dict comprehension here
 
 # Gives a dictionnary of the latest videos from the selected channels#
-latest_videos = {}
+videos = {}
 for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
     try:
         latest_partial = get_recent_videos(youtube, playlist_Id)
@@ -110,45 +99,70 @@ for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
             playlist_Id,
         )
         pass
-    
-    for vid_info in latest_partial.values():
-        vid_info.update({"channel name":ch_name,"upload playlist":playlist_Id})
-    #latest_partial.update()
 
-    latest_videos.update(latest_partial)
+    for vid_info in latest_partial.values():
+        vid_info.update(
+            {"channel name": ch_name, "upload playlist": playlist_Id, "to add": True}
+        )
+    # latest_partial.update()
+
+    videos.update(latest_partial)
+
+# Adds info to the info dictionnary for each video
+for ID, vid_info in videos.items():
+    # Tags
+    try:
+        tags = get_tags(youtube, ID)
+        tags_dict = {"tags": tags}
+    except:
+        tags_dict = {"tags": ["No tags"]}
+
+    vid_info.update(tags_dict)
+
+    # Title
+    title = get_title(youtube, ID)
+    vid_info.update({"title": title})
+
+    # Short
+    short = is_short(youtube, ID)
+    short_dict = {"is short": short}
+
+    vid_info.update(short_dict)
 
 # Gives yesterday's date#
 yesterday = str(dt.date.today() - dt.timedelta(days=1))
 
-# Checks if videos were uploaded yesterday#
-videos_to_add = {}
-for ID, vid_info in latest_videos.items():
-    upload_day =  vid_info["upload day"]
-    if upload_day==yesterday:
-        videos_to_add.update({ID: vid_info})
+# Applies filters#
+for ID, vid_info in videos.items():
+    # Upload day
+    upload_day = vid_info["upload day"]
+    if upload_day != yesterday:
+        vid_info.update({"to add": False})
     else:
         pass
-
-# Adds tags to the info dictionnary for each video
-for ID,vid_info in videos_to_add.items():
-    try:
-        tags=get_tags(youtube,ID)
-        tags_dict={"tags":tags}
-    except:
-        tags_dict={"tags":["No tags"]}
-
-    vid_info.update(tags_dict)
+    # Short
+    if user_param_dict["keep_shorts"] == False and vid_info["is short"] == True:
+        vid_info.update({"to add": False})
+    else:
+        pass
 
 # Adds the videos to a playlist#
 playlist_ID = user_param_dict["upload_playlist_ID"]
 
+videos_to_add = {k: v for k, v in videos.items() if v["to add"] == True}
+
 if videos_to_add is not None:  # Checks if there's actually videos to add
     print("\n")
     print("Number of videos added: ", len(videos_to_add))
-    print("The videos added to the specified playlist are: \n")
-    for vid_ID in videos_to_add.keys():
-        add_to_playlist(youtube, playlist_ID, vid_ID)
+    for ID, vid_info in videos_to_add.items():
+        add_to_playlist(youtube, playlist_ID, ID)
 
-        print(get_title(youtube, vid_ID) + " (ID: " + vid_ID + ")")
+        print(
+            "From "
+            + vid_info["channel name"]
+            + ", the video named: "
+            + vid_info["title"]
+            + " was added."
+        )
 else:
     print("No videos from yesterday to add.")

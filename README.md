@@ -15,3 +15,8 @@ With this software, you can specify a certain number of rules that will define w
 I would personally recommend to create a task to execute the program once a day.
 
 To get more information on setting up the API key and cliens secrets, watch this [video](https://www.youtube.com/watch?v=vQQEaSnQ_bs) from Corey Schafer (and big thanks to him for providing the code to use oauth!)
+
+## User parameters:
+* *upload_playlist_ID* : ID of the playlist the videos will be added to.
+* *words_in_channel_names* : Whitelist of words present in channel names, typically channel names themselves. Videos from channels not containing any of the words will not be considered.
+* *keep_shorts* : Determines if shorts are added to the playlist.
