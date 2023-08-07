@@ -71,10 +71,11 @@ for tk in tokens:
     subbed_channels_info.update(subbed_partial_info)
 
 # Gives a dictionnary of desired channels' names and IDs#
-word_filter = user_param_dict["words_in_channel_names"]
+allowed_words = user_param_dict["required_in_channel_name"]
+banned_words = user_param_dict["banned_in_channel_name"]
 
 wanted_channels_info = {
-    k: v for k, v in subbed_channels_info.items() if any(w in k for w in word_filter)
+    k: v for k, v in subbed_channels_info.items() if any(aw in k for aw in allowed_words) and not any(bw in k for bw in banned_words)
 }
 
 # Gives a dictionnary of the channels names and their upload playlist#

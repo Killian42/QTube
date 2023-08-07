@@ -1,5 +1,9 @@
 {
-    "words_in_channel_names": [
+    "required_in_channel_name": [
+        "word1",
+        "word2"
+    ],
+    "banned_in_channel_name": [
         "word1",
         "word2"
     ],

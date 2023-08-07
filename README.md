@@ -18,5 +18,6 @@ To get more information on setting up the API key and cliens secrets, watch this
 
 ## User parameters:
 * *upload_playlist_ID* : ID of the playlist the videos will be added to.
-* *words_in_channel_names* : Whitelist of words present in channel names, typically channel names themselves. Videos from channels not containing any of the words will not be considered.
-* *keep_shorts* : Determines if shorts are added to the playlist.
+* required_in_channel_name* : Whitelist of words present in channel names, typically channel names themselves. Videos from channels not containing any of the words of this list in their name will not be added.
+* banned_in_channel_name* : Blacklist of words present in channel names, typically channel names themselves. Videos from channels containing any of the words of this list in their name will not be added.
+* *keep_shorts* : Determines if shorts are added.

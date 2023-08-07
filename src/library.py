@@ -11,9 +11,20 @@ import datetime as dt
 import time
 import json
 import isodate
+import sys
 
 
 ### Functions ###
+
+## Checks ##
+def user_params_correct():
+
+    return
+
+def http_error_handling():
+
+    return
+
 ## Channel interactions ##
 def get_tokens(youtube):
     """Retrieves the tokens of the subscription pages of the logged user
