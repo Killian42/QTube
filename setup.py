@@ -14,5 +14,5 @@ setup(
     package_dir={"": "src"},
     author="Killian Lebreton",
     author_email="killian.lebreton35@gmail.com",
-    url="https://github.com/Killian42/Youtube_Bot",
+    url="https://github.com/Killian42/Youtube-Bot",
 )

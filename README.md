@@ -1,4 +1,4 @@
-# Youtube_Bot
+# Youtube-Bot
 Youtube Bot is a software that automatically adds Youtube videos to a playlist for you!
 ## About
 This reason behind the existence of this software is Youtube's apparent quasi-random behavior about informing people that a new video came out (no notification even when the bell is clicked, videos not showing up the subscription tab, ...). 
