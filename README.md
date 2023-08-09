@@ -18,6 +18,10 @@ To get more information on setting up the API key and cliens secrets, watch this
 
 ## User parameters:
 * *upload_playlist_ID* : ID of the playlist the videos will be added to.
-* required_in_channel_name* : Whitelist of words present in channel names, typically channel names themselves. Videos from channels not containing any of the words of this list in their name will not be added.
-* banned_in_channel_name* : Blacklist of words present in channel names, typically channel names themselves. Videos from channels containing any of the words of this list in their name will not be added.
+* *required_in_channel_name* : Whitelist of words present in channel names, typically channel names themselves. Videos from channels not containing any of the words of this list in their name will not be added.
+* *banned_in_channel_name* : Blacklist of words present in channel names, typically channel names themselves. Videos from channels containing any of the words of this list in their name will not be added.
 * *keep_shorts* : Determines if shorts are added.
+* *verbosity* : Controls how much information is shown in the terminal. Options are:
+  * *all*: Everything is shown
+  * *none*: Nothing is shown
+  * *videos*: Only information regarding added videos is shown (number, channel names and video titles)

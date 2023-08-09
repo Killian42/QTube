@@ -16,14 +16,61 @@ import sys
 
 ### Functions ###
 
+
 ## Checks ##
-def user_params_correct():
+def check_user_params(params_dict):
+    """Checks if the user defined parameters are correctly formatted
 
-    return
+    Args:
+        params_dict (dict): Dictionnary of the user defined parameters
 
-def http_error_handling():
+    Returns:
+        ok (boolean): True if all checks are passed, False otherwise
+    """
 
-    return
+    check_0 = not any(
+        type(item) != str for item in params_dict["required_in_channel_name"]
+    )
+    check_1 = not any(
+        type(item) != str for item in params_dict["banned_in_channel_name"]
+    )
+    check_2 = type(params_dict["upload_playlist_ID"]) == str
+    check_3 = type(params_dict["keep_shorts"]) == bool
+    check_4 = params_dict["verbosity"] in ["all", "none", "videos"]
+
+    ok = bool(check_0 * check_1 * check_2 * check_3 * check_4)
+
+    return ok
+
+
+def http_error_handling(func, *args, **kwargs):
+    """Handles http errors when making API queries.
+    If after 5 tries, the function could not be executed, it shuts the program down.
+
+    Args:
+        func (function): function to be executed, with its arguments and keyword arguments
+
+    Returns:
+        res (any): whatever the function is supposed to return if no http error occur
+    """
+    tries = ["1", "2", "3", "4", "5"]
+    for t in tries:
+        try:
+            res = func(*args, **kwargs)
+        except HttpError as err:
+            print(
+                f"During the execution of function {func.__name__}, error {err.status_code} occured: {err.reason}"
+            )
+            print(f"Retrying in 5 seconds. This was attempt number {t} out of 5.")
+            time.sleep(5)
+        else:
+            print(f"{func.__name__} successfully executed.")
+            return res
+    print(
+        f"Function {func.__name__} could not be executed after 5 tries. Please check your internet connection, Youtube's API status and retry later."
+    )
+    sys.exit()
+
 
 ## Channel interactions ##
 def get_tokens(youtube):
@@ -237,3 +284,21 @@ def add_to_playlist(youtube, playlist_ID, video_ID):
         .execute()
     )
     return
+
+
+def print2(message, verb_level, verbosity):
+    """Prints in the terminal depending on the choosen verbosity
+
+    Args:
+        message (str): Text to be printed in the terminal
+        verb_level (str or str lst): Verbosity associated to the text
+        verbosity (str): User defined verbosity
+
+    Returns:
+        None
+    """
+    if type(verb_level) == str:
+        verb_level = [verb_level]
+
+    if verbosity in verb_level:
+        print(message)

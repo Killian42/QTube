@@ -3,6 +3,12 @@ from library import *
 
 ### User parameters loading ###
 user_param_dict = json.load(open("user_params.json"))
+if check_user_params(user_param_dict) is not True:
+    print("User defined parameters are not correct. Check the template and retry.")
+    sys.exit()
+else:
+    print("The user defined parameters are correctly formatted.\n")
+verb = user_param_dict["verbosity"]
 
 ### Youtube API login ###
 credentials = None
@@ -22,7 +28,7 @@ if not credentials or not credentials.valid:
         print("Refreshing access token...")
 
         credentials.refresh(Request())
-        print("Access token refreshed")
+        print("Access token refreshed\n")
     else:
         print("Fetching New Tokens...")
         flow = InstalledAppFlow.from_client_secrets_file(
@@ -35,35 +41,21 @@ if not credentials or not credentials.valid:
 
         credentials = flow.credentials
 
-        print("New token fetched")
+        print("New token fetched\n")
 
         # Save the credentials for the next run
         with open("token.pickle", "wb") as f:
             print("Saving Credentials for Future Use...")
 
             pickle.dump(credentials, f)
-            print("Credentials saved")
+            print("Credentials saved\n")
 
 ### Retrieving data ###
 youtube = build("youtube", "v3", credentials=credentials)
 
 ### Actual code ###
 # Gives a dictionnary of all subscribed channels' names and IDs#
-tries = ["1", "2", "3", "4", "5"]
-for t in tries:
-    try:
-        tokens = get_tokens(youtube)
-    except HttpError as err:
-        print("Error " + str(err.status_code) + " occured:" + err.reason)
-        print(
-            "Could not get subscription tokens, retrying in 5 seconds. This was attempt number "
-            + t
-            + " out of 5."
-        )
-        time.sleep(5)
-    else:
-        print("Subscription tokens successfully retrieved.")
-        break
+tokens = http_error_handling(get_tokens, youtube)
 
 subbed_channels_info = {}
 for tk in tokens:
@@ -75,13 +67,15 @@ allowed_words = user_param_dict["required_in_channel_name"]
 banned_words = user_param_dict["banned_in_channel_name"]
 
 wanted_channels_info = {
-    k: v for k, v in subbed_channels_info.items() if any(aw in k for aw in allowed_words) and not any(bw in k for bw in banned_words)
+    k: v
+    for k, v in subbed_channels_info.items()
+    if any(aw in k for aw in allowed_words) and not any(bw in k for bw in banned_words)
 }
 
 # Gives a dictionnary of the channels names and their upload playlist#
 wanted_channels_upload_playlists = {}
 for ch_name, ch_Id in wanted_channels_info.items():
-    upload_playlist = get_uploads_playlists(youtube, ch_Id)
+    upload_playlist = http_error_handling(get_uploads_playlists, youtube, ch_Id)
     desired_playlists_partial = {ch_name: upload_playlist}
     wanted_channels_upload_playlists.update(desired_playlists_partial)
 # try to use dict comprehension here
@@ -89,23 +83,24 @@ for ch_name, ch_Id in wanted_channels_info.items():
 # Gives a dictionnary of the latest videos from the selected channels#
 videos = {}
 for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
-    try:
-        latest_partial = get_recent_videos(youtube, playlist_Id)
-    except HttpError as err:
-        print(
-            "Channel: ",
-            ch_name,
-            " throws an HTTP error.\n",
-            "Their upload playlist ID is: ",
-            playlist_Id,
-        )
-        pass
+    # try:
+    #     latest_partial = get_recent_videos(youtube, playlist_Id)
+    # except HttpError as err:
+    #     print(
+    #         "Channel: ",
+    #         ch_name,
+    #         " throws an HTTP error.\n",
+    #         "Their upload playlist ID is: ",
+    #         playlist_Id,
+    #     )
+    #     pass
+
+    latest_partial = http_error_handling(get_recent_videos, youtube, playlist_Id)
 
     for vid_info in latest_partial.values():
         vid_info.update(
             {"channel name": ch_name, "upload playlist": playlist_Id, "to add": True}
         )
-    # latest_partial.update()
 
     videos.update(latest_partial)
 
@@ -113,7 +108,7 @@ for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
 for ID, vid_info in videos.items():
     # Tags
     try:
-        tags = get_tags(youtube, ID)
+        tags = http_error_handling(get_tags, youtube, ID)
         tags_dict = {"tags": tags}
     except:
         tags_dict = {"tags": ["No tags"]}
@@ -121,11 +116,11 @@ for ID, vid_info in videos.items():
     vid_info.update(tags_dict)
 
     # Title
-    title = get_title(youtube, ID)
+    title = http_error_handling(get_title, youtube, ID)
     vid_info.update({"title": title})
 
     # Short
-    short = is_short(youtube, ID)
+    short = http_error_handling(is_short, youtube, ID)
     short_dict = {"is short": short}
 
     vid_info.update(short_dict)
@@ -156,14 +151,10 @@ if videos_to_add is not None:  # Checks if there's actually videos to add
     print("\n")
     print("Number of videos added: ", len(videos_to_add))
     for ID, vid_info in videos_to_add.items():
-        add_to_playlist(youtube, playlist_ID, ID)
+        # http_error_handling(add_to_playlist,youtube,playlist_ID,ID)
 
         print(
-            "From "
-            + vid_info["channel name"]
-            + ", the video named: "
-            + vid_info["title"]
-            + " was added."
+            f"From {vid_info['channel name']}, the video named: {vid_info['title']} was added."
         )
 else:
     print("No videos from yesterday to add.")
