@@ -3,34 +3,36 @@ from library import *
 
 ### User parameters loading ###
 user_param_dict = json.load(open("user_params.json"))
+verb = user_param_dict["verbosity"]
+
 if check_user_params(user_param_dict) is not True:
-    print("User defined parameters are not correct. Check the template and retry.")
+    print2("User defined parameters are not correct. Check the template and retry.","all",verb)
     sys.exit()
 else:
-    print("The user defined parameters are correctly formatted.\n")
-verb = user_param_dict["verbosity"]
+    print2("The user defined parameters are correctly formatted.\n","all",verb)
+
 
 ### Youtube API login ###
 credentials = None
 
 # token.pickle stores the user's credentials from previously successful logins
 if os.path.exists("token.pickle"):
-    print("Loading credentials from pickle file...")
+    print2("Loading credentials from pickle file...","all",verb)
 
     with open("token.pickle", "rb") as token:
         credentials = pickle.load(token)
 
-        print("Credentials loaded from pickle file")
+        print2("Credentials loaded from pickle file","all",verb)
 
 # If there are no valid credentials available, then either refresh the token or log in.
 if not credentials or not credentials.valid:
     if credentials and credentials.expired and credentials.refresh_token:
-        print("Refreshing access token...")
+        print2("Refreshing access token...","all",verb)
 
         credentials.refresh(Request())
-        print("Access token refreshed\n")
+        print2("Access token refreshed\n","all",verb)
     else:
-        print("Fetching New Tokens...")
+        print2("Fetching New Tokens...","all",verb)
         flow = InstalledAppFlow.from_client_secrets_file(
             "client_secrets.json", scopes=["https://www.googleapis.com/auth/youtube"]
         )
@@ -41,21 +43,21 @@ if not credentials or not credentials.valid:
 
         credentials = flow.credentials
 
-        print("New token fetched\n")
+        print2("New token fetched\n","all",verb)
 
         # Save the credentials for the next run
         with open("token.pickle", "wb") as f:
-            print("Saving Credentials for Future Use...")
+            print2("Saving Credentials for Future Use...","all",verb)
 
             pickle.dump(credentials, f)
-            print("Credentials saved\n")
+            print2("Credentials saved\n","all",verb)
 
 ### Retrieving data ###
 youtube = build("youtube", "v3", credentials=credentials)
 
 ### Actual code ###
 # Gives a dictionnary of all subscribed channels' names and IDs#
-tokens = http_error_handling(get_tokens, youtube)
+tokens = handle_http_errors(get_tokens, youtube)
 
 subbed_channels_info = {}
 for tk in tokens:
@@ -75,7 +77,7 @@ wanted_channels_info = {
 # Gives a dictionnary of the channels names and their upload playlist#
 wanted_channels_upload_playlists = {}
 for ch_name, ch_Id in wanted_channels_info.items():
-    upload_playlist = http_error_handling(get_uploads_playlists, youtube, ch_Id)
+    upload_playlist = handle_http_errors(get_uploads_playlists, youtube, ch_Id)
     desired_playlists_partial = {ch_name: upload_playlist}
     wanted_channels_upload_playlists.update(desired_playlists_partial)
 # try to use dict comprehension here
@@ -86,7 +88,7 @@ for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
     # try:
     #     latest_partial = get_recent_videos(youtube, playlist_Id)
     # except HttpError as err:
-    #     print(
+    #     print2(
     #         "Channel: ",
     #         ch_name,
     #         " throws an HTTP error.\n",
@@ -95,7 +97,7 @@ for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
     #     )
     #     pass
 
-    latest_partial = http_error_handling(get_recent_videos, youtube, playlist_Id)
+    latest_partial = handle_http_errors(get_recent_videos, youtube, playlist_Id)
 
     for vid_info in latest_partial.values():
         vid_info.update(
@@ -108,7 +110,7 @@ for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
 for ID, vid_info in videos.items():
     # Tags
     try:
-        tags = http_error_handling(get_tags, youtube, ID)
+        tags = handle_http_errors(get_tags, youtube, ID)
         tags_dict = {"tags": tags}
     except:
         tags_dict = {"tags": ["No tags"]}
@@ -116,11 +118,11 @@ for ID, vid_info in videos.items():
     vid_info.update(tags_dict)
 
     # Title
-    title = http_error_handling(get_title, youtube, ID)
+    title = handle_http_errors(get_title, youtube, ID)
     vid_info.update({"title": title})
 
     # Short
-    short = http_error_handling(is_short, youtube, ID)
+    short = handle_http_errors(is_short, youtube, ID)
     short_dict = {"is short": short}
 
     vid_info.update(short_dict)
@@ -149,12 +151,12 @@ videos_to_add = {k: v for k, v in videos.items() if v["to add"] == True}
 
 if videos_to_add is not None:  # Checks if there's actually videos to add
     print("\n")
-    print("Number of videos added: ", len(videos_to_add))
+    print2(f"Number of videos added: {len(videos_to_add)}",["all","videos"],verb)
     for ID, vid_info in videos_to_add.items():
-        # http_error_handling(add_to_playlist,youtube,playlist_ID,ID)
+        handle_http_errors(add_to_playlist,youtube,playlist_ID,ID)
 
-        print(
+        print2(
             f"From {vid_info['channel name']}, the video named: {vid_info['title']} was added."
-        )
+        ,["all","videos"],verb)
 else:
-    print("No videos from yesterday to add.")
+    print2("No videos from yesterday to add.",["all","videos"],verb)

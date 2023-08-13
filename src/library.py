@@ -43,7 +43,7 @@ def check_user_params(params_dict):
     return ok
 
 
-def http_error_handling(func, *args, **kwargs):
+def handle_http_errors(func, *args, **kwargs):
     """Handles http errors when making API queries.
     If after 5 tries, the function could not be executed, it shuts the program down.
 
@@ -287,7 +287,7 @@ def add_to_playlist(youtube, playlist_ID, video_ID):
 
 
 def print2(message, verb_level, verbosity):
-    """Prints in the terminal depending on the choosen verbosity
+    """Prints text in the terminal depending on the choosen verbosity
 
     Args:
         message (str): Text to be printed in the terminal
