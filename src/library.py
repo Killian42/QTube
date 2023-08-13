@@ -43,7 +43,7 @@ def check_user_params(params_dict):
     return ok
 
 
-def handle_http_errors(func, *args, **kwargs):
+def handle_http_errors(verbosity, func, *args, **kwargs):
     """Handles http errors when making API queries.
     If after 5 tries, the function could not be executed, it shuts the program down.
 
@@ -64,7 +64,7 @@ def handle_http_errors(func, *args, **kwargs):
             print(f"Retrying in 5 seconds. This was attempt number {t} out of 5.")
             time.sleep(5)
         else:
-            print(f"{func.__name__} successfully executed.")
+            print2(f"{func.__name__} successfully executed.", "all", verbosity)
             return res
     print(
         f"Function {func.__name__} could not be executed after 5 tries. Please check your internet connection, Youtube's API status and retry later."

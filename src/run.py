@@ -61,7 +61,7 @@ youtube = build("youtube", "v3", credentials=credentials)
 
 ### Actual code ###
 # Gives a dictionnary of all subscribed channels' names and IDs#
-tokens = handle_http_errors(get_tokens, youtube)
+tokens = handle_http_errors(get_tokens, verb, youtube)
 
 subbed_channels_info = {}
 for tk in tokens:
@@ -81,7 +81,7 @@ wanted_channels_info = {
 # Gives a dictionnary of the channels names and their upload playlist#
 wanted_channels_upload_playlists = {}
 for ch_name, ch_Id in wanted_channels_info.items():
-    upload_playlist = handle_http_errors(get_uploads_playlists, youtube, ch_Id)
+    upload_playlist = handle_http_errors(get_uploads_playlists, verb, youtube, ch_Id)
     desired_playlists_partial = {ch_name: upload_playlist}
     wanted_channels_upload_playlists.update(desired_playlists_partial)
 # try to use dict comprehension here
@@ -101,7 +101,7 @@ for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
     #     )
     #     pass
 
-    latest_partial = handle_http_errors(get_recent_videos, youtube, playlist_Id)
+    latest_partial = handle_http_errors(get_recent_videos, verb, youtube, playlist_Id)
 
     for vid_info in latest_partial.values():
         vid_info.update(
@@ -114,7 +114,7 @@ for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
 for ID, vid_info in videos.items():
     # Tags
     try:
-        tags = handle_http_errors(get_tags, youtube, ID)
+        tags = handle_http_errors(get_tags, verb, youtube, ID)
         tags_dict = {"tags": tags}
     except:
         tags_dict = {"tags": ["No tags"]}
@@ -122,11 +122,11 @@ for ID, vid_info in videos.items():
     vid_info.update(tags_dict)
 
     # Title
-    title = handle_http_errors(get_title, youtube, ID)
+    title = handle_http_errors(get_title, verb, youtube, ID)
     vid_info.update({"title": title})
 
     # Short
-    short = handle_http_errors(is_short, youtube, ID)
+    short = handle_http_errors(is_short, verb, youtube, ID)
     short_dict = {"is short": short}
 
     vid_info.update(short_dict)
@@ -157,7 +157,7 @@ if videos_to_add is not None:  # Checks if there's actually videos to add
     print("\n")
     print2(f"Number of videos added: {len(videos_to_add)}", ["all", "videos"], verb)
     for ID, vid_info in videos_to_add.items():
-        handle_http_errors(add_to_playlist, youtube, playlist_ID, ID)
+        handle_http_errors(add_to_playlist, verb, youtube, playlist_ID, ID)
 
         print2(
             f"From {vid_info['channel name']}, the video named: {vid_info['title']} was added.",
