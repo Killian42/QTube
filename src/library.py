@@ -1,4 +1,4 @@
-### Librairies ###
+### Libraries ###
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -36,7 +36,10 @@ def check_user_params(params_dict):
     )
     check_2 = type(params_dict["upload_playlist_ID"]) == str
     check_3 = type(params_dict["keep_shorts"]) == bool
-    check_4 = params_dict["verbosity"] in ["all", "none", "videos"]
+    check_4 = all(
+        v in ["all", "none", "videos", "credentials", "func"]
+        for v in params_dict["verbosity"]
+    )
 
     ok = bool(check_0 * check_1 * check_2 * check_3 * check_4)
 
@@ -64,7 +67,9 @@ def handle_http_errors(verbosity, func, *args, **kwargs):
             print(f"Retrying in 5 seconds. This was attempt number {t} out of 5.")
             time.sleep(5)
         else:
-            print2(f"{func.__name__} successfully executed.", "all", verbosity)
+            print2(
+                f"{func.__name__} successfully executed.", ["all", "func"], verbosity
+            )
             return res
     print(
         f"Function {func.__name__} could not be executed after 5 tries. Please check your internet connection, Youtube's API status and retry later."
@@ -291,14 +296,12 @@ def print2(message, verb_level, verbosity):
 
     Args:
         message (str): Text to be printed in the terminal
-        verb_level (str or str lst): Verbosity associated to the text
-        verbosity (str): User defined verbosity
+        verb_level (str lst): Verbosity associated to the text
+        verbosity (str lst): User defined verbosity
 
     Returns:
         None
     """
-    if type(verb_level) == str:
-        verb_level = [verb_level]
 
-    if verbosity in verb_level:
+    if any(v in verb_level for v in verbosity):
         print(message)

@@ -1,4 +1,4 @@
-### Librairy importation ###
+### Libraries importation ###
 from library import *
 
 ### User parameters loading ###
@@ -6,14 +6,12 @@ user_param_dict = json.load(open("user_params.json"))
 verb = user_param_dict["verbosity"]
 
 if check_user_params(user_param_dict) is not True:
-    print2(
-        "User defined parameters are not correct. Check the template and retry.",
-        "all",
-        verb,
-    )
+    print("User defined parameters are not correct. Check the template and retry.")
     sys.exit()
 else:
-    print2("The user defined parameters are correctly formatted.\n", "all", verb)
+    print(
+        f"The user defined parameters are correctly formatted.\nYou have choosen the following verbosity options: {verb}.\n"
+    )
 
 
 ### Youtube API login ###
@@ -21,22 +19,22 @@ credentials = None
 
 # token.pickle stores the user's credentials from previously successful logins
 if os.path.exists("token.pickle"):
-    print2("Loading credentials from pickle file...", "all", verb)
+    print2("Loading credentials from pickle file...", ["all", "credentials"], verb)
 
     with open("token.pickle", "rb") as token:
         credentials = pickle.load(token)
 
-        print2("Credentials loaded from pickle file", "all", verb)
+        print2("Credentials loaded from pickle file", ["all", "credentials"], verb)
 
 # If there are no valid credentials available, then either refresh the token or log in.
 if not credentials or not credentials.valid:
     if credentials and credentials.expired and credentials.refresh_token:
-        print2("Refreshing access token...", "all", verb)
+        print2("Refreshing access token...", ["all", "credentials"], verb)
 
         credentials.refresh(Request())
-        print2("Access token refreshed\n", "all", verb)
+        print2("Access token refreshed\n", ["all", "credentials"], verb)
     else:
-        print2("Fetching New Tokens...", "all", verb)
+        print2("Fetching New Tokens...", ["all", "credentials"], verb)
         flow = InstalledAppFlow.from_client_secrets_file(
             "client_secrets.json", scopes=["https://www.googleapis.com/auth/youtube"]
         )
@@ -47,14 +45,14 @@ if not credentials or not credentials.valid:
 
         credentials = flow.credentials
 
-        print2("New token fetched\n", "all", verb)
+        print2("New token fetched\n", ["all", "credentials"], verb)
 
         # Save the credentials for the next run
         with open("token.pickle", "wb") as f:
-            print2("Saving Credentials for Future Use...", "all", verb)
+            print2("Saving Credentials for Future Use...", ["all", "credentials"], verb)
 
             pickle.dump(credentials, f)
-            print2("Credentials saved\n", "all", verb)
+            print2("Credentials saved\n", ["all", "credentials"], verb)
 
 ### Retrieving data ###
 youtube = build("youtube", "v3", credentials=credentials)

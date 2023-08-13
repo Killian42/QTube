@@ -24,4 +24,7 @@ To get more information on setting up the API key and cliens secrets, watch this
 * *verbosity* : Controls how much information is shown in the terminal. Options are:
   * *all*: Everything is shown
   * *none*: Nothing is shown
+  * *func*: Only information regarding function execution is shown
+  * *credentials*: Only information regarding credentials is shown (loading, retrieving and saving)
   * *videos*: Only information regarding added videos is shown (number, channel names and video titles)
+  Options can be combined, such that choosing every options except *none* gives the same result as choosing *all*.

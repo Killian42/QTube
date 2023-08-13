@@ -8,6 +8,9 @@
         "word2"
     ],
     "upload_playlist_ID": "lkjdslksdfkjsdflkjfdslkjfsdlkjdsfljkfd",
-    "keep_shorts":false,
-    "verbosity":"all" 
+    "keep_shorts": false,
+    "verbosity": [
+        "credentials",
+        "videos"
+    ]
 }
