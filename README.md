@@ -8,9 +8,9 @@ With this software, you can specify a certain number of rules that will define w
 ## How to use
 * Clone the repo
 * Get a Youtube API key
-* Create a web app to get a client secrets file. It should look like [this](client_secrets_template.json)
-* Copy and rename the [user parameters template file](user_params_template.json) to *user_params.json*. Modify it so that it fits your needs
-* Execute the [run.py](run.py) file
+* Create a web app to get a client secrets file. It should look like [this](src/client_secrets_template.json)
+* Copy and rename the [user parameters template file](src/user_params_template.json) to *user_params.json*. Modify it so that it fits your needs
+* Execute the [run.py](src/run.py) file
 
 I would personally recommend to create a task to execute the program once a day.
 
@@ -18,13 +18,13 @@ To get more information on setting up the API key and cliens secrets, watch this
 
 ## User parameters:
 * *upload_playlist_ID* : ID of the playlist the videos will be added to.
-* *required_in_channel_name* : Whitelist of words present in channel names, typically channel names themselves. Videos from channels not containing any of the words of this list in their name will not be added.
-* *banned_in_channel_name* : Blacklist of words present in channel names, typically channel names themselves. Videos from channels containing any of the words of this list in their name will not be added.
+* *required_in_channel_name* : Words that must be in channel names, typically channel names themselves (Case sensitive). Videos from channels not containing any of the words of this list in their name will not be added.
+* *banned_in_channel_name* : Words that must not be in channel names, typically channel names themselves (Case sensitive). Videos from channels containing any of the words of this list in their name will not be added.
 * *keep_shorts* : Determines if shorts are added.
 * *verbosity* : Controls how much information is shown in the terminal. Options are:
-  * *all*: Everything is shown
-  * *none*: Nothing is shown
-  * *func*: Only information regarding function execution is shown
-  * *credentials*: Only information regarding credentials is shown (loading, retrieving and saving)
-  * *videos*: Only information regarding added videos is shown (number, channel names and video titles)
-  Options can be combined, such that choosing every options except *none* gives the same result as choosing *all*.
+  * *all*: Everything is shown.
+  * *func*: Only information regarding function execution is shown.
+  * *credentials*: Only information regarding credentials is shown (loading, retrieving and saving).
+  * *videos*: Only information regarding added videos is shown (number, channel names and video titles).
+  
+  Options can be combined, such that choosing every options gives the same result as choosing *all*. For nothing to be shown, replace the array of strings with *null*.

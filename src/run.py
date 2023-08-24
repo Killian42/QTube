@@ -66,15 +66,34 @@ for tk in tokens:
     subbed_partial_info = get_youtube_subscriptions(youtube, tk)
     subbed_channels_info.update(subbed_partial_info)
 
-# Gives a dictionnary of desired channels' names and IDs#
-allowed_words = user_param_dict["required_in_channel_name"]
+# Filtering on channel names #
+required_words = user_param_dict["required_in_channel_name"]
 banned_words = user_param_dict["banned_in_channel_name"]
 
-wanted_channels_info = {
-    k: v
-    for k, v in subbed_channels_info.items()
-    if any(aw in k for aw in allowed_words) and not any(bw in k for bw in banned_words)
-}
+if required_words is None and banned_words is None:  # No filtering
+    wanted_channels_info = subbed_channels_info
+
+elif required_words is not None and banned_words is None:  # Required filtering
+    wanted_channels_info = {
+        k: v
+        for k, v in subbed_channels_info.items()
+        if any(aw in k for aw in required_words)
+    }
+
+elif required_words is None and banned_words is not None:  # Banned filtering
+    wanted_channels_info = {
+        k: v
+        for k, v in subbed_channels_info.items()
+        if not any(bw in k for bw in banned_words)
+    }
+
+else:  # Required and banned filtering
+    wanted_channels_info = {
+        k: v
+        for k, v in subbed_channels_info.items()
+        if any(aw in k for aw in required_words)
+        and not any(bw in k for bw in banned_words)
+    }
 
 # Gives a dictionnary of the channels names and their upload playlist#
 wanted_channels_upload_playlists = {}
@@ -87,19 +106,11 @@ for ch_name, ch_Id in wanted_channels_info.items():
 # Gives a dictionnary of the latest videos from the selected channels#
 videos = {}
 for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
-    # try:
-    #     latest_partial = get_recent_videos(youtube, playlist_Id)
-    # except HttpError as err:
-    #     print2(
-    #         "Channel: ",
-    #         ch_name,
-    #         " throws an HTTP error.\n",
-    #         "Their upload playlist ID is: ",
-    #         playlist_Id,
-    #     )
-    #     pass
-
     latest_partial = handle_http_errors(verb, get_recent_videos, youtube, playlist_Id)
+
+    if latest_partial == "ignore":
+        print2(f"Channel {ch_name} has no public videos.", ["all", "func"], verb)
+        continue
 
     for vid_info in latest_partial.values():
         vid_info.update(
@@ -111,13 +122,13 @@ for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
 # Adds info to the info dictionnary for each video
 for ID, vid_info in videos.items():
     # Tags
-    try:
-        tags = handle_http_errors(verb, get_tags, youtube, ID)
-        tags_dict = {"tags": tags}
-    except:
-        tags_dict = {"tags": ["No tags"]}
+    # try:
+    #     tags = handle_http_errors(verb, get_tags, youtube, ID)
+    #     tags_dict = {"tags": tags}
+    # except:
+    #     tags_dict = {"tags": ["No tags"]}
 
-    vid_info.update(tags_dict)
+    # vid_info.update(tags_dict)
 
     # Title
     title = handle_http_errors(verb, get_title, youtube, ID)

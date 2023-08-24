@@ -1,6 +1,8 @@
 client_secrets.json
 user_params.json
 
+test_data_generator.py
+
 token.pickle
 
 *.code-workspace
