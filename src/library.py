@@ -28,17 +28,16 @@ def check_user_params(params_dict):
         ok (boolean): True if all checks are passed, False otherwise
     """
 
-    check_0 = not any(
+    check_0 = params_dict["required_in_channel_name"] == None or not any(
         type(item) != str for item in params_dict["required_in_channel_name"]
     )
-    check_1 = not any(
+    check_1 = params_dict["banned_in_channel_name"] == None or not any(
         type(item) != str for item in params_dict["banned_in_channel_name"]
     )
     check_2 = type(params_dict["upload_playlist_ID"]) == str
     check_3 = type(params_dict["keep_shorts"]) == bool
-    check_4 = all(
-        v in ["all", "none", "videos", "credentials", "func"]
-        for v in params_dict["verbosity"]
+    check_4 = params_dict["verbosity"] == None or all(
+        v in ["all", "videos", "credentials", "func"] for v in params_dict["verbosity"]
     )
 
     ok = bool(check_0 * check_1 * check_2 * check_3 * check_4)
@@ -51,30 +50,87 @@ def handle_http_errors(verbosity, func, *args, **kwargs):
     If after 5 tries, the function could not be executed, it shuts the program down.
 
     Args:
-        func (function): function to be executed, with its arguments and keyword arguments
+        verbosity (str lst): User defined verbosity
+        func (function): Function to be executed, with its arguments and keyword arguments
+        args: Arguments of func
+        kwargs: Keyword arguments of func
 
     Returns:
-        res (any): whatever the function is supposed to return if no http error occur
+        res (any): Whatever the function is supposed to return if no http error occur otherwise, it depends on the function
     """
-    tries = ["1", "2", "3", "4", "5"]
-    for t in tries:
+    for i, t in enumerate(
+        [5, 10, 30, 180, 300]
+    ):  # Run 5 times with increasing retrying times
         try:
             res = func(*args, **kwargs)
-        except HttpError as err:
-            print(
-                f"During the execution of function {func.__name__}, error {err.status_code} occured: {err.reason}"
-            )
-            print(f"Retrying in 5 seconds. This was attempt number {t} out of 5.")
-            time.sleep(5)
-        else:
             print2(
                 f"{func.__name__} successfully executed.", ["all", "func"], verbosity
             )
-            return res
-    print(
-        f"Function {func.__name__} could not be executed after 5 tries. Please check your internet connection, Youtube's API status and retry later."
-    )
-    sys.exit()
+            return res  # Return the response if no error occurs
+        except HttpError as err:
+            if (
+                func.__name__ == "get_recent_videos" and err.status_code == 404
+            ):  # Channel has no videos
+                return "ignore"  # Ignore this channel in the main code
+            elif (
+                all(
+                    word in err.reason
+                    for word in ["request", "cannot", "exceeded", "quota"]
+                )
+                and err.status_code == 403
+            ):  # Quota limit exceeded, the program cannot continue
+                print(
+                    "Your quota limit has been reached, please try again in a few hours. \nYou can check your usage at the following url: https://console.cloud.google.com/apis/dashboard"
+                )
+                sys.exit()
+            else:  # General case
+                print(
+                    f"During the execution of function {func.__name__}, error {err.status_code} occured: {err.reason}"
+                )
+                print(
+                    f"Retrying in {t} seconds. This was attempt number {i+1} out of 5."
+                )
+                time.sleep(t)
+        if t == 4:
+            print(
+                f"Function {func.__name__} could not be executed after 5 tries. Please check your internet connection, Youtube's API status and retry later."
+            )
+            sys.exit()  # Exit the program after 5 retries
+
+
+# def handle_http_errors(verbosity, func, *args, **kwargs):
+#     """Handles http errors when making API queries.
+#     If after 5 tries, the function could not be executed, it shuts the program down.
+
+#     Args:
+#         func (function): function to be executed, with its arguments and keyword arguments
+
+#     Returns:
+#         res (any): whatever the function is supposed to return if no http error occur
+#     """
+#     tries = ["1", "2", "3", "4", "5"]
+#     for t in tries:
+#         try:
+#             res = func(*args, **kwargs)
+#         except HttpError as err:
+#             if func.__name__ == "get_recent_videos" and err.status_code ==404: #Channel has no videos
+#                 print("nipe")
+#                 continue
+#             else:
+#                 print(
+#                     f"During the execution of function {func.__name__}, error {err.status_code} occured: {err.reason}"
+#                 )
+#                 print(f"Retrying in 5 seconds. This was attempt number {t} out of 5.")
+#                 time.sleep(5)
+#         else:
+#             print2(
+#                 f"{func.__name__} successfully executed.", ["all", "func"], verbosity
+#             )
+#             return res
+#     print(
+#         f"Function {func.__name__} could not be executed after 5 tries. Please check your internet connection, Youtube's API status and retry later."
+#     )
+#     sys.exit()
 
 
 ## Channel interactions ##
