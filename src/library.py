@@ -1,4 +1,4 @@
-### Libraries ###
+### Libraries
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -14,10 +14,10 @@ import isodate
 import sys
 
 
-### Functions ###
+### Functions
 
 
-## Checks ##
+## Checks
 def check_user_params(params_dict):
     """Checks if the user defined parameters are correctly formatted
 
@@ -98,42 +98,7 @@ def handle_http_errors(verbosity, func, *args, **kwargs):
             sys.exit()  # Exit the program after 5 retries
 
 
-# def handle_http_errors(verbosity, func, *args, **kwargs):
-#     """Handles http errors when making API queries.
-#     If after 5 tries, the function could not be executed, it shuts the program down.
-
-#     Args:
-#         func (function): function to be executed, with its arguments and keyword arguments
-
-#     Returns:
-#         res (any): whatever the function is supposed to return if no http error occur
-#     """
-#     tries = ["1", "2", "3", "4", "5"]
-#     for t in tries:
-#         try:
-#             res = func(*args, **kwargs)
-#         except HttpError as err:
-#             if func.__name__ == "get_recent_videos" and err.status_code ==404: #Channel has no videos
-#                 print("nipe")
-#                 continue
-#             else:
-#                 print(
-#                     f"During the execution of function {func.__name__}, error {err.status_code} occured: {err.reason}"
-#                 )
-#                 print(f"Retrying in 5 seconds. This was attempt number {t} out of 5.")
-#                 time.sleep(5)
-#         else:
-#             print2(
-#                 f"{func.__name__} successfully executed.", ["all", "func"], verbosity
-#             )
-#             return res
-#     print(
-#         f"Function {func.__name__} could not be executed after 5 tries. Please check your internet connection, Youtube's API status and retry later."
-#     )
-#     sys.exit()
-
-
-## Channel interactions ##
+## Channel interactions
 def get_tokens(youtube):
     """Retrieves the tokens of the subscription pages of the logged user
 
@@ -234,7 +199,7 @@ def get_recent_videos(youtube, playlist_ID):
     return recent_vids
 
 
-## Video interactions ##
+## Video interactions
 def get_title(youtube, video_ID):
     """Retrieves the title of a YT video
 
@@ -318,7 +283,7 @@ def is_short(youtube, video_ID):
         return False
 
 
-## Actions ##
+## Actions
 def add_to_playlist(youtube, playlist_ID, video_ID):
     """Adds a  YT video to the YT playlist
 

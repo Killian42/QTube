@@ -1,23 +1,25 @@
-### Libraries importation ###
+### Libraries importation
 from library import *
 
-### User parameters loading ###
+### User parameters loading
+## File opening
 user_param_dict = json.load(open("user_params.json"))
-verb = user_param_dict["verbosity"]
 
+## Parameters checking
 if check_user_params(user_param_dict) is not True:
     print("User defined parameters are not correct. Check the template and retry.")
     sys.exit()
 else:
-    print(
-        f"The user defined parameters are correctly formatted.\nYou have choosen the following verbosity options: {verb}.\n"
-    )
+    print("The user defined parameters are correctly formatted.\n")
 
+## Verbosity parameter
+verb = user_param_dict["verbosity"]
+print(f"You have choosen the following verbosity options: {verb}.\n")
 
-### Youtube API login ###
+### Youtube API login
 credentials = None
 
-# token.pickle stores the user's credentials from previously successful logins
+## token.pickle stores the user's credentials from previously successful logins
 if os.path.exists("token.pickle"):
     print2("Loading credentials from pickle file...", ["all", "credentials"], verb)
 
@@ -26,7 +28,7 @@ if os.path.exists("token.pickle"):
 
         print2("Credentials loaded from pickle file", ["all", "credentials"], verb)
 
-# If there are no valid credentials available, then either refresh the token or log in.
+## If there are no valid credentials available, then either refresh the token or log in.
 if not credentials or not credentials.valid:
     if credentials and credentials.expired and credentials.refresh_token:
         print2("Refreshing access token...", ["all", "credentials"], verb)
@@ -54,11 +56,12 @@ if not credentials or not credentials.valid:
             pickle.dump(credentials, f)
             print2("Credentials saved\n", ["all", "credentials"], verb)
 
-### Retrieving data ###
+### Building API resource
 youtube = build("youtube", "v3", credentials=credentials)
 
-### Actual code ###
-# Gives a dictionnary of all subscribed channels' names and IDs#
+### Actual code
+
+## Dictionnary of all subscribed channels' names and IDs
 tokens = handle_http_errors(verb, get_tokens, youtube)
 
 subbed_channels_info = {}
@@ -66,7 +69,7 @@ for tk in tokens:
     subbed_partial_info = get_youtube_subscriptions(youtube, tk)
     subbed_channels_info.update(subbed_partial_info)
 
-# Filtering on channel names #
+## Filtering on channel names
 required_words = user_param_dict["required_in_channel_name"]
 banned_words = user_param_dict["banned_in_channel_name"]
 
@@ -95,15 +98,14 @@ else:  # Required and banned filtering
         and not any(bw in k for bw in banned_words)
     }
 
-# Gives a dictionnary of the channels names and their upload playlist#
+## Dictionnary of channels names and their associated upload playlist
 wanted_channels_upload_playlists = {}
 for ch_name, ch_Id in wanted_channels_info.items():
     upload_playlist = handle_http_errors(verb, get_uploads_playlists, youtube, ch_Id)
     desired_playlists_partial = {ch_name: upload_playlist}
     wanted_channels_upload_playlists.update(desired_playlists_partial)
-# try to use dict comprehension here
 
-# Gives a dictionnary of the latest videos from the selected channels#
+## Dictionnary of the latest videos from selected channels
 videos = {}
 for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
     latest_partial = handle_http_errors(verb, get_recent_videos, youtube, playlist_Id)
@@ -119,17 +121,8 @@ for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
 
     videos.update(latest_partial)
 
-# Adds info to the info dictionnary for each video
+## Information retrieving on retrieved videos
 for ID, vid_info in videos.items():
-    # Tags
-    # try:
-    #     tags = handle_http_errors(verb, get_tags, youtube, ID)
-    #     tags_dict = {"tags": tags}
-    # except:
-    #     tags_dict = {"tags": ["No tags"]}
-
-    # vid_info.update(tags_dict)
-
     # Title
     title = handle_http_errors(verb, get_title, youtube, ID)
     vid_info.update({"title": title})
@@ -140,10 +133,10 @@ for ID, vid_info in videos.items():
 
     vid_info.update(short_dict)
 
-# Gives yesterday's date#
+## Yesterday's date
 yesterday = str(dt.date.today() - dt.timedelta(days=1))
 
-# Applies filters#
+## Filtering on videos information
 for ID, vid_info in videos.items():
     # Upload day
     upload_day = vid_info["upload day"]
@@ -157,10 +150,10 @@ for ID, vid_info in videos.items():
     else:
         pass
 
-# Adds the videos to a playlist#
-playlist_ID = user_param_dict["upload_playlist_ID"]
-
 videos_to_add = {k: v for k, v in videos.items() if v["to add"] == True}
+
+## Adding selected videos to a playlist
+playlist_ID = user_param_dict["upload_playlist_ID"]
 
 if videos_to_add is not None:  # Checks if there's actually videos to add
     print("\n")
