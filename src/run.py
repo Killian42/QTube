@@ -12,7 +12,7 @@ if check_user_params(user_param_dict) is not True:
 else:
     print("The user defined parameters are correctly formatted.\n")
 
-## Verbosity parameter
+## Verbosity options
 verb = user_param_dict["verbosity"]
 print(f"You have choosen the following verbosity options: {verb}.\n")
 
@@ -59,19 +59,14 @@ if not credentials or not credentials.valid:
 ### Building API resource
 youtube = build("youtube", "v3", credentials=credentials)
 
-### Actual code
+### Code
 
-## Dictionnary of all subscribed channels' names and IDs
-tokens = handle_http_errors(verb, get_tokens, youtube)
-
-subbed_channels_info = {}
-for tk in tokens:
-    subbed_partial_info = get_youtube_subscriptions(youtube, tk)
-    subbed_channels_info.update(subbed_partial_info)
+## Dictionnary of subscribed channel names and IDs
+subbed_channels_info = handle_http_errors(verb, get_subscriptions, youtube)
 
 ## Filtering on channel names
-required_words = user_param_dict["required_in_channel_name"]
-banned_words = user_param_dict["banned_in_channel_name"]
+required_words = user_param_dict.get("required_in_channel_name")
+banned_words = user_param_dict.get("banned_in_channel_name")
 
 if required_words is None and banned_words is None:  # No filtering
     wanted_channels_info = subbed_channels_info
@@ -99,11 +94,16 @@ else:  # Required and banned filtering
     }
 
 ## Dictionnary of channels names and their associated upload playlist
+split_channels = split_dict(wanted_channels_info, 50)
+
 wanted_channels_upload_playlists = {}
-for ch_name, ch_Id in wanted_channels_info.items():
-    upload_playlist = handle_http_errors(verb, get_uploads_playlists, youtube, ch_Id)
-    desired_playlists_partial = {ch_name: upload_playlist}
-    wanted_channels_upload_playlists.update(desired_playlists_partial)
+for sub_dict in split_channels:
+    partial = handle_http_errors(
+        verb, get_uploads_playlists, youtube, list(sub_dict.values())
+    )
+    partial_dict = dict(zip(list(sub_dict.keys()), partial))
+    wanted_channels_upload_playlists.update(partial_dict)
+
 
 ## Dictionnary of the latest videos from selected channels
 videos = {}
@@ -114,52 +114,73 @@ for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
         print2(f"Channel {ch_name} has no public videos.", ["all", "func"], verb)
         continue
 
-    for vid_info in latest_partial.values():
-        vid_info.update(
-            {"channel name": ch_name, "upload playlist": playlist_Id, "to add": True}
-        )
+    videos.update(
+        {
+            vid_id: {
+                **vid_info,
+                "channel name": ch_name,
+                "upload playlist": playlist_Id,
+                "to add": True,
+            }
+            for vid_id, vid_info in latest_partial.items()
+        }
+    )
 
-    videos.update(latest_partial)
 
-## Information retrieving on retrieved videos
-for ID, vid_info in videos.items():
+## Upload day filtering
+yesterday = str(dt.date.today() - dt.timedelta(days=1))  # Yesterday's date
+for vid_ID, vid_info in videos.items():
+    if vid_info.get("upload day") != yesterday:
+        vid_info.update({"to add": False})
+
+
+## Additional information retrieving on the videos
+split_videos = split_dict(videos, 50)
+
+responses = {}
+for sub_dict in split_videos:
+    partial = handle_http_errors(verb, make_video_requests, youtube, sub_dict.keys())
+
+    if len(responses) == 0: #first run of the loop
+        responses.update(partial)
+    else:
+        vid_dicts = partial.get("items")
+        responses.get("items").extend(vid_dicts)
+
+
+## Title filtering
+titles = get_titles(response=responses)
+
+## Duration filtering
+durations = get_durations(response=responses)
+
+## Shorts filtering
+if user_param_dict.get("keep_shorts") ==False:
+    shorts = is_short(response=responses)
+
+## Flagging filtered videos
+for index, (vid_ID, vid_info) in enumerate(videos.items()):
     # Title
-    title = handle_http_errors(verb, get_title, youtube, ID)
-    vid_info.update({"title": title})
+    vid_info.update({"title": titles[index]})
+
+    # Duration
+    vid_info.update({"duration": durations[index]})
 
     # Short
-    short = handle_http_errors(verb, is_short, youtube, ID)
-    short_dict = {"is short": short}
+    if user_param_dict.get("keep_shorts") ==False:
+        vid_info.update({"is short": shorts[index]})
+        if vid_info["is short"] == True:
+            vid_info.update({"to add": False})
 
-    vid_info.update(short_dict)
-
-## Yesterday's date
-yesterday = str(dt.date.today() - dt.timedelta(days=1))
-
-## Filtering on videos information
-for ID, vid_info in videos.items():
-    # Upload day
-    upload_day = vid_info["upload day"]
-    if upload_day != yesterday:
-        vid_info.update({"to add": False})
-    else:
-        pass
-    # Short
-    if user_param_dict["keep_shorts"] == False and vid_info["is short"] == True:
-        vid_info.update({"to add": False})
-    else:
-        pass
-
-videos_to_add = {k: v for k, v in videos.items() if v["to add"] == True}
+videos_to_add = {k: v for k, v in videos.items() if v.get("to add") == True}
 
 ## Adding selected videos to a playlist
-playlist_ID = user_param_dict["upload_playlist_ID"]
+playlist_ID = user_param_dict.get("upload_playlist_ID")
 
 if videos_to_add is not None:  # Checks if there's actually videos to add
-    print("\n")
     print2(f"Number of videos added: {len(videos_to_add)}", ["all", "videos"], verb)
-    for ID, vid_info in videos_to_add.items():
-        handle_http_errors(verb, add_to_playlist, youtube, playlist_ID, ID)
+    for vid_ID, vid_info in videos_to_add.items():
+        handle_http_errors(verb, add_to_playlist, youtube, playlist_ID, vid_ID)
 
         print2(
             f"From {vid_info['channel name']}, the video named: {vid_info['title']} was added.",
