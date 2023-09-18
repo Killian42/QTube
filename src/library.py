@@ -157,7 +157,7 @@ def merge_dicts(list_of_dicts: list) -> dict:
     """Merges a list of dictionaries into one
 
     Args:
-        list of dict (lst): list of dictionaries to be merged
+        list of dict (list): list of dictionaries to be merged
 
     Returns:
         (dict): single dictionary containing the the dictionaries from the list

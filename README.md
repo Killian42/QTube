@@ -1,9 +1,9 @@
-# Youtube-Bot
-Youtube Bot is a software that automatically adds Youtube videos to a playlist for you!
+# QTube
+QTube is a software that automatically adds Youtube videos to a playlist for you!
 ## About
-This reason behind the existence of this software is Youtube's apparent quasi-random behavior about informing people that a new video came out (no notification even when the bell is clicked, videos not showing up the subscription tab, ...). 
+The reason for the existence of this software is Youtube's seemingly random behavior when it comes to notifying people that a new video has been published (late or missing notifications, useless notification bell, videos not appearing in the subscription tab, ...).
 
-With this software, you can specify a certain number of rules that will define what videos are added to a dedicated playlist, so that you won't miss any new uploads!
+With this software, you can set a number of rules that determine which videos are added to a dedicated playlist, so you won't miss any new uploads!
 
 ## How to use
 * Clone the repo
@@ -14,7 +14,7 @@ With this software, you can specify a certain number of rules that will define w
 
 I would personally recommend to create a task to execute the program once a day.
 
-To get more information on setting up the API key and cliens secrets, watch this [video](https://www.youtube.com/watch?v=vQQEaSnQ_bs) from Corey Schafer (and big thanks to him for providing the code to use oauth!)
+To get more information on setting up the API key and client secrets, you can watch this [video](https://www.youtube.com/watch?v=vQQEaSnQ_bs) from Corey Schafer. Big thanks to him for making this helpful and detailed video, as well as providing the OAuth snippets.
 
 ## User parameters:
 * *upload_playlist_ID* : ID of the playlist the videos will be added to.
@@ -27,4 +27,4 @@ To get more information on setting up the API key and cliens secrets, watch this
   * *credentials*: Only information regarding credentials is shown (loading, retrieving and saving).
   * *videos*: Only information regarding added videos is shown (number, channel names and video titles).
   
-  Options can be combined, such that choosing every options gives the same result as choosing *all*. For nothing to be shown, replace the array of strings with *null*.
+  Options can be combined, so that selecting each option gives the same result as selecting *all*. To display nothing, replace the array of strings with *null*.

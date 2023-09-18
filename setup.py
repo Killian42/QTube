@@ -4,9 +4,9 @@ with open("README.md", "r") as f:
     long_description = f.read()
 
 setup(
-    name="Youtube_Bot",
-    version="0.0.1",
-    description="Add youtube videos to a playlist automatically",
+    name="QTube",
+    version="1.1.0",
+    description="Automatic adding of Youtube videos to a playlist.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",
@@ -14,5 +14,5 @@ setup(
     package_dir={"": "src"},
     author="Killian Lebreton",
     author_email="killian.lebreton35@gmail.com",
-    url="https://github.com/Killian42/Youtube-Bot",
+    url="https://github.com/Killian42/QTube",
 )
