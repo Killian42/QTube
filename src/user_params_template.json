@@ -7,6 +7,14 @@
         "word1",
         "word2"
     ],
+    "required_in_video_title": [
+        "word1",
+        "word2"
+    ],
+    "banned_in_video_title": [
+        "word1",
+        "word2"
+    ],
     "upload_playlist_ID": "your_playlist_ID",
     "keep_shorts": false,
     "verbosity": [

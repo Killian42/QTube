@@ -14,7 +14,7 @@ else:
 
 ## Verbosity options
 verb = user_param_dict["verbosity"]
-print(f"You have choosen the following verbosity options: {verb}.\n")
+print(f"The following verbosity options are enabled: {verb}.\n")
 
 ### Youtube API login
 credentials = None
@@ -65,32 +65,36 @@ youtube = build("youtube", "v3", credentials=credentials)
 subbed_channels_info = handle_http_errors(verb, get_subscriptions, youtube)
 
 ## Filtering on channel names
-required_words = user_param_dict.get("required_in_channel_name")
-banned_words = user_param_dict.get("banned_in_channel_name")
+required_channel_words = user_param_dict.get("required_in_channel_name")
+banned_channel_words = user_param_dict.get("banned_in_channel_name")
 
-if required_words is None and banned_words is None:  # No filtering
+if required_channel_words is None and banned_channel_words is None:  # No filtering
     wanted_channels_info = subbed_channels_info
 
-elif required_words is not None and banned_words is None:  # Required filtering
+elif (
+    required_channel_words is not None and banned_channel_words is None
+):  # Required filtering
     wanted_channels_info = {
         k: v
         for k, v in subbed_channels_info.items()
-        if any(aw in k for aw in required_words)
+        if any(rw in k for rw in required_channel_words)
     }
 
-elif required_words is None and banned_words is not None:  # Banned filtering
+elif (
+    required_channel_words is None and banned_channel_words is not None
+):  # Banned filtering
     wanted_channels_info = {
         k: v
         for k, v in subbed_channels_info.items()
-        if not any(bw in k for bw in banned_words)
+        if not any(bw in k for bw in banned_channel_words)
     }
 
 else:  # Required and banned filtering
     wanted_channels_info = {
         k: v
         for k, v in subbed_channels_info.items()
-        if any(aw in k for aw in required_words)
-        and not any(bw in k for bw in banned_words)
+        if any(rw in k for rw in required_channel_words)
+        and not any(bw in k for bw in banned_channel_words)
     }
 
 ## Dictionnary of channels names and their associated upload playlist
@@ -141,24 +145,24 @@ responses = {}
 for sub_dict in split_videos:
     partial = handle_http_errors(verb, make_video_requests, youtube, sub_dict.keys())
 
-    if len(responses) == 0: #first run of the loop
+    if len(responses) == 0:  # first run of the loop
         responses.update(partial)
     else:
         vid_dicts = partial.get("items")
         responses.get("items").extend(vid_dicts)
 
 
-## Title filtering
+# Titles retrieving
 titles = get_titles(response=responses)
 
-## Duration filtering
+# Duration retrieving
 durations = get_durations(response=responses)
 
-## Shorts filtering
-if user_param_dict.get("keep_shorts") ==False:
+# Shorts retrieving
+if user_param_dict.get("keep_shorts") == False:
     shorts = is_short(response=responses)
 
-## Flagging filtered videos
+## Videos' information updating
 for index, (vid_ID, vid_info) in enumerate(videos.items()):
     # Title
     vid_info.update({"title": titles[index]})
@@ -167,9 +171,58 @@ for index, (vid_ID, vid_info) in enumerate(videos.items()):
     vid_info.update({"duration": durations[index]})
 
     # Short
-    if user_param_dict.get("keep_shorts") ==False:
+    if user_param_dict.get("keep_shorts") == False:
         vid_info.update({"is short": shorts[index]})
-        if vid_info["is short"] == True:
+
+## Additional information filtering
+required_title_words = user_param_dict.get("required_in_video_title")
+banned_title_words = user_param_dict.get("banned_in_video_title")
+
+# Title filtering
+if required_title_words is None and banned_title_words is None:  # No filtering
+    pass
+
+elif (
+    required_title_words is not None and banned_title_words is None
+):  # Required filtering
+    for vid_ID, vid_info in videos.items():
+        if vid_info.get("to add") == False:
+            continue
+        elif any(rw in vid_info.get("title") for rw in required_title_words):
+            continue
+        else:
+            vid_info.update({"to add": False})
+
+elif (
+    required_title_words is None and banned_title_words is not None
+):  # Banned filtering
+    for vid_ID, vid_info in videos.items():
+        if vid_info.get("to add") == False:
+            continue
+        elif not any(bw in vid_info.get("title") for bw in banned_title_words):
+            continue
+        else:
+            vid_info.update({"to add": False})
+
+else:  # Required and banned filtering
+    for vid_ID, vid_info in videos.items():
+        if vid_info.get("to add") == False:
+            continue
+        elif any(
+            rw in vid_info.get("title") for rw in required_title_words
+        ) and not any(bw in vid_info.get("title") for bw in banned_title_words):
+            continue
+        else:
+            vid_info.update({"to add": False})
+
+# Duration filtering
+
+# Short filtering
+if user_param_dict.get("keep_shorts") == False:
+    for vid_ID, vid_info in videos.items():
+        if vid_info.get("to add") == False:
+            continue
+        elif vid_info.get("is short") == True:
             vid_info.update({"to add": False})
 
 videos_to_add = {k: v for k, v in videos.items() if v.get("to add") == True}
@@ -183,7 +236,7 @@ if videos_to_add is not None:  # Checks if there's actually videos to add
         handle_http_errors(verb, add_to_playlist, youtube, playlist_ID, vid_ID)
 
         print2(
-            f"From {vid_info['channel name']}, the video named: {vid_info['title']} was added.",
+            f"From {vid_info.get('channel name')}, the video named: {vid_info.get('title')} was added.",
             ["all", "videos"],
             verb,
         )

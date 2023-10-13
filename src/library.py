@@ -43,8 +43,14 @@ def check_user_params(params_dict: dict) -> bool:
         v in ["all", "videos", "credentials", "func"]
         for v in params_dict.get("verbosity")
     )
+    check_5 = params_dict.get("required_in_video_title") == None or not any(
+        type(item) != str for item in params_dict.get("required_in_video_title")
+    )
+    check_6 = params_dict.get("banned_in_video_title") == None or not any(
+        type(item) != str for item in params_dict.get("banned_in_video_title")
+    )
 
-    ok = bool(check_0 * check_1 * check_2 * check_3 * check_4)
+    ok = bool(check_0 * check_1 * check_2 * check_3 * check_4 * check_5 * check_6)
 
     return ok
 
