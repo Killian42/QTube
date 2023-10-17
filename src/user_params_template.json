@@ -15,8 +15,12 @@
         "word1",
         "word2"
     ],
-    "upload_playlist_ID": "your_playlist_ID",
+    "allowed_durations": [
+        0,
+        60
+    ],
     "keep_shorts": false,
+    "upload_playlist_ID": "your_playlist_ID",
     "verbosity": [
         "credentials",
         "videos"

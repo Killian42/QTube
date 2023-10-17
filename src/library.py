@@ -49,8 +49,15 @@ def check_user_params(params_dict: dict) -> bool:
     check_6 = params_dict.get("banned_in_video_title") == None or not any(
         type(item) != str for item in params_dict.get("banned_in_video_title")
     )
+    check_7 = params_dict.get("allowed_durations") == None or (
+        not any(type(item) != int for item in params_dict.get("allowed_durations"))
+        and all(item > 0 for item in params_dict.get("allowed_durations"))
+        and len(params_dict.get("allowed_durations")) == 2
+    )
 
-    ok = bool(check_0 * check_1 * check_2 * check_3 * check_4 * check_5 * check_6)
+    ok = bool(
+        check_0 * check_1 * check_2 * check_3 * check_4 * check_5 * check_6 * check_7
+    )
 
     return ok
 

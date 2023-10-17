@@ -17,12 +17,13 @@ I would personally recommend to create a task to execute the program once a day.
 To get more information on setting up the API key and client secrets, you can watch this [video](https://www.youtube.com/watch?v=vQQEaSnQ_bs) from Corey Schafer. Big thanks to him for making this helpful and detailed video, as well as providing the OAuth snippets.
 
 ## User parameters:
-* *upload_playlist_ID* : ID of the playlist the videos will be added to.
 * *required_in_channel_name* : Words that must be in channel names, typically channel names themselves (Case sensitive). Videos from channels not containing any of the words of this list in their name will not be added. To not use this parameter, replace the array of strings with *null*.
 * *banned_in_channel_name* : Words that must not be in channel names, typically channel names themselves (Case sensitive). Videos from channels containing any of the words of this list in their name will not be added. To not use this parameter, replace the array of strings with *null*.
 * *required_in_video_title* : Words that must be in video titles (Case sensitive). Videos with titles not containing any of the words of this list will not be added. To not use this parameter, replace the array of strings with *null*.
 * *banned_in_video_title* : Words that must not be in video titles (Case sensitive). Videos with titles containing any of the words of this list will not be added. To not use this parameter, replace the array of strings with *null*.
+* *allowed_durations* : Minimum and maximum duration (in minutes) of added videos. To not use this parameter, replace the array of positive integers with *null*.
 * *keep_shorts* : Determines if shorts are added.
+* *upload_playlist_ID* : ID of the playlist the videos will be added to. The playlist ID can be found in the playlist URL after the equal sign: https://www.youtube.com/playlist?list=*playlist_ID*
 * *verbosity* : Controls how much information is shown in the terminal. Options are:
   * *all*: Everything is shown.
   * *func*: Only information regarding function execution is shown.
