@@ -13,7 +13,7 @@ else:
     print("The user defined parameters are correctly formatted.\n")
 
 ## Verbosity options
-verb = user_param_dict["verbosity"]
+verb = user_param_dict.get("verbosity")
 print(f"The following verbosity options are enabled: {verb}.\n")
 
 ### Youtube API login
@@ -178,6 +178,8 @@ for index, (vid_ID, vid_info) in enumerate(videos.items()):
 required_title_words = user_param_dict.get("required_in_video_title")
 banned_title_words = user_param_dict.get("banned_in_video_title")
 
+min_max_durations = user_param_dict.get("allowed_durations")
+
 # Title filtering
 if required_title_words is None and banned_title_words is None:  # No filtering
     pass
@@ -216,6 +218,17 @@ else:  # Required and banned filtering
             vid_info.update({"to add": False})
 
 # Duration filtering
+for vid_info in videos.values():
+    if vid_info.get("to add") == False:
+        continue
+    elif (
+        min_max_durations[0] * 60.0
+        <= vid_info.get("duration")
+        <= min_max_durations[-1] * 60.0
+    ):
+        pass
+    else:
+        vid_info.update({"to add": False})
 
 # Short filtering
 if user_param_dict.get("keep_shorts") == False:
