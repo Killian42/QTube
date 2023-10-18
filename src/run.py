@@ -218,17 +218,18 @@ else:  # Required and banned filtering
             vid_info.update({"to add": False})
 
 # Duration filtering
-for vid_info in videos.values():
-    if vid_info.get("to add") == False:
-        continue
-    elif (
-        min_max_durations[0] * 60.0
-        <= vid_info.get("duration")
-        <= min_max_durations[-1] * 60.0
-    ):
-        pass
-    else:
-        vid_info.update({"to add": False})
+if min_max_durations is not None:
+    for vid_info in videos.values():
+        if vid_info.get("to add") == False:
+            continue
+        elif (
+            min_max_durations[0] * 60.0
+            <= vid_info.get("duration")
+            <= min_max_durations[-1] * 60.0
+        ):
+            pass
+        else:
+            vid_info.update({"to add": False})
 
 # Short filtering
 if user_param_dict.get("keep_shorts") == False:
