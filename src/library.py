@@ -22,42 +22,60 @@ import sys
 
 # Checks
 def check_user_params(params_dict: dict) -> bool:
-    """Checks if the user defined parameters are correctly formatted
+    """Checks if the user-defined parameters are correctly formatted
 
     Args:
-        params_dict (dict): Dictionnary of the user defined parameters
+        params_dict (dict): Dictionary of the user-defined parameters
 
     Returns:
         ok (bool): True if all checks are passed, False otherwise
     """
 
-    check_0 = params_dict.get("required_in_channel_name") == None or not any(
-        type(item) != str for item in params_dict.get("required_in_channel_name")
-    )
-    check_1 = params_dict.get("banned_in_channel_name") == None or not any(
-        type(item) != str for item in params_dict.get("banned_in_channel_name")
-    )
-    check_2 = type(params_dict.get("upload_playlist_ID")) == str
-    check_3 = type(params_dict.get("keep_shorts")) == bool
-    check_4 = params_dict.get("verbosity") == None or all(
-        v in ["all", "videos", "credentials", "func"]
-        for v in params_dict.get("verbosity")
-    )
-    check_5 = params_dict.get("required_in_video_title") == None or not any(
-        type(item) != str for item in params_dict.get("required_in_video_title")
-    )
-    check_6 = params_dict.get("banned_in_video_title") == None or not any(
-        type(item) != str for item in params_dict.get("banned_in_video_title")
-    )
-    check_7 = params_dict.get("allowed_durations") == None or (
-        not any(type(item) != int for item in params_dict.get("allowed_durations"))
-        and all(item > 0 for item in params_dict.get("allowed_durations"))
-        and len(params_dict.get("allowed_durations")) == 2
-    )
+    # List of checks
+    checks = [
+        # Channel name
+        params_dict.get("required_in_channel_name") is None
+        or all(
+            isinstance(item, str)
+            for item in params_dict.get("required_in_channel_name")
+        ),
+        # Channel name
+        params_dict.get("banned_in_channel_name") is None
+        or all(
+            isinstance(item, str) for item in params_dict.get("banned_in_channel_name")
+        ),
+        # Playlist ID
+        isinstance(params_dict.get("upload_playlist_ID"), str),
+        # Shorts
+        isinstance(params_dict.get("keep_shorts"), bool),
+        # Verbosity
+        params_dict.get("verbosity") is None
+        or all(
+            v in ["all", "videos", "credentials", "func"]
+            for v in params_dict.get("verbosity")
+        ),
+        # Title
+        params_dict.get("required_in_video_title") is None
+        or all(
+            isinstance(item, str) for item in params_dict.get("required_in_video_title")
+        ),
+        # Title
+        params_dict.get("banned_in_video_title") is None
+        or all(
+            isinstance(item, str) for item in params_dict.get("banned_in_video_title")
+        ),
+        # Duration
+        params_dict.get("allowed_durations") is None
+        or (
+            len(params_dict.get("allowed_durations")) == 2
+            and all(
+                isinstance(item, int) and item >= 0
+                for item in params_dict.get("allowed_durations")
+            )
+        ),
+    ]
 
-    ok = bool(
-        check_0 * check_1 * check_2 * check_3 * check_4 * check_5 * check_6 * check_7
-    )
+    ok = all(checks)
 
     return ok
 

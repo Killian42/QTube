@@ -3,17 +3,17 @@ from library import *
 
 ### User parameters loading
 ## File opening
-user_param_dict = json.load(open("user_params.json"))
+user_params_dict = json.load(open("user_params.json"))
 
 ## Parameters checking
-if check_user_params(user_param_dict) is not True:
+if check_user_params(user_params_dict) is not True:
     print("User defined parameters are not correct. Check the template and retry.")
     sys.exit()
 else:
     print("The user defined parameters are correctly formatted.\n")
 
 ## Verbosity options
-verb = user_param_dict.get("verbosity")
+verb = user_params_dict.get("verbosity")
 print(f"The following verbosity options are enabled: {verb}.\n")
 
 ### Youtube API login
@@ -65,8 +65,8 @@ youtube = build("youtube", "v3", credentials=credentials)
 subbed_channels_info = handle_http_errors(verb, get_subscriptions, youtube)
 
 ## Filtering on channel names
-required_channel_words = user_param_dict.get("required_in_channel_name")
-banned_channel_words = user_param_dict.get("banned_in_channel_name")
+required_channel_words = user_params_dict.get("required_in_channel_name")
+banned_channel_words = user_params_dict.get("banned_in_channel_name")
 
 if required_channel_words is None and banned_channel_words is None:  # No filtering
     wanted_channels_info = subbed_channels_info
@@ -159,7 +159,7 @@ titles = get_titles(response=responses)
 durations = get_durations(response=responses)
 
 # Shorts retrieving
-if user_param_dict.get("keep_shorts") == False:
+if user_params_dict.get("keep_shorts") is False:
     shorts = is_short(response=responses)
 
 ## Videos' information updating
@@ -171,14 +171,14 @@ for index, (vid_ID, vid_info) in enumerate(videos.items()):
     vid_info.update({"duration": durations[index]})
 
     # Short
-    if user_param_dict.get("keep_shorts") == False:
+    if user_params_dict.get("keep_shorts") is False:
         vid_info.update({"is short": shorts[index]})
 
 ## Additional information filtering
-required_title_words = user_param_dict.get("required_in_video_title")
-banned_title_words = user_param_dict.get("banned_in_video_title")
+required_title_words = user_params_dict.get("required_in_video_title")
+banned_title_words = user_params_dict.get("banned_in_video_title")
 
-min_max_durations = user_param_dict.get("allowed_durations")
+min_max_durations = user_params_dict.get("allowed_durations")
 
 # Title filtering
 if required_title_words is None and banned_title_words is None:  # No filtering
@@ -188,7 +188,7 @@ elif (
     required_title_words is not None and banned_title_words is None
 ):  # Required filtering
     for vid_ID, vid_info in videos.items():
-        if vid_info.get("to add") == False:
+        if vid_info.get("to add") is False:
             continue
         elif any(rw in vid_info.get("title") for rw in required_title_words):
             continue
@@ -199,7 +199,7 @@ elif (
     required_title_words is None and banned_title_words is not None
 ):  # Banned filtering
     for vid_ID, vid_info in videos.items():
-        if vid_info.get("to add") == False:
+        if vid_info.get("to add") is False:
             continue
         elif not any(bw in vid_info.get("title") for bw in banned_title_words):
             continue
@@ -208,7 +208,7 @@ elif (
 
 else:  # Required and banned filtering
     for vid_ID, vid_info in videos.items():
-        if vid_info.get("to add") == False:
+        if vid_info.get("to add") is False:
             continue
         elif any(
             rw in vid_info.get("title") for rw in required_title_words
@@ -220,7 +220,7 @@ else:  # Required and banned filtering
 # Duration filtering
 if min_max_durations is not None:
     for vid_info in videos.values():
-        if vid_info.get("to add") == False:
+        if vid_info.get("to add") is False:
             continue
         elif (
             min_max_durations[0] * 60.0
@@ -232,17 +232,17 @@ if min_max_durations is not None:
             vid_info.update({"to add": False})
 
 # Short filtering
-if user_param_dict.get("keep_shorts") == False:
+if user_params_dict.get("keep_shorts") is False:
     for vid_ID, vid_info in videos.items():
-        if vid_info.get("to add") == False:
+        if vid_info.get("to add") is False:
             continue
-        elif vid_info.get("is short") == True:
+        elif vid_info.get("is short"):
             vid_info.update({"to add": False})
 
-videos_to_add = {k: v for k, v in videos.items() if v.get("to add") == True}
+videos_to_add = {k: v for k, v in videos.items() if v.get("to add")}
 
 ## Adding selected videos to a playlist
-playlist_ID = user_param_dict.get("upload_playlist_ID")
+playlist_ID = user_params_dict.get("upload_playlist_ID")
 
 if videos_to_add is not None:  # Checks if there's actually videos to add
     print2(f"Number of videos added: {len(videos_to_add)}", ["all", "videos"], verb)
