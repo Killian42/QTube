@@ -5,6 +5,8 @@ tests.py
 
 token.pickle
 
+merge_to_main.ps1
+
 *.code-workspace
 
 # Created by https://www.toptal.com/developers/gitignore/api/python

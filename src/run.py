@@ -61,6 +61,13 @@ youtube = build("youtube", "v3", credentials=credentials)
 
 ### Code
 
+## Checking the playlist ID
+playlist_ID = user_params_dict.get("upload_playlist_ID")
+user_info = handle_http_errors(verb, get_user_info, youtube)
+if not handle_http_errors(verb, check_playlist_id, youtube, user_info, playlist_ID):
+    sys.exit()
+
+
 ## Dictionnary of subscribed channel names and IDs
 subbed_channels_info = handle_http_errors(verb, get_subscriptions, youtube)
 
@@ -242,8 +249,6 @@ if user_params_dict.get("keep_shorts") is False:
 videos_to_add = {k: v for k, v in videos.items() if v.get("to add")}
 
 ## Adding selected videos to a playlist
-playlist_ID = user_params_dict.get("upload_playlist_ID")
-
 if videos_to_add is not None:  # Checks if there's actually videos to add
     print2(f"Number of videos added: {len(videos_to_add)}", ["all", "videos"], verb)
     for vid_ID, vid_info in videos_to_add.items():

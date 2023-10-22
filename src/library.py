@@ -80,6 +80,39 @@ def check_user_params(params_dict: dict) -> bool:
     return ok
 
 
+def check_playlist_id(youtube, user_info: dict, test_playlist_ID: str) -> bool:
+    """Checks if the user can upload the playlist provided in the paramaters file.
+
+    Args:
+        youtube (Resource): YT API resource
+        user_info (dict): Dictionary containing information on the logged-in user channel
+        test_playlist_ID (str): YT playlist ID to test
+
+    Returns:
+        (bool): True if the playlist belongs to the user, False otherwise.
+    """
+    user_channel_ID = user_info["items"][0]["id"]
+
+    response = youtube.playlists().list(part="snippet", id=test_playlist_ID).execute()
+
+    if "items" in response and len(response["items"]) > 0:
+        playlist_owner = response["items"][0]["snippet"]["channelId"]
+
+        if user_channel_ID == playlist_owner:
+            return True
+        else:
+            print(
+                "Invalid playlist ID: This playlist does not belong to you. Check the parameters file."
+            )
+            return False
+
+    else:
+        print(
+            "Invalid playlist ID: This playlist does not exist. Check the parameters file."
+        )
+        return False
+
+
 def handle_http_errors(verbosity: list[str], func, *args, **kwargs):
     """Handles http errors when making API queries.
     If after 5 tries, the function could not be executed, it shuts the program down.
@@ -262,6 +295,24 @@ def get_uploads_playlists(youtube, channel_IDs: list[str]) -> list[str]:
     upload_pl_ids = [channel_to_upload_map[channel_ID] for channel_ID in channel_IDs]
 
     return upload_pl_ids
+
+
+def get_user_info(youtube) -> dict:
+    """Retrieves information about the logged-in user channel
+
+    Args:
+        youtube (Resource): YT API resource
+
+    Returns:
+        response (dict): Dictionary containing information on the logged-in user channel
+    """
+    response = (
+        youtube.channels()
+        .list(part="snippet,contentDetails,statistics", mine=True)
+        .execute()
+    )
+
+    return response
 
 
 # Playlists
