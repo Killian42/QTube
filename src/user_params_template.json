@@ -20,6 +20,7 @@
         60
     ],
     "keep_shorts": false,
+    "keep_duplicates": false,
     "upload_playlist_ID": "your_playlist_ID",
     "verbosity": [
         "credentials",

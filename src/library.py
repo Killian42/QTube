@@ -49,10 +49,9 @@ def check_user_params(params_dict: dict) -> bool:
         # Shorts
         isinstance(params_dict.get("keep_shorts"), bool),
         # Verbosity
-        params_dict.get("verbosity") is None
-        or all(
-            v in ["all", "videos", "credentials", "func"]
-            for v in params_dict.get("verbosity")
+        all(
+            v in ["all", "videos", "credentials", "func", "none"]
+            for v in params_dict.get("verbosity", ["failsafe"])
         ),
         # Title
         params_dict.get("required_in_video_title") is None
@@ -73,6 +72,8 @@ def check_user_params(params_dict: dict) -> bool:
                 for item in params_dict.get("allowed_durations")
             )
         ),
+        # Duplicates
+        isinstance(params_dict.get("keep_duplicates"), bool),
     ]
 
     ok = all(checks)
@@ -342,6 +343,43 @@ def get_recent_videos(youtube, playlist_ID: str) -> dict:
     return recent_vids
 
 
+def get_playlist_content(youtube, playlist_ID: str) -> list[str]:
+    """Retrieves the IDs of videos saved in a YT playlist
+
+    Args:
+        youtube (Resource): YT API resource
+        playlist_ID (str): ID of the playlist
+
+    Returns:
+        videos_IDs (list[str]): List containing the IDs of the videos saved in the playlist
+    """
+    next_page_token = None
+    videos_IDs = []
+    while True:
+        response = (
+            youtube.playlistItems()
+            .list(
+                part="contentDetails",
+                playlistId=playlist_ID,
+                maxResults=50,
+                pageToken=next_page_token,
+            )
+            .execute()
+        )
+
+        temp_videos_IDs = [
+            item["contentDetails"]["videoId"] for item in response.get("items")
+        ]
+        videos_IDs.extend(temp_videos_IDs)
+
+        next_page_token = response.get("nextPageToken")
+
+        if not next_page_token:
+            break
+
+    return videos_IDs
+
+
 # Videos
 def make_video_requests(youtube, video_IDs: list[str]) -> dict:
     """Retrieves information on a list of YT videos
@@ -381,7 +419,7 @@ def get_titles(
         video_IDs_str = ",".join(video_IDs)
         response = youtube.videos().list(part="snippet", id=video_IDs_str).execute()
 
-    titles = [vid["snippet"]["title"] for vid in response.get("items")]
+    titles = [vid["snippet"]["title"] for vid in response["items"]]
 
     return titles
 
@@ -436,7 +474,7 @@ def get_descriptions(
         video_IDs_str = ",".join(video_IDs)  # Join the video IDs with commas
         response = youtube.videos().list(part="snippet", id=video_IDs_str).execute()
 
-    descriptions = [vid["snippet"]["description"] for vid in response["items"]]
+    descriptions = [vid["snippet"]["description"] for vid in response.get("items", [])]
     return descriptions
 
 
