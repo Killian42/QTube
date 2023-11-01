@@ -17,20 +17,20 @@ I would personally recommend to create a task to execute the program once a day.
 To get more information on setting up the API key and client secrets, you can watch this [video](https://www.youtube.com/watch?v=vQQEaSnQ_bs) from Corey Schafer. Big thanks to him for making this helpful and detailed video, as well as providing the OAuth snippets.
 
 ## User parameters:
-* *required_in_channel_name* (optional): Words that must be in channel names, typically channel names themselves (Case sensitive). Videos from channels not containing any of the words of this list in their name will not be added.
-* *banned_in_channel_name* (optional): Words that must not be in channel names, typically channel names themselves (Case sensitive). Videos from channels containing any of the words of this list in their name will not be added.
-* *required_in_video_title* (optional): Words that must be in video titles (Case sensitive). Videos with titles not containing any of the words of this list will not be added.
-* *banned_in_video_title* (optional): Words that must not be in video titles (Case sensitive). Videos with titles containing any of the words of this list will not be added.
+* *required_in_channel_name* (optional): Words that must be in channel names, typically channel names themselves (case sensitive). Videos from channels not containing any of the words of this list in their name will not be added.
+* *banned_in_channel_name* (optional): Words that must not be in channel names, typically channel names themselves (case sensitive). Videos from channels containing any of the words of this list in their name will not be added.
+* *required_in_video_title* (optional): Words that must be in video titles (case sensitive). Videos with titles not containing any of the words of this list will not be added.
+* *banned_in_video_title* (optional): Words that must not be in video titles (case sensitive). Videos with titles containing any of the words of this list will not be added.
 * *allowed_durations* (optional): Minimum and maximum duration (in minutes) of added videos.
 * *keep_shorts* (required): Determines whether to add shorts.
 * *keep_duplicates* (required): Determines whether to add videos that are already in the playlist.
 * *upload_playlist_ID* (required): ID of the playlist the videos will be added to. The playlist ID can be found in the playlist URL after the equal sign: `https://www.youtube.com/playlist?list=*playlist_ID*`
 * *verbosity* (required): Controls how much information is shown in the terminal. Options are:
   * *all*: Everything is shown.
+  * *none*: Nothing is shown.
   * *func*: Only information regarding function execution is shown.
   * *credentials*: Only information regarding credentials is shown (loading, retrieving and saving).
   * *videos*: Only information regarding added videos is shown (number, channel names and video titles).
-  * *none*: Nothing is shown.
   
   Options can be combined, so that selecting each option gives the same result as selecting *all*.
 
