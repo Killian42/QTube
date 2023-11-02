@@ -166,8 +166,10 @@ titles = get_titles(response=responses)
 durations = get_durations(response=responses)
 
 # Shorts retrieving
-if user_params_dict["keep_shorts"] is False:
-    shorts = is_short(response=responses)
+shorts = is_short(response=responses)
+
+# Languages retrieving
+languages = get_languages(response=responses)
 
 ## Videos' information updating
 for index, (vid_ID, vid_info) in enumerate(videos.items()):
@@ -178,14 +180,18 @@ for index, (vid_ID, vid_info) in enumerate(videos.items()):
     vid_info.update({"duration": durations[index]})
 
     # Short
-    if user_params_dict["keep_shorts"] is False:
-        vid_info.update({"is short": shorts[index]})
+    vid_info.update({"is short": shorts[index]})
+
+    # Language
+    vid_info.update({"language": languages[index]})
 
 ## Additional information filtering
 required_title_words = user_params_dict.get("required_in_video_title")
 banned_title_words = user_params_dict.get("banned_in_video_title")
 
 min_max_durations = user_params_dict.get("allowed_durations")
+
+preferred_languages = user_params_dict.get("preferred_languages")
 
 # Title filtering
 if required_title_words is None and banned_title_words is None:  # No filtering
@@ -256,6 +262,16 @@ if user_params_dict["keep_duplicates"] is False:
     for vid_ID in old_vid_IDs:
         if vid_ID in new_vid_IDs:
             videos[vid_ID].update({"to add": False})
+
+# Language filtering
+if preferred_languages is not None:
+    preferred_languages.append("unknown")
+    for vid_ID, vid_info in videos.items():
+        if vid_info["to add"] is False:
+            continue
+        else:
+            if vid_info["language"] not in preferred_languages:
+                vid_info.update({"to add": False})
 
 videos_to_add = {
     vid_ID: vid_info for vid_ID, vid_info in videos.items() if vid_info["to add"]

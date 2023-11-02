@@ -74,6 +74,12 @@ def check_user_params(params_dict: dict) -> bool:
         ),
         # Duplicates
         isinstance(params_dict.get("keep_duplicates"), bool),
+        # Languages
+        params_dict.get("preferred_languages") is None
+        or all(
+            isinstance(item, str) and len(item) == 2 and item.isalpha()
+            for item in params_dict.get("preferred_languages")
+        ),
     ]
 
     ok = all(checks)
@@ -504,6 +510,43 @@ def get_durations(
     durations_iso = [vid["contentDetails"]["duration"] for vid in response["items"]]
     durations = [isodate.parse_duration(d).total_seconds() for d in durations_iso]
     return durations
+
+
+def get_languages(
+    youtube=None,
+    response: dict = None,
+    video_IDs: list[str] = None,
+    use_API: bool = False,
+) -> list[str]:
+    """Retrieves the original language of YT videos
+
+    Args:
+        youtube (Resource): YT API resource
+        response (dict[dict]): YT API response from the make_video_request function
+        video_IDs (list[str]): List of video IDs
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+
+    Returns:
+        languages (list[str]): List of YT videos languages
+    """
+    if use_API:
+        video_IDs_str = ",".join(video_IDs)
+        response = youtube.videos().list(part="snippet", id=video_IDs_str).execute()
+
+    languages = [
+        (
+            vid["snippet"]["defaultAudioLanguage"]
+            if "defaultAudioLanguage" in vid["snippet"]
+            else vid["snippet"]["defaultLanguage"]
+            if "defaultLanguage" in vid["snippet"]
+            else "unknown"
+        ).split("-")[
+            0
+        ]  # strips regional specifiers
+        for vid in response["items"]
+    ]
+
+    return languages
 
 
 def is_short(

@@ -19,6 +19,7 @@
         0,
         60
     ],
+    "preferred_languages":["en"],
     "keep_shorts": false,
     "keep_duplicates": false,
     "upload_playlist_ID": "your_playlist_ID",
