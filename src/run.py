@@ -1,6 +1,14 @@
 ### Libraries importation
 from library import *
 
+### Software version checking
+version, latest_release = check_version()
+if version != latest_release and latest_release is not None:
+    latest_url = "https://github.com/Killian42/QTube/releases/latest"
+    print(
+        f"You are currently running version {version}.\nConsider upgrading to {latest_release} at {latest_url}."
+    )
+
 ### User parameters loading
 ## File opening
 user_params_dict = json.load(open("user_params.json"))
@@ -171,6 +179,9 @@ shorts = is_short(response=responses)
 # Languages retrieving
 languages = get_languages(response=responses)
 
+# Tags retrieving
+tags = get_tags(response=responses)
+
 ## Videos' information updating
 for index, (vid_ID, vid_info) in enumerate(videos.items()):
     # Title
@@ -185,6 +196,9 @@ for index, (vid_ID, vid_info) in enumerate(videos.items()):
     # Language
     vid_info.update({"language": languages[index]})
 
+    # Tags
+    vid_info.update({"tags": tags[index]})
+
 ## Additional information filtering
 required_title_words = user_params_dict.get("required_in_video_title")
 banned_title_words = user_params_dict.get("banned_in_video_title")
@@ -192,6 +206,9 @@ banned_title_words = user_params_dict.get("banned_in_video_title")
 min_max_durations = user_params_dict.get("allowed_durations")
 
 preferred_languages = user_params_dict.get("preferred_languages")
+
+required_tags = user_params_dict.get("required_tags")
+banned_tags = user_params_dict.get("banned_tags")
 
 # Title filtering
 if required_title_words is None and banned_title_words is None:  # No filtering
@@ -272,6 +289,40 @@ if preferred_languages is not None:
         else:
             if vid_info["language"] not in preferred_languages:
                 vid_info.update({"to add": False})
+
+# Tags filtering
+if required_tags is None and banned_tags is None:  # No filtering
+    print("nope")
+    pass
+
+elif required_tags is not None and banned_tags is None:  # Required filtering
+    for vid_ID, vid_info in videos.items():
+        if vid_info["to add"] is False or vid_info["tags"] is None:
+            continue
+        elif any(rw in vid_info["tags"] for rw in required_tags):
+            continue
+        else:
+            vid_info.update({"to add": False})
+
+elif required_tags is None and banned_tags is not None:  # Banned filtering
+    for vid_ID, vid_info in videos.items():
+        if vid_info["to add"] is False or vid_info["tags"] is None:
+            continue
+        elif not any(bw in vid_info["tags"] for bw in banned_tags):
+            continue
+        else:
+            vid_info.update({"to add": False})
+
+else:  # Required and banned filtering
+    for vid_ID, vid_info in videos.items():
+        if vid_info["to add"] is False or vid_info["tags"] is None:
+            continue
+        elif any(rw in vid_info["tags"] for rw in required_tags) and not any(
+            bw in vid_info["tags"] for bw in banned_tags
+        ):
+            continue
+        else:
+            vid_info.update({"to add": False})
 
 videos_to_add = {
     vid_ID: vid_info for vid_ID, vid_info in videos.items() if vid_info["to add"]

@@ -15,6 +15,14 @@
         "word1",
         "word2"
     ],
+    "required_tags": [
+        "word1",
+        "word2"
+    ],
+    "banned_tags": [
+        "word1",
+        "word2"
+    ],
     "allowed_durations": [
         0,
         60

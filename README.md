@@ -21,6 +21,8 @@ To get more information on setting up the API key and client secrets, you can wa
 * *banned_in_channel_name* (optional): Words that must not be in channel names, typically channel names themselves (case sensitive). Videos from channels containing any of the words of this list in their name will not be added.
 * *required_in_video_title* (optional): Words that must be in video titles (case sensitive). Videos with titles not containing any of the words of this list will not be added.
 * *banned_in_video_title* (optional): Words that must not be in video titles (case sensitive). Videos with titles containing any of the words of this list will not be added.
+* *required_tags* (optional): Tags that must be associated with the videos (case sensitive).
+* *banned_tags* (optional): Tags that must not be associated with the videos (case sensitive).
 * *allowed_durations* (optional): Minimum and maximum video durations (in minutes).
 * *preferred_languages* (optional): Languages the videos need to be in. See this [wikipedia page](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) for the language codes. Videos with an unspecified language will be added as a precaution.
 * *keep_shorts* (required): Determines whether to add shorts.

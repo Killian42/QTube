@@ -1,17 +1,19 @@
 ### Libraries
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
+import datetime as dt
+import isodate
+import json
 import os
 import pickle
-import datetime as dt
-import time
-import json
-import isodate
+import re
+import requests
 import sys
+import time
 
 
 ### Functions
@@ -80,6 +82,12 @@ def check_user_params(params_dict: dict) -> bool:
             isinstance(item, str) and len(item) == 2 and item.isalpha()
             for item in params_dict.get("preferred_languages")
         ),
+        # Tags
+        params_dict.get("required_tags") is None
+        or all(isinstance(item, str) for item in params_dict.get("required_tags")),
+        # Tags
+        params_dict.get("banned_tags") is None
+        or all(isinstance(item, str) for item in params_dict.get("banned_tags")),
     ]
 
     ok = all(checks)
@@ -118,6 +126,35 @@ def check_playlist_id(youtube, user_info: dict, test_playlist_ID: str) -> bool:
             "Invalid playlist ID: This playlist does not exist. Check the parameters file."
         )
         return False
+
+
+def check_version() -> tuple[str]:
+    """Checks that the local software version is up to date with the latest GitHub release
+
+    Returns:
+        version, latest_release (tuple[str]): local version and latest release
+    """
+    setup_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "setup.py")
+    )
+
+    with open(setup_path) as setup_file:
+        contents = setup_file.read()
+
+        version = re.search(r"version=['\"]([^'\"]+)['\"]", contents).group(1)
+
+        github_url = "https://api.github.com/repos/Killian42/QTube/releases/latest"
+
+        try:
+            response = requests.get(github_url)
+            response.raise_for_status()  # Raise an error for non-200 status codes
+            tag = response.json().get("tag_name")
+            latest_release = tag.split("v")[-1]
+        except requests.RequestException as e:
+            latest_release = None
+            print(f"Failed to check the latest release:\n{e}")
+
+    return version, latest_release
 
 
 def handle_http_errors(verbosity: list[str], func, *args, **kwargs):
