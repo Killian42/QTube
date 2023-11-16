@@ -11,7 +11,14 @@ if version != latest_release and latest_release is not None:
 
 ### User parameters loading
 ## File opening
-user_params_dict = json.load(open("user_params.json"))
+try:
+    user_params_dict = json.load(open("user_params.json"))
+except FileNotFoundError:
+    print(f"Error: user_params.json file not found.\nCheck that your parameter file is properly named.")
+    sys.exit()
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
+    sys.exit()
 
 ## Parameters checking
 if check_user_params(user_params_dict) is not True:
@@ -179,6 +186,9 @@ shorts = is_short(response=responses)
 # Languages retrieving
 languages = get_languages(response=responses)
 
+# Descriptions retrieving
+descriptions = get_descriptions(response=responses)
+
 # Tags retrieving
 tags = get_tags(response=responses)
 
@@ -196,6 +206,9 @@ for index, (vid_ID, vid_info) in enumerate(videos.items()):
     # Language
     vid_info.update({"language": languages[index]})
 
+    # Descriptions
+    vid_info.update({"description": descriptions[index]})
+
     # Tags
     vid_info.update({"tags": tags[index]})
 
@@ -206,6 +219,9 @@ banned_title_words = user_params_dict.get("banned_in_video_title")
 min_max_durations = user_params_dict.get("allowed_durations")
 
 preferred_languages = user_params_dict.get("preferred_languages")
+
+required_in_description = user_params_dict.get("required_in_description")
+banned_in_description = user_params_dict.get("banned_in_description")
 
 required_tags = user_params_dict.get("required_tags")
 banned_tags = user_params_dict.get("banned_tags")
@@ -290,9 +306,41 @@ if preferred_languages is not None:
             if vid_info["language"] not in preferred_languages:
                 vid_info.update({"to add": False})
 
+# Description filtering
+if required_in_description is None and banned_in_description is None:  # No filtering
+    pass
+
+elif required_in_description is not None and banned_in_description is None:  # Required filtering
+    for vid_ID, vid_info in videos.items():
+        if vid_info["to add"] is False or vid_info["description"] is None:
+            continue
+        elif any(rw in vid_info["description"] for rw in required_in_description):
+            continue
+        else:
+            vid_info.update({"to add": False})
+
+elif required_in_description is None and banned_in_description is not None:  # Banned filtering
+    for vid_ID, vid_info in videos.items():
+        if vid_info["to add"] is False or vid_info["description"] is None:
+            continue
+        elif not any(bw in vid_info["description"] for bw in banned_in_description):
+            continue
+        else:
+            vid_info.update({"to add": False})
+
+else:  # Required and banned filtering
+    for vid_ID, vid_info in videos.items():
+        if vid_info["to add"] is False or vid_info["description"] is None:
+            continue
+        elif any(rw in vid_info["description"] for rw in required_in_description) and not any(
+            bw in vid_info["description"] for bw in banned_in_description
+        ):
+            continue
+        else:
+            vid_info.update({"to add": False})
+
 # Tags filtering
 if required_tags is None and banned_tags is None:  # No filtering
-    print("nope")
     pass
 
 elif required_tags is not None and banned_tags is None:  # Required filtering

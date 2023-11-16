@@ -15,6 +15,14 @@
         "word1",
         "word2"
     ],
+    "required_in_description":[
+        "word1",
+        "word2"
+    ],
+    "banned_in_description":[
+        "word1",
+        "word2"
+    ],
     "required_tags": [
         "word1",
         "word2"
