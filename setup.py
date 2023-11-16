@@ -5,8 +5,8 @@ with open("README.md", "r") as f:
 
 setup(
     name="QTube",
-    version="1.4.0",
-    description="Automatic adding of Youtube videos to a playlist.",
+    version="1.5.0",
+    description="Automatically add Youtube videos to a playlist.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",
