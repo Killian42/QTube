@@ -56,7 +56,7 @@ I would recommend creating a task to execute the program once a day.
 
 ### User-defined parameters
 |Parameter|Optional|Description|Possible values|
-|--|:--:|:--:|--|
+|--|:--:|:--:|:--:|
 |`required_in_channel_name`|Yes|Words that must be in channel names, typically channel names themselves. Videos from channels not containing any of the words of this list in their name will not be added.|Any string|
 |`banned_in_channel_name`|Yes|Words that must not be in channel names, typically channel names themselves. Videos from channels containing any of the words of this list in their name will not be added.|Any string|
 |`required_in_video_title`|Yes|Words that must be in video titles. Videos with titles not containing any of the words of this list will not be added.|Any string|
