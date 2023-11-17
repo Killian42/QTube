@@ -4,7 +4,7 @@
    <br>
 </h1>
 
-<h4 align="center">Automatically add Youtube videos to a playlist.</h4>
+<h3 align="center">Automatically add Youtube videos to a playlist.</h3>
 
 <p align="center">
    <a href="https://www.repostatus.org/#active"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." /></a>
