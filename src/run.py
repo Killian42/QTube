@@ -14,7 +14,9 @@ if version != latest_release and latest_release is not None:
 try:
     user_params_dict = json.load(open("user_params.json"))
 except FileNotFoundError:
-    print(f"Error: user_params.json file not found.\nCheck that your parameter file is properly named.")
+    print(
+        f"Error: user_params.json file not found.\nCheck that your parameter file is properly named."
+    )
     sys.exit()
 except Exception as e:
     print(f"An unexpected error occurred: {e}")
@@ -310,7 +312,9 @@ if preferred_languages is not None:
 if required_in_description is None and banned_in_description is None:  # No filtering
     pass
 
-elif required_in_description is not None and banned_in_description is None:  # Required filtering
+elif (
+    required_in_description is not None and banned_in_description is None
+):  # Required filtering
     for vid_ID, vid_info in videos.items():
         if vid_info["to add"] is False or vid_info["description"] is None:
             continue
@@ -319,7 +323,9 @@ elif required_in_description is not None and banned_in_description is None:  # R
         else:
             vid_info.update({"to add": False})
 
-elif required_in_description is None and banned_in_description is not None:  # Banned filtering
+elif (
+    required_in_description is None and banned_in_description is not None
+):  # Banned filtering
     for vid_ID, vid_info in videos.items():
         if vid_info["to add"] is False or vid_info["description"] is None:
             continue
@@ -332,9 +338,9 @@ else:  # Required and banned filtering
     for vid_ID, vid_info in videos.items():
         if vid_info["to add"] is False or vid_info["description"] is None:
             continue
-        elif any(rw in vid_info["description"] for rw in required_in_description) and not any(
-            bw in vid_info["description"] for bw in banned_in_description
-        ):
+        elif any(
+            rw in vid_info["description"] for rw in required_in_description
+        ) and not any(bw in vid_info["description"] for bw in banned_in_description):
             continue
         else:
             vid_info.update({"to add": False})
