@@ -1,6 +1,6 @@
 <h1 align="center">
    <br>
-   <a href="https://github.com/Killian42/QTube/releases/latest"><img src="https://github.com/Killian42/QTube/blob/main/logo.png" alt="QTube" width="500"></a>
+   <a href="https://github.com/Killian42/QTube/releases/latest"><img src="logo.png" alt="QTube" width="500"></a>
    <br>
 </h1>
 
@@ -46,9 +46,9 @@ Each of these rules is based on putting some kind of constraint on video propert
 ## How to use
 Before using this software, you first need to get a Youtube API key and create a web app to get a client secrets file (that should look like [this](src/client_secrets_template.json)). This [Corey Schafer video](https://www.youtube.com/watch?v=vQQEaSnQ_bs) goes through the process step by step.
 
-Once that's done, either clone this repository or download the ZIP archive. Then, copy and rename the [user parameters template](src/user_params_template.json) file to *user_params.json*. Modify it so that it fits your needs (more information on how in the [following table](https://github.com/Killian42/QTube/blob/main/README.md#user-defined-parameters) and in the [example section](https://github.com/Killian42/QTube/blob/main/README.md#example)).
+Once that's done, either clone this repository or download the ZIP archive. Then, copy and rename the [user parameters template](src/user_params_template.json) file to *user_params.json*. Modify it so that it fits your needs (more information on how in the [following table](README.md#user-defined-parameters) and in the [example section](README.md#example)).
 
-Verify that you have all of the dependencies installed (see the [requirements](requirements.txt) file)
+Verify that you have all of the dependencies installed (see the [requirements](requirements.txt) file).
 
 Finally, execute the [run.py](src/run.py) file to start the software.
 
@@ -75,7 +75,7 @@ I would recommend creating a task to execute the program once a day.
 All parameters are case-sensitive and if you do not want to use an optional parameter, replace its value with *null* or delete the entry.
 
 ### Requirements
-See the [requirements](https://github.com/Killian42/QTube/blob/main/requirements.txt) file.
+See the [requirements](requirements.txt) file.
 
 ## Example
 Let's say that you don't want to miss any of the less than 15 minutes *$1 vs.* MrBeast videos. Then you would need the following *user_params.json* file:
@@ -108,4 +108,4 @@ You can reach me by [email](mailto:killian.lebreton35@gmail.com). Please put *QT
 Big thanks [Corey Schafer](https://github.com/CoreyMSchafer) for his great tutorials, as well as for providing the OAuth snippets used in this software.
 
 ## License
-This project is licensed under the [MIT License](https://github.com/Killian42/QTube/blob/main/LICENSE.txt).
+This project is licensed under the [MIT License](LICENSE.txt).
