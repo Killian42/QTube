@@ -4,4 +4,4 @@ isodate==0.6.1
 numpy==1.24.3
 protobuf==4.25.0
 Requests==2.31.0
-setuptools==65.5.0
+setuptools==65.5.1
