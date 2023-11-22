@@ -70,7 +70,7 @@ I would recommend creating a task to execute the program once a day.
 |`keep_shorts`|No|Determines whether to add shorts.|boolean
 |`keep_duplicates`|No|Determines whether to add videos that are already in the playlist.|boolean
 |`upload_playlist_ID`|No|ID of the playlist the videos will be added to. Playlist IDs are found at the end of their URL: `https://www.youtube.com/playlist?list=*playlist_ID*`|Playlist ID
-|`verbosity`|No|Controls how much information is shown in the terminal. Options can be combined, so that selecting each option gives the same result as selecting *all*.|*all*: Everything is shown.<br>*none*: Nothing is shown.<br>*func*: Only information regarding function execution is shown.<br>*credentials*: Only information regarding credentials is shown (loading, retrieving and saving).<br>*videos*: Only information regarding added videos is shown (number, channel names and video titles).
+|`verbosity`|No|Controls how much information is shown in the terminal. Options can be combined, so that selecting each option gives the same result as selecting *all*. <br>1: Everything is shown.<br>2: Nothing is shown.<br>3: Only information regarding function execution is shown.<br>4: Only information regarding credentials is shown (loading, retrieving and saving).<br>5: Only information regarding added videos is shown (number, channel names and video titles).|<br>*all*<sup> 1 </sup>, <br>*none*<sup> 2 </sup> , <br>*func*<sup> 3 </sup>, <br>*credentials*<sup> 4 </sup> ,<br>*videos*<sup> 5 </sup>.
 
 All parameters are case-sensitive and if you do not want to use an optional parameter, replace its value with *null* or delete the entry.
 
@@ -83,7 +83,7 @@ Let's say that you don't want to miss any of the less than 15 minutes *$1 vs.* M
 {
 "required_in_channel_name": ["MrBeast"],
 "banned_in_channel_name": null,
-"required_in_video_title": ["$1"],
+"required_in_video_title": ["$1 vs."],
 "banned_in_video_title": null,
 "required_in_description":null,
 "banned_in_description":null,
