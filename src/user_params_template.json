@@ -36,6 +36,7 @@
         60
     ],
     "preferred_languages":["en"],
+    "run_frequency":"daily",
     "keep_shorts": false,
     "keep_duplicates": false,
     "upload_playlist_ID": "your_playlist_ID",

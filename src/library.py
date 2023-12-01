@@ -218,6 +218,7 @@ def check_user_params(params_dict: dict) -> bool:
         "zu",
     ]
     verbosity_options = ["all", "videos", "credentials", "func", "none"]
+    frequency_options = ["daily", "weekly", "monthly"]
 
     # List of checks
     checks = [
@@ -270,6 +271,12 @@ def check_user_params(params_dict: dict) -> bool:
         # Tags
         params_dict.get("banned_tags") is None
         or all(isinstance(item, str) for item in params_dict.get("banned_tags")),
+        # Upload date
+        (
+            isinstance(params_dict.get("run_frequency"), int)
+            and params_dict.get("run_frequency") > 0
+        )
+        or params_dict.get("run_frequency") in frequency_options,
     ]
 
     ok = all(checks)
@@ -560,7 +567,9 @@ def get_recent_videos(youtube, playlist_ID: str) -> dict:
 
     recent_vids = {
         item["contentDetails"]["videoId"]: {
-            "upload day": item["contentDetails"]["videoPublishedAt"].split("T")[0]
+            "upload day": dt.datetime.strptime(
+                item["contentDetails"]["videoPublishedAt"].split("T")[0], "%Y-%m-%d"
+            )
         }
         for item in response.get("items", [])
     }

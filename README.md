@@ -40,6 +40,7 @@ Each of these rules is based on putting some kind of constraint on video propert
 * Tags filtering
 * Duration filtering
 * Language filtering
+* Upload date filtering
 * Shorts filtering
 * Duplicate checking
 
@@ -52,7 +53,7 @@ Verify that you have all of the dependencies installed (see the [requirements](r
 
 Finally, execute the [run.py](src/run.py) file to start the software.
 
-I would recommend creating a task to execute the program once a day.
+I would recommend creating a task to execute the program regularly (like once a day).
 
 ### User-defined parameters
 |Parameter|Optional|Description|Possible values|
@@ -67,6 +68,7 @@ I would recommend creating a task to execute the program once a day.
 |`banned_tags`|Yes|Tags that must not be associated with the videos.|Any string|
 |`allowed_durations`|Yes|Minimum and maximum video durations (in minutes).|Two positive integers|
 |`preferred_languages`|Yes|Languages the videos need to be in. Videos with an unspecified language will be added as a precaution.|Any ISO 636-1 code ([wikipedia page](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes))|
+|`run_frequency`|No|Defines the duration, in days, of the timeframe considered by the software. Can be interpreted as the frequency the program should be run.|*daily*, *weekly*, *monthly* or any positive interger|
 |`keep_shorts`|No|Determines whether to add shorts.|boolean
 |`keep_duplicates`|No|Determines whether to add videos that are already in the playlist.|boolean
 |`upload_playlist_ID`|No|ID of the playlist the videos will be added to. Playlist IDs are found at the end of their URL: `https://www.youtube.com/playlist?list=*playlist_ID*`|Playlist ID
@@ -91,6 +93,7 @@ Let's say that you don't want to miss any of the less than 15 minutes *$1 vs.* M
 "banned_tags": null,
 "allowed_durations": [0,15],
 "preferred_languages":["en"],
+"run_frequency":"daily",
 "keep_shorts": false,
 "keep_duplicates": false,
 "upload_playlist_ID": "your_playlist_ID",

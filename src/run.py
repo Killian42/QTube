@@ -156,9 +156,19 @@ for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
 
 
 ## Upload day filtering
-yesterday = str(dt.date.today() - dt.timedelta(days=1))  # Yesterday's date
+run_freq_dict = {"daily": 1, "weekly": 7, "monthly": 30}
+today = dt.datetime.combine(dt.date.today(), dt.datetime.min.time())
+
+run_freq = user_params_dict["run_frequency"]
+
+if isinstance(run_freq, int):
+    run_freq_dict = merge_dicts([run_freq_dict, {"custom": run_freq}])
+    run_freq = "custom"
+
+upload_date_threshold = today - dt.timedelta(days=run_freq_dict[run_freq])
+
 for vid_ID, vid_info in videos.items():
-    if vid_info["upload day"] != yesterday:
+    if not (upload_date_threshold <= vid_info["upload day"] <= today):
         vid_info.update({"to add": False})
 
 
@@ -386,7 +396,7 @@ videos_to_add = {
 if videos_to_add is not None:  # Checks if there's actually videos to add
     print2(f"Number of videos added: {len(videos_to_add)}", ["all", "videos"], verb)
     for vid_ID, vid_info in videos_to_add.items():
-        handle_http_errors(verb, add_to_playlist, youtube, playlist_ID, vid_ID)
+        # handle_http_errors(verb, add_to_playlist, youtube, playlist_ID, vid_ID)
 
         print2(
             f"From {vid_info['channel name']}, the video named: {vid_info['title']} was added.",
