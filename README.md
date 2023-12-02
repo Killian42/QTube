@@ -67,8 +67,8 @@ I would recommend creating a task to execute the program regularly (like once a 
 |`required_tags`|Yes|Tags that must be associated with the videos.|Any string|
 |`banned_tags`|Yes|Tags that must not be associated with the videos.|Any string|
 |`allowed_durations`|Yes|Minimum and maximum video durations (in minutes).|Two positive integers|
-|`preferred_languages`|Yes|Languages the videos need to be in. Videos with an unspecified language will be added as a precaution.|Any ISO 636-1 code ([wikipedia page](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes))|
-|`run_frequency`|No|Defines the duration, in days, of the timeframe considered by the software. Can be interpreted as the frequency the program should be run.|*daily*, *weekly*, *monthly* or any positive interger|
+|`preferred_languages`|Yes|Languages the videos need to be in. Videos with an unspecified language will be added as a precaution.|Any [ISO 636-1 code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)|
+|`run_frequency`|No|Defines the duration, in days, of the timeframe considered by the software. Can be interpreted as the frequency the program should be run.|*daily*, *weekly*, *monthly* or any positive integer|
 |`keep_shorts`|No|Determines whether to add shorts.|boolean
 |`keep_duplicates`|No|Determines whether to add videos that are already in the playlist.|boolean
 |`upload_playlist_ID`|No|ID of the playlist the videos will be added to. Playlist IDs are found at the end of their URL: `https://www.youtube.com/playlist?list=*playlist_ID*`|Playlist ID
@@ -76,6 +76,7 @@ I would recommend creating a task to execute the program regularly (like once a 
 
 All parameters are case-sensitive and if you do not want to use an optional parameter, replace its value with *null* or delete the entry.
 
+For further information about each parameter, check the note associated with the [release](https://github.com/Killian42/QTube/releases) they were introduced in.
 ### Requirements
 See the [requirements](requirements.txt) file.
 
