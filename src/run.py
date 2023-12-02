@@ -396,7 +396,7 @@ videos_to_add = {
 if videos_to_add is not None:  # Checks if there's actually videos to add
     print2(f"Number of videos added: {len(videos_to_add)}", ["all", "videos"], verb)
     for vid_ID, vid_info in videos_to_add.items():
-        # handle_http_errors(verb, add_to_playlist, youtube, playlist_ID, vid_ID)
+        handle_http_errors(verb, add_to_playlist, youtube, playlist_ID, vid_ID)
 
         print2(
             f"From {vid_info['channel name']}, the video named: {vid_info['title']} was added.",
