@@ -38,8 +38,9 @@ Each of these rules is based on putting some kind of constraint on video propert
 * Title filtering
 * Description filtering
 * Tags filtering
-* Duration filtering
 * Language filtering
+* Duration filtering
+* Quality filtering
 * Upload date filtering
 * Shorts filtering
 * Duplicate checking
@@ -60,14 +61,18 @@ I would recommend creating a task to execute the program regularly (like once a 
 |--|:--:|:--:|:--:|
 |`required_in_channel_name`|Yes|Words that must be in channel names, typically channel names themselves. Videos from channels not containing any of the words of this list in their name will not be added.|Any string|
 |`banned_in_channel_name`|Yes|Words that must not be in channel names, typically channel names themselves. Videos from channels containing any of the words of this list in their name will not be added.|Any string|
-|`required_in_video_title`|Yes|Words that must be in video titles. Videos with titles not containing any of the words of this list will not be added.|Any string|
-|`banned_in_video_title`|Yes|Words that must not be in video titles. Videos with titles containing any of the words of this list will not be added.|Any string|
+|`required_in_title`|Yes|Words that must be in video titles. Videos with titles not containing any of the words of this list will not be added.|Any string|
+|`banned_in_title`|Yes|Words that must not be in video titles. Videos with titles containing any of the words of this list will not be added.|Any string|
 |`required_in_description`|Yes|Words that must be in video descriptions. Videos with descriptions not containing any of the words of this list will not be added.|Any string|
 |`banned_in_description`|Yes|Words that must not be in video descriptions. Videos with descriptions containing any of the words of this list will not be added.|Any string|
 |`required_tags`|Yes|Tags that must be associated with the videos.|Any string|
 |`banned_tags`|Yes|Tags that must not be associated with the videos.|Any string|
-|`allowed_durations`|Yes|Minimum and maximum video durations (in minutes).|Two positive integers|
 |`preferred_languages`|Yes|Languages the videos need to be in. Videos with an unspecified language will be added as a precaution.|Any [ISO 636-1 code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)|
+|`allowed_durations`|Yes|Minimum and maximum video durations (in minutes).|Two positive integers|
+|`lowest_definition`|Yes|Minimum definition. Videos with definitions stricly lower than this value will not be added.|*SD* or *HD*|
+|`lowest_resolution`|Yes|Minimum resolution. Videos with resolutions stricly lower than this value will not be added.|Any of [Youtube standard resolutions](https://support.google.com/youtube/answer/6375112)|
+|`lowest_framerate`|Yes|Minimum framerate. Videos with framerates stricly lower than this value will not be added.|Positive integer|
+|`preferred_dimensions`|Yes|Dimension the videos need to be in.|*2D*, *3D* or both|
 |`run_frequency`|No|Defines the duration, in days, of the timeframe considered by the software. Can be interpreted as the frequency the program should be run.|*daily*, *weekly*, *monthly* or any positive integer|
 |`keep_shorts`|No|Determines whether to add shorts.|boolean
 |`keep_duplicates`|No|Determines whether to add videos that are already in the playlist.|boolean
@@ -86,14 +91,18 @@ Let's say that you don't want to miss any of the less than 15 minutes *$1 vs.* M
 {
 "required_in_channel_name": ["MrBeast"],
 "banned_in_channel_name": null,
-"required_in_video_title": ["$1 vs."],
-"banned_in_video_title": null,
+"required_in_title": ["$1 vs."],
+"banned_in_title": null,
 "required_in_description":null,
 "banned_in_description":null,
 "required_tags": null,
 "banned_tags": null,
-"allowed_durations": [0,15],
 "preferred_languages":["en"],
+"allowed_durations": [0,15],
+"preferred_dimensions": ["2D"],
+"lowest_definition": "HD",
+"lowest_resolution": null,
+"lowest_framerate": null,
 "run_frequency":"daily",
 "keep_shorts": false,
 "keep_duplicates": false,

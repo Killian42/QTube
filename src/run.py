@@ -204,6 +204,22 @@ descriptions = get_descriptions(response=responses)
 # Tags retrieving
 tags = get_tags(response=responses)
 
+# Dimensions retrieving
+dimensions = get_dimensions(response=responses)
+
+# Definitions retrieving
+definitions = get_definitions(response=responses)
+
+# Resolutions retrieving (do not use YT API)
+lowest_resolution = user_params_dict.get("lowest_resolution")
+if lowest_resolution is not None:
+    resolutions = get_resolutions()
+
+# Framerates retrieving (do not use YT API)
+lowest_framerate = user_params_dict.get("lowest_framerate")
+if lowest_framerate is not None:
+    framerates = get_framerates()
+
 ## Videos' information updating
 for index, (vid_ID, vid_info) in enumerate(videos.items()):
     # Title
@@ -224,9 +240,23 @@ for index, (vid_ID, vid_info) in enumerate(videos.items()):
     # Tags
     vid_info.update({"tags": tags[index]})
 
+    # Definitions
+    vid_info.update({"definition": definitions[index]})
+
+    # Dimensions
+    vid_info.update({"dimension": dimensions[index]})
+
+    # Resolutions
+    if lowest_resolution is not None:
+        vid_info.update({"resolutions": resolutions[index]})
+
+    # Framerates
+    if lowest_framerate is not None:
+        vid_info.update({"framerates": framerates[index]})
+
 ## Additional information filtering
-required_title_words = user_params_dict.get("required_in_video_title")
-banned_title_words = user_params_dict.get("banned_in_video_title")
+required_title_words = user_params_dict.get("required_in_title")
+banned_title_words = user_params_dict.get("banned_in_title")
 
 min_max_durations = user_params_dict.get("allowed_durations")
 
@@ -237,6 +267,9 @@ banned_in_description = user_params_dict.get("banned_in_description")
 
 required_tags = user_params_dict.get("required_tags")
 banned_tags = user_params_dict.get("banned_tags")
+
+lowest_definition = user_params_dict.get("lowest_definition")
+preferred_dimensions = user_params_dict.get("preferred_dimensions")
 
 # Title filtering
 if required_title_words is None and banned_title_words is None:  # No filtering
@@ -316,6 +349,44 @@ if preferred_languages is not None:
             continue
         else:
             if vid_info["language"] not in preferred_languages:
+                vid_info.update({"to add": False})
+
+# Quality filtering
+if lowest_definition is not None:
+    for vid_ID, vid_info in videos.items():
+        if vid_info["to add"] is False:
+            continue
+        else:
+            if (
+                vid_info["definition"] != lowest_definition.lower()
+                and lowest_definition == "HD"
+            ):
+                vid_info.update({"to add": False})
+
+if preferred_dimensions is not None:
+    for vid_ID, vid_info in videos.items():
+        if vid_info["to add"] is False:
+            continue
+        else:
+            if vid_info["dimension"].upper() not in preferred_dimensions:
+                vid_info.update({"to add": False})
+
+if lowest_resolution is not None:
+    for vid_ID, vid_info in videos.items():
+        if vid_info["to add"] is False:
+            continue
+        else:
+            if sorted(vid_info["resolutions"])[-1] >= int(
+                lowest_resolution.split("p")[0]
+            ):
+                vid_info.update({"to add": False})
+
+if lowest_framerate is not None:
+    for vid_ID, vid_info in videos.items():
+        if vid_info["to add"] is False:
+            continue
+        else:
+            if sorted(vid_info["framerates"])[-1] >= lowest_framerate:
                 vid_info.update({"to add": False})
 
 # Description filtering

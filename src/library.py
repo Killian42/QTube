@@ -4,6 +4,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from pytube import YouTube
 
 import datetime as dt
 import isodate
@@ -34,7 +35,7 @@ def check_user_params(params_dict: dict) -> bool:
     """
 
     # Data used for comparison
-    iso_639_1_codes = [
+    languages_options = [
         "aa",
         "ab",
         "af",
@@ -219,6 +220,19 @@ def check_user_params(params_dict: dict) -> bool:
     ]
     verbosity_options = ["all", "videos", "credentials", "func", "none"]
     frequency_options = ["daily", "weekly", "monthly"]
+    definition_options = ["HD", "SD"]
+    dimension_options = ["3D", "2D"]
+    resolution_options = [
+        "144p",
+        "240p",
+        "360p",
+        "480p",
+        "720p",
+        "1080p",
+        "1440p",
+        "2160p",
+        "4320p ",
+    ]
 
     # List of checks
     checks = [
@@ -240,12 +254,12 @@ def check_user_params(params_dict: dict) -> bool:
         # Verbosity
         all(v in verbosity_options for v in params_dict.get("verbosity", ["failsafe"])),
         # Title
-        params_dict.get("required_in_video_title") is None
+        params_dict.get("required_in_title") is None
         or all(
             isinstance(item, str) for item in params_dict.get("required_in_video_title")
         ),
         # Title
-        params_dict.get("banned_in_video_title") is None
+        params_dict.get("banned_in_title") is None
         or all(
             isinstance(item, str) for item in params_dict.get("banned_in_video_title")
         ),
@@ -263,7 +277,7 @@ def check_user_params(params_dict: dict) -> bool:
         # Languages
         params_dict.get("preferred_languages") is None
         or all(
-            item in iso_639_1_codes for item in params_dict.get("preferred_languages")
+            item in languages_options for item in params_dict.get("preferred_languages")
         ),
         # Tags
         params_dict.get("required_tags") is None
@@ -277,6 +291,24 @@ def check_user_params(params_dict: dict) -> bool:
             and params_dict.get("run_frequency") > 0
         )
         or params_dict.get("run_frequency") in frequency_options,
+        # Definition
+        params_dict.get("lowest_definition") is None
+        or params_dict.get("lowest_definition") in definition_options,
+        # Dimension
+        params_dict.get("preferred_dimensions") is None
+        or all(
+            item in dimension_options
+            for item in params_dict.get("preferred_dimensions")
+        ),
+        # Resolution
+        params_dict.get("lowest_resolution") is None
+        or params_dict.get("lowest_resolution") in resolution_options,
+        # Framerate
+        params_dict.get("lowest_framerate") is None
+        or (
+            isinstance(params_dict.get("lowest_framerate"), int)
+            and params_dict.get("lowest_framerate") > 0
+        ),
     ]
 
     ok = all(checks)
@@ -775,6 +807,121 @@ def get_languages(
     ]
 
     return languages
+
+
+def get_dimensions(
+    youtube=None,
+    response: dict = None,
+    video_IDs: list[str] = None,
+    use_API: bool = False,
+) -> list[str]:
+    """Retrieves the dimension of YT videos (2D or 3D)
+
+    Args:
+        youtube (Resource): YT API resource
+        response (dict[dict]): YT API response from the make_video_request function
+        video_IDs (list[str]): List of video IDs
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+
+    Returns:
+        dimensions (list[str]): List of YT videos dimensions
+    """
+    if use_API:
+        video_IDs_str = ",".join(video_IDs)
+        response = (
+            youtube.videos().list(part="contentDetails", id=video_IDs_str).execute()
+        )
+
+    dimensions = [vid["contentDetails"]["dimension"] for vid in response["items"]]
+    return dimensions
+
+
+def get_definitions(
+    youtube=None,
+    response: dict = None,
+    video_IDs: list[str] = None,
+    use_API: bool = False,
+) -> list[str]:
+    """Retrieves the definition (sd or hd) of YT videos
+
+    Args:
+        youtube (Resource): YT API resource
+        response (dict[dict]): YT API response from the make_video_request function
+        video_IDs (list[str]): List of video IDs
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+
+    Returns:
+        definitions (list[str]): List of YT videos definitions
+    """
+    if use_API:
+        video_IDs_str = ",".join(video_IDs)
+        response = (
+            youtube.videos().list(part="contentDetails", id=video_IDs_str).execute()
+        )
+
+    definitions = [vid["contentDetails"]["definition"] for vid in response["items"]]
+    return definitions
+
+
+def get_resolutions(video_IDs: list[str] = None) -> dict[str, list[int]]:
+    """Retrieves the resolutions of YT videos.
+    This function does not rely on the YT API but on a third party
+    package (pytube), so it takes longer to run.
+
+    Args:
+        video_IDs (list[str]): List of video IDs
+
+    Returns:
+        resolutions (dict[str, list[int]]): Dictionary mapping video IDs to the resolutions
+    """
+    base_url = "http://youtube.com/watch?v"
+    resolutions = {}
+
+    for vid_ID in video_IDs:
+        url = f"{base_url}={vid_ID}"
+
+        try:
+            yt = YouTube(url)
+            vid_resolutions = list(
+                {
+                    int(stream.resolution.split("p")[0])
+                    for stream in yt.streams.filter(type="video")
+                }
+            )
+            resolutions[vid_ID] = vid_resolutions
+        except Exception as e:
+            print(f"Error processing video {vid_ID}: {e}")
+
+    return resolutions
+
+
+def get_framerates(video_IDs: list[str] = None) -> dict[str, list[int]]:
+    """Retrieves the framerates of YT videos.
+    This function does not rely on the YT API but on a third party
+    package (pytube), so it takes longer to run.
+
+    Args:
+        video_IDs (list[str]): List of video IDs
+
+    Returns:
+        framerates (dict[str, list[int]]): Dictionary mapping video IDs to the framerates
+    """
+    base_url = "http://youtube.com/watch?v"
+    framerates = {}
+
+    for vid_ID in video_IDs:
+        url = f"{base_url}={vid_ID}"
+
+        try:
+            yt = YouTube(url)
+            vid_framerates = list(
+                {stream.fps for stream in yt.streams.filter(type="video")}
+            )
+            framerates[vid_ID] = vid_framerates
+        except Exception as e:
+            print(f"Error processing video {vid_ID}: {e}")
+
+    return framerates
 
 
 def is_short(

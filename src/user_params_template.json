@@ -7,19 +7,19 @@
         "word1",
         "word2"
     ],
-    "required_in_video_title": [
+    "required_in_title": [
         "word1",
         "word2"
     ],
-    "banned_in_video_title": [
+    "banned_in_title": [
         "word1",
         "word2"
     ],
-    "required_in_description":[
+    "required_in_description": [
         "word1",
         "word2"
     ],
-    "banned_in_description":[
+    "banned_in_description": [
         "word1",
         "word2"
     ],
@@ -31,12 +31,20 @@
         "word1",
         "word2"
     ],
+    "preferred_languages": [
+        "en"
+    ],
     "allowed_durations": [
         0,
         60
     ],
-    "preferred_languages":["en"],
-    "run_frequency":"daily",
+    "lowest_definition": "HD",
+    "lowest_resolution": null,
+    "lowest_framerate": null,
+    "preferred_dimensions": [
+        "2D"
+    ],
+    "run_frequency": "daily",
     "keep_shorts": false,
     "keep_duplicates": false,
     "upload_playlist_ID": "your_playlist_ID",
