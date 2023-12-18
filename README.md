@@ -73,6 +73,7 @@ I would recommend creating a task to execute the program regularly (like once a 
 |`lowest_resolution`|Yes|Minimum resolution. Videos with resolutions stricly lower than this value will not be added.|Any of [Youtube standard resolutions](https://support.google.com/youtube/answer/6375112)|
 |`lowest_framerate`|Yes|Minimum framerate. Videos with framerates stricly lower than this value will not be added.|Positive integer|
 |`preferred_dimensions`|Yes|Dimension the videos need to be in.|*2D*, *3D* or both|
+|`preferred_projections`|Yes|Projection the videos need to be in.|*rectangular*, *360* or both|
 |`run_frequency`|No|Defines the duration, in days, of the timeframe considered by the software. Can be interpreted as the frequency the program should be run.|*daily*, *weekly*, *monthly* or any positive integer|
 |`keep_shorts`|No|Determines whether to add shorts.|boolean
 |`keep_duplicates`|No|Determines whether to add videos that are already in the playlist.|boolean
@@ -100,6 +101,7 @@ Let's say that you don't want to miss any of the less than 15 minutes *$1 vs.* M
 "preferred_languages":["en"],
 "allowed_durations": [0,15],
 "preferred_dimensions": ["2D"],
+"preferred_projections": ["rectangular"],
 "lowest_definition": "HD",
 "lowest_resolution": null,
 "lowest_framerate": null,

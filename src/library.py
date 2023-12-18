@@ -233,6 +233,7 @@ def check_user_params(params_dict: dict) -> bool:
         "2160p",
         "4320p ",
     ]
+    projections_options = ["rectangular", "360"]
 
     # List of checks
     checks = [
@@ -309,6 +310,9 @@ def check_user_params(params_dict: dict) -> bool:
             isinstance(params_dict.get("lowest_framerate"), int)
             and params_dict.get("lowest_framerate") > 0
         ),
+        # Projection
+        params_dict.get("preferred_projections") is None
+        or params_dict.get("preferred_projections") in projections_options,
     ]
 
     ok = all(checks)
@@ -922,6 +926,33 @@ def get_framerates(video_IDs: list[str] = None) -> dict[str, list[int]]:
             print(f"Error processing video {vid_ID}: {e}")
 
     return framerates
+
+
+def get_projections(
+    youtube=None,
+    response: dict = None,
+    video_IDs: list[str] = None,
+    use_API: bool = False,
+) -> list[str]:
+    """Retrieves the projection (360 or rectangular) of YT videos
+
+    Args:
+        youtube (Resource): YT API resource
+        response (dict[dict]): YT API response from the make_video_request function
+        video_IDs (list[str]): List of video IDs
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+
+    Returns:
+        projections (list[str]): List of YT videos projections
+    """
+    if use_API:
+        video_IDs_str = ",".join(video_IDs)
+        response = (
+            youtube.videos().list(part="contentDetails", id=video_IDs_str).execute()
+        )
+
+    projections = [vid["contentDetails"]["projection"] for vid in response["items"]]
+    return projections
 
 
 def is_short(
