@@ -312,8 +312,12 @@ def check_user_params(params_dict: dict) -> bool:
         ),
         # Projection
         params_dict.get("preferred_projections") is None
-        or params_dict.get("preferred_projections") in projections_options,
+        or all(
+            item in projections_options
+            for item in params_dict.get("preferred_projections")
+        ),
     ]
+    print(checks)
 
     ok = all(checks)
 
