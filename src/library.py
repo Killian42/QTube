@@ -317,7 +317,6 @@ def check_user_params(params_dict: dict) -> bool:
             for item in params_dict.get("preferred_projections")
         ),
     ]
-    print(checks)
 
     ok = all(checks)
 
