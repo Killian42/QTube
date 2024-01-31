@@ -39,6 +39,7 @@ Each of these rules is based on putting some kind of constraint on video propert
 * Description filtering
 * Tags filtering
 * Language filtering
+* Captions filtering
 * Duration filtering
 * Quality filtering
 * Upload date filtering
@@ -67,7 +68,9 @@ I would recommend creating a task to execute the program regularly (like once a 
 |`banned_in_description`|Yes|Words that must not be in video descriptions. Videos with descriptions containing any of the words of this list will not be added.|Any string|
 |`required_tags`|Yes|Tags that must be associated with the videos.|Any string|
 |`banned_tags`|Yes|Tags that must not be associated with the videos.|Any string|
-|`preferred_languages`|Yes|Languages the videos need to be in. Videos with an unspecified language will be added as a precaution.|Any [ISO 636-1 code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)|
+|`preferred_languages`|Yes|Languages the videos need to be in. Videos with an unspecified language will be added as a precaution.|Any [ISO 639-1 code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)|
+|`require_captions`|No|Determines whether to add videos with no captions.|boolean|
+|`caption_options`|Yes|Caption properties such as language, track kind, audio type and accessibility parameters|See [Youtube captions docs](https://developers.google.com/youtube/v3/docs/captions)|
 |`allowed_durations`|Yes|Minimum and maximum video durations (in minutes).|Two positive integers|
 |`lowest_definition`|Yes|Minimum definition. Videos with definitions stricly lower than this value will not be added.|*SD* or *HD*|
 |`lowest_resolution`|Yes|Minimum resolution. Videos with resolutions stricly lower than this value will not be added.|Any of [Youtube standard resolutions](https://support.google.com/youtube/answer/6375112)|
@@ -75,10 +78,10 @@ I would recommend creating a task to execute the program regularly (like once a 
 |`preferred_dimensions`|Yes|Dimension the videos need to be in.|*2D*, *3D* or both|
 |`preferred_projections`|Yes|Projection the videos need to be in.|*rectangular*, *360* or both|
 |`run_frequency`|No|Defines the duration, in days, of the timeframe considered by the software. Can be interpreted as the frequency the program should be run.|*daily*, *weekly*, *monthly* or any positive integer|
-|`keep_shorts`|No|Determines whether to add shorts.|boolean
-|`keep_duplicates`|No|Determines whether to add videos that are already in the playlist.|boolean
-|`upload_playlist_ID`|No|ID of the playlist the videos will be added to. Playlist IDs are found at the end of their URL: `https://www.youtube.com/playlist?list=*playlist_ID*`|Playlist ID
-|`verbosity`|No|Controls how much information is shown in the terminal. Options can be combined, so that selecting each option gives the same result as selecting *all*. <br>1: Everything is shown.<br>2: Nothing is shown.<br>3: Only information regarding function execution is shown.<br>4: Only information regarding credentials is shown (loading, retrieving and saving).<br>5: Only information regarding added videos is shown (number, channel names and video titles).|<br>*all*<sup> 1 </sup>, <br>*none*<sup> 2 </sup> , <br>*func*<sup> 3 </sup>, <br>*credentials*<sup> 4 </sup> ,<br>*videos*<sup> 5 </sup>.
+|`keep_shorts`|No|Determines whether to add shorts.|boolean|
+|`keep_duplicates`|No|Determines whether to add videos that are already in the playlist.|boolean|
+|`upload_playlist_ID`|No|ID of the playlist the videos will be added to. Playlist IDs are found at the end of their URL: `https://www.youtube.com/playlist?list=*playlist_ID*`|Playlist ID|
+|`verbosity`|No|Controls how much information is shown in the terminal. Options can be combined, so that selecting each option gives the same result as selecting *all*. <br>1: Everything is shown.<br>2: Nothing is shown.<br>3: Only information regarding function execution is shown.<br>4: Only information regarding credentials is shown (loading, retrieving and saving).<br>5: Only information regarding added videos is shown (number, channel names and video titles).|<br>*all*<sup> 1 </sup>, <br>*none*<sup> 2 </sup> , <br>*func*<sup> 3 </sup>, <br>*credentials*<sup> 4 </sup> ,<br>*videos*<sup> 5 </sup>.|
 
 All parameters are case-sensitive and if you do not want to use an optional parameter, replace its value with *null* or delete the entry.
 
@@ -99,6 +102,16 @@ Let's say that you don't want to miss any of the less than 15 minutes *$1 vs.* M
 "required_tags": null,
 "banned_tags": null,
 "preferred_languages":["en"],
+"require_captions":false,
+"caption_options":{
+    "trackKind":["asr","standard"],
+    "language":["en"],
+    "audioTrackType":["primary","unknown"],
+    "isCC":false,
+    "isLarge":false,
+    "isEasyReader":false,
+    "isAutoSynced":false,
+    "status":["serving"]},
 "allowed_durations": [0,15],
 "preferred_dimensions": ["2D"],
 "preferred_projections": ["rectangular"],

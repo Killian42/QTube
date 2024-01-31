@@ -15,6 +15,7 @@ import re
 import requests
 import sys
 import time
+import string
 
 
 ### Functions
@@ -234,6 +235,16 @@ def check_user_params(params_dict: dict) -> bool:
         "4320p ",
     ]
     projections_options = ["rectangular", "360"]
+    caption_options = [
+        "trackKind",
+        "languages",
+        "audioTrackType",
+        "isCC",
+        "isLarge",
+        "isEasyReader",
+        "isAutoSynced",
+        "status",
+    ]
 
     # List of checks
     checks = [
@@ -315,6 +326,16 @@ def check_user_params(params_dict: dict) -> bool:
         or all(
             item in projections_options
             for item in params_dict.get("preferred_projections")
+        ),
+        # Caption
+        isinstance(params_dict.get("require_captions"), bool),
+        # Caption
+        params_dict.get("caption_options") is None
+        and params_dict.get("require_captions") is False
+        or isinstance(params_dict.get("caption_options"), dict)
+        and all(
+            item in caption_options
+            for item in params_dict.get("caption_options").keys()
         ),
     ]
 
@@ -420,7 +441,7 @@ def handle_http_errors(verbosity: list[str], func, *args, **kwargs):
                 and err.status_code == 403
             ):  # Quota limit exceeded, the program cannot continue
                 print(
-                    "Your quota limit has been reached, please try again in a few hours. \nYou can check your usage at the following url: https://console.cloud.google.com/apis/dashboard"
+                    "The quota limit has been reached, please try again later. Check your usage at the following urls: \nUsed quota: https://console.cloud.google.com/iam-admin/quotas?pageState=(%22allQuotasTable%22:(%22c%22:%5B%22displayDimensions%22,%22serviceName%22,%22metricName%22,%22limitName%22,%22monitoredResource%22%5D)) \nCalls made: https://console.cloud.google.com/apis/dashboard"
                 )
                 sys.exit()
             else:  # General case
@@ -499,6 +520,46 @@ def merge_dicts(list_of_dicts: list) -> dict:
         (dict): single dictionary containing the the dictionaries from the list
     """
     return {key: value for d in list_of_dicts for key, value in d.items()}
+
+
+def strip_emojis(text):
+    """Strips emojis from a string
+
+    Args:
+        text (str): Text string containing emojis
+
+    Returns:
+        (str): Same Text string, but without any emojis
+    """
+    emoji_pattern = re.compile(
+        "["
+        "\U0001F600-\U0001F64F"  # emoticons
+        "\U0001F300-\U0001F5FF"  # symbols & pictographs
+        "\U0001F680-\U0001F6FF"  # transport & map symbols
+        "\U0001F700-\U0001F77F"  # alchemical symbols
+        "\U0001F780-\U0001F7FF"  # Geometric Shapes Extended
+        "\U0001F800-\U0001F8FF"  # Supplemental Arrows-C
+        "\U0001F900-\U0001F9FF"  # Supplemental Symbols and Pictographs
+        "\U0001FA00-\U0001FA6F"  # Chess Symbols
+        "\U0001FA70-\U0001FAFF"  # Symbols and Pictographs Extended-A
+        "\U00002702-\U000027B0"
+        "\U000024C2-\U0001F251"
+        "]+",
+        flags=re.UNICODE,
+    )
+    return emoji_pattern.sub(r"", text)
+
+
+def strip_punctuation(text):
+    """Strips punctuation from a string
+
+    Args:
+        text (str): Text string containing punctuation
+
+    Returns:
+        (str): Same text string, but without any punctuation
+    """
+    return text.translate(str.maketrans("", "", string.punctuation))
 
 
 ## Youtube API interactions
@@ -958,6 +1019,33 @@ def get_projections(
     return projections
 
 
+def has_captions(
+    youtube=None,
+    response: dict = None,
+    video_IDs: list[str] = None,
+    use_API: bool = False,
+) -> list[bool]:
+    """Determines if YT videos have captions
+
+    Args:
+        youtube (Resource): YT API resource
+        response (dict[dict]): YT API response from the make_video_request function
+        video_IDs (list[str]): List of video IDs
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+
+    Returns:
+        captions (list[bool]): True if the video has captions, False otherwise
+    """
+    if use_API:
+        video_IDs_str = ",".join(video_IDs)
+        response = (
+            youtube.videos().list(part="contentDetails", id=video_IDs_str).execute()
+        )
+
+    captions = [vid["contentDetails"]["caption"] for vid in response["items"]]
+    return captions
+
+
 def is_short(
     youtube=None,
     response: dict = None,
@@ -980,6 +1068,55 @@ def is_short(
     is_short = [True if length <= 65.0 else False for length in durations]
 
     return is_short
+
+
+# Captions
+def make_caption_requests(youtube, video_IDs: list[str]) -> dict[dict]:
+    """Retrieves API caption responses of a list of YT videos
+
+    Args:
+        youtube (Resource): YT API resource
+        video_IDs (list[str]): List of video IDs
+
+    Returns:
+        responses_dict (dict[dict]): Dictionary with video IDs as keys and YT API caption responses as values
+    """
+    responses_dict = {
+        video_ID: youtube.captions().list(part="snippet", videoId=video_ID).execute()
+        for video_ID in video_IDs
+    }
+
+    return responses_dict
+
+
+def get_captions(
+    youtube=None,
+    response: dict = None,
+    video_IDs: list[str] = None,
+    use_API: bool = False,
+) -> dict[dict]:
+    """Retrieves the captions of YT videos
+
+    Args:
+        youtube (Resource): YT API resource
+        response (dict[dict]): YT API response from the make_caption_request function
+        video_IDs (list[str]): List of video IDs
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+
+    Returns:
+        captions_dict (dict[dict]): Dictionary with video IDs as keys and caption dictionaries as values
+    """
+    if use_API:
+        response = make_caption_requests(youtube, video_IDs)
+
+    captions_dict = {}
+    for video_ID, vid_resp in response.items():
+        caption_dict = {
+            caption["id"]: caption["snippet"] for caption in vid_resp.get("items", [])
+        }
+        captions_dict.update({video_ID: caption_dict})
+
+    return captions_dict
 
 
 # Actions

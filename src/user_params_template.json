@@ -34,6 +34,17 @@
     "preferred_languages": [
         "en"
     ],
+    "require_captions":false,
+    "caption_options":{
+        "trackKind":["asr","standard"],
+        "language":["en"],
+        "audioTrackType":["primary","unknown"],
+        "isCC":false,
+        "isLarge":false,
+        "isEasyReader":false,
+        "isAutoSynced":false,
+        "status":["serving"]
+    },
     "allowed_durations": [
         0,
         60

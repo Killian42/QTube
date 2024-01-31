@@ -55,7 +55,11 @@ if not credentials or not credentials.valid:
     else:
         print2("Fetching New Tokens...", ["all", "credentials"], verb)
         flow = InstalledAppFlow.from_client_secrets_file(
-            "client_secrets.json", scopes=["https://www.googleapis.com/auth/youtube"]
+            "client_secrets.json",
+            scopes=[
+                "https://www.googleapis.com/auth/youtube",
+                "https://www.googleapis.com/auth/youtube.force-ssl",
+            ],
         )
 
         flow.run_local_server(
@@ -134,7 +138,7 @@ for sub_dict in split_channels:
 
 
 ## Dictionnary of the latest videos from selected channels
-videos = {}
+recent_videos = {}
 for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
     latest_partial = handle_http_errors(verb, get_recent_videos, youtube, playlist_Id)
 
@@ -142,7 +146,7 @@ for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
         print2(f"Channel {ch_name} has no public videos.", ["all", "func"], verb)
         continue
 
-    videos.update(
+    recent_videos.update(
         {
             vid_id: {
                 **vid_info,
@@ -167,9 +171,13 @@ if isinstance(run_freq, int):
 
 upload_date_threshold = today - dt.timedelta(days=run_freq_dict[run_freq])
 
-for vid_ID, vid_info in videos.items():
+for vid_ID, vid_info in recent_videos.items():
     if not (upload_date_threshold <= vid_info["upload day"] <= today):
         vid_info.update({"to add": False})
+
+videos = {
+    vid_ID: vid_info for vid_ID, vid_info in recent_videos.items() if vid_info["to add"]
+}
 
 
 ## Additional information retrieving on the videos
@@ -210,15 +218,25 @@ dimensions = get_dimensions(response=responses)
 # Definitions retrieving
 definitions = get_definitions(response=responses)
 
-# Resolutions retrieving (do not use YT API)
+# Resolutions retrieving (does not use YT API)
 lowest_resolution = user_params_dict.get("lowest_resolution")
 if lowest_resolution is not None:
-    resolutions = get_resolutions()
+    resolutions = get_resolutions(video_IDs=responses.keys())
 
-# Framerates retrieving (do not use YT API)
+# Framerates retrieving (does not use YT API)
 lowest_framerate = user_params_dict.get("lowest_framerate")
 if lowest_framerate is not None:
-    framerates = get_framerates()
+    framerates = get_framerates(video_IDs=responses.keys())
+
+## Caption information retrieving
+need_captions = user_params_dict["require_captions"]
+if need_captions:
+    captions_responses = handle_http_errors(
+        verb, make_caption_requests, youtube, videos.keys()
+    )
+
+    captions = get_captions(response=captions_responses)
+
 
 ## Videos' information updating
 for index, (vid_ID, vid_info) in enumerate(videos.items()):
@@ -253,6 +271,10 @@ for index, (vid_ID, vid_info) in enumerate(videos.items()):
     # Framerates
     if lowest_framerate is not None:
         vid_info.update({"framerates": framerates[index]})
+
+    # Captions
+    if need_captions:
+        vid_info.update({"captions": captions[vid_ID]})
 
 ## Additional information filtering
 required_title_words = user_params_dict.get("required_in_title")
@@ -459,6 +481,34 @@ else:  # Required and banned filtering
         else:
             vid_info.update({"to add": False})
 
+# Captions filtering
+if need_captions:
+    captions_options = user_params_dict["caption_options"]
+    for vid_ID, vid_info in videos.items():
+        if vid_info["to add"] is False:
+            continue
+
+        captions = vid_info["captions"].values()
+
+        # Check that at least one caption is good
+        if not any(
+            all(
+                (
+                    caption["trackKind"] in captions_options["trackKind"],
+                    caption["language"] in captions_options["languages"],
+                    caption["audioTrackType"] in captions_options["audioTrackType"],
+                    caption["status"] in captions_options["status"],
+                    caption["isCC"] == captions_options["isCC"],
+                    caption["isLarge"] == captions_options["isLarge"],
+                    caption["isEasyReader"] == captions_options["isEasyReader"],
+                    caption["isAutoSynced"] == captions_options["isAutoSynced"],
+                )
+            )
+            for caption in captions
+        ):
+            vid_info.update({"to add": False})
+
+## Selecting correct videos
 videos_to_add = {
     vid_ID: vid_info for vid_ID, vid_info in videos.items() if vid_info["to add"]
 }
