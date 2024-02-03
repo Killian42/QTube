@@ -39,7 +39,7 @@ Each of these rules is based on putting some kind of constraint on video propert
 * Description filtering
 * Tags filtering
 * Language filtering
-* Captions filtering
+* Caption filtering
 * Duration filtering
 * Quality filtering
 * Upload date filtering
@@ -70,7 +70,7 @@ I would recommend creating a task to execute the program regularly (like once a 
 |`banned_tags`|Yes|Tags that must not be associated with the videos.|Any string|
 |`preferred_languages`|Yes|Languages the videos need to be in. Videos with an unspecified language will be added as a precaution.|Any [ISO 639-1 code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)|
 |`require_captions`|No|Determines whether to add videos with no captions.|boolean|
-|`caption_options`|Yes|Caption properties such as language, track kind, audio type and accessibility parameters|See [Youtube captions docs](https://developers.google.com/youtube/v3/docs/captions)|
+|`caption_options`|Yes|Caption properties such as language, track kind, audio type and accessibility parameters.|See [Youtube captions docs](https://developers.google.com/youtube/v3/docs/captions)|
 |`allowed_durations`|Yes|Minimum and maximum video durations (in minutes).|Two positive integers|
 |`lowest_definition`|Yes|Minimum definition. Videos with definitions stricly lower than this value will not be added.|*SD* or *HD*|
 |`lowest_resolution`|Yes|Minimum resolution. Videos with resolutions stricly lower than this value will not be added.|Any of [Youtube standard resolutions](https://support.google.com/youtube/answer/6375112)|
