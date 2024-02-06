@@ -15,6 +15,9 @@
         "word1",
         "word2"
     ],
+    "ignore_title_emojis":false,
+    "ignore_title_punctuation":false,
+    "ignore_title_case":false,
     "required_in_description": [
         "word1",
         "word2"

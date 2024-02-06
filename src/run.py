@@ -276,10 +276,41 @@ for index, (vid_ID, vid_info) in enumerate(videos.items()):
     if need_captions:
         vid_info.update({"captions": captions[vid_ID]})
 
-## Additional information filtering
+## Title preparing
+no_emojis = user_params_dict.get("ignore_title_emojis")
+no_punctuation = user_params_dict.get("ignore_title_punctuation")
+no_case = user_params_dict.get("ignore_title_case")
 required_title_words = user_params_dict.get("required_in_title")
 banned_title_words = user_params_dict.get("banned_in_title")
 
+if no_emojis:
+    for vid_info in videos.values():
+        vid_info["title"] = strip_emojis(vid_info["title"])
+    if required_title_words is not None:
+        required_title_words = [strip_emojis(word) for word in required_title_words]
+    if banned_title_words is not None:
+        banned_title_words = [strip_emojis(word) for word in banned_title_words]
+
+if no_punctuation:
+    for vid_info in videos.values():
+        vid_info["title"] = strip_punctuation(vid_info["title"])
+    if required_title_words is not None:
+        required_title_words = [
+            strip_punctuation(word) for word in required_title_words
+        ]
+    if banned_title_words is not None:
+        banned_title_words = [strip_punctuation(word) for word in banned_title_words]
+
+if no_case:
+    for vid_info in videos.values():
+        vid_info["title"] = make_lowercase(vid_info["title"])
+    if required_title_words is not None:
+        required_title_words = [make_lowercase(word) for word in required_title_words]
+    if banned_title_words is not None:
+        banned_title_words = [make_lowercase(word) for word in banned_title_words]
+
+
+## Additional information filtering
 min_max_durations = user_params_dict.get("allowed_durations")
 
 preferred_languages = user_params_dict.get("preferred_languages")
@@ -483,7 +514,7 @@ else:  # Required and banned filtering
 
 # Captions filtering
 if need_captions:
-    captions_options = user_params_dict["caption_options"]
+    captions_options = user_params_dict.get("caption_options")
     for vid_ID, vid_info in videos.items():
         if vid_info["to add"] is False:
             continue
@@ -494,14 +525,14 @@ if need_captions:
         if not any(
             all(
                 (
-                    caption["trackKind"] in captions_options["trackKind"],
-                    caption["language"] in captions_options["languages"],
-                    caption["audioTrackType"] in captions_options["audioTrackType"],
-                    caption["status"] in captions_options["status"],
-                    caption["isCC"] == captions_options["isCC"],
-                    caption["isLarge"] == captions_options["isLarge"],
-                    caption["isEasyReader"] == captions_options["isEasyReader"],
-                    caption["isAutoSynced"] == captions_options["isAutoSynced"],
+                    caption["trackKind"] in captions_options.get("trackKind"),
+                    caption["language"] in captions_options.get("languages"),
+                    caption["audioTrackType"] in captions_options.get("audioTrackType"),
+                    caption["status"] in captions_options.get("status"),
+                    caption["isCC"] == captions_options.get("isCC"),
+                    caption["isLarge"] == captions_options.get("isLarge"),
+                    caption["isEasyReader"] == captions_options.get("isEasyReader"),
+                    caption["isAutoSynced"] == captions_options.get("isAutoSynced"),
                 )
             )
             for caption in captions

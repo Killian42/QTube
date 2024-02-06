@@ -64,6 +64,9 @@ I would recommend creating a task to execute the program regularly (like once a 
 |`banned_in_channel_name`|Yes|Words that must not be in channel names, typically channel names themselves. Videos from channels containing any of the words of this list in their name will not be added.|Any string|
 |`required_in_title`|Yes|Words that must be in video titles. Videos with titles not containing any of the words of this list will not be added.|Any string|
 |`banned_in_title`|Yes|Words that must not be in video titles. Videos with titles containing any of the words of this list will not be added.|Any string|
+|`ignore_title_emojis`|No|Determines whether emojis are ignored in video titles.|boolean|
+|`ignore_title_punctuation`|No|Determines whether punctuation is ignored in video titles.|boolean|
+|`ignore_title_case`|No|Determines whether case is ignored in video titles.|boolean|
 |`required_in_description`|Yes|Words that must be in video descriptions. Videos with descriptions not containing any of the words of this list will not be added.|Any string|
 |`banned_in_description`|Yes|Words that must not be in video descriptions. Videos with descriptions containing any of the words of this list will not be added.|Any string|
 |`required_tags`|Yes|Tags that must be associated with the videos.|Any string|
@@ -83,7 +86,7 @@ I would recommend creating a task to execute the program regularly (like once a 
 |`upload_playlist_ID`|No|ID of the playlist the videos will be added to. Playlist IDs are found at the end of their URL: `https://www.youtube.com/playlist?list=*playlist_ID*`|Playlist ID|
 |`verbosity`|No|Controls how much information is shown in the terminal. Options can be combined, so that selecting each option gives the same result as selecting *all*. <br>1: Everything is shown.<br>2: Nothing is shown.<br>3: Only information regarding function execution is shown.<br>4: Only information regarding credentials is shown (loading, retrieving and saving).<br>5: Only information regarding added videos is shown (number, channel names and video titles).|<br>*all*<sup> 1 </sup>, <br>*none*<sup> 2 </sup> , <br>*func*<sup> 3 </sup>, <br>*credentials*<sup> 4 </sup> ,<br>*videos*<sup> 5 </sup>.|
 
-All parameters are case-sensitive and if you do not want to use an optional parameter, replace its value with *null* or delete the entry.
+All parameters are case-sensitive by default and if you do not want to use an optional parameter, replace its value with *null* or delete the entry.
 
 For further information about each parameter, check the note associated with the [release](https://github.com/Killian42/QTube/releases) they were introduced in.
 ### Requirements
@@ -96,6 +99,9 @@ Let's say that you don't want to miss any of the less than 15 minutes *$1 vs.* M
 "required_in_channel_name": ["MrBeast"],
 "banned_in_channel_name": null,
 "required_in_title": ["$1 vs."],
+"ignore_title_emojis":false,
+"ignore_title_punctuation":false,
+"ignore_title_case":false,
 "banned_in_title": null,
 "required_in_description":null,
 "banned_in_description":null,

@@ -268,12 +268,12 @@ def check_user_params(params_dict: dict) -> bool:
         # Title
         params_dict.get("required_in_title") is None
         or all(
-            isinstance(item, str) for item in params_dict.get("required_in_video_title")
+            isinstance(item, str) for item in params_dict.get("required_in_title")
         ),
         # Title
         params_dict.get("banned_in_title") is None
         or all(
-            isinstance(item, str) for item in params_dict.get("banned_in_video_title")
+            isinstance(item, str) for item in params_dict.get("banned_in_title")
         ),
         # Duration
         params_dict.get("allowed_durations") is None
@@ -337,6 +337,12 @@ def check_user_params(params_dict: dict) -> bool:
             item in caption_options
             for item in params_dict.get("caption_options").keys()
         ),
+        # Title emojis
+        isinstance(params_dict.get("ignore_title_emojis"), bool),
+        # Title punctuation
+        isinstance(params_dict.get("ignore_title_punctuation"), bool),
+        # Title case
+        isinstance(params_dict.get("ignore_title_case"), bool),
     ]
 
     ok = all(checks)
@@ -529,7 +535,7 @@ def strip_emojis(text):
         text (str): Text string containing emojis
 
     Returns:
-        (str): Same Text string, but without any emojis
+        (str): Same Text string, but emojis are replaces by spaces
     """
     emoji_pattern = re.compile(
         "["
@@ -547,19 +553,47 @@ def strip_emojis(text):
         "]+",
         flags=re.UNICODE,
     )
-    return emoji_pattern.sub(r"", text)
+    clean_text = emoji_pattern.sub(r"", text)
+    return remove_multiple_spaces(clean_text)
 
 
 def strip_punctuation(text):
-    """Strips punctuation from a string
+    """Strips punctuation from a string (all of these characters: !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~)
 
     Args:
         text (str): Text string containing punctuation
 
     Returns:
-        (str): Same text string, but without any punctuation
+        (str): Same text string, but the punctuation is replaced by a space
     """
-    return text.translate(str.maketrans("", "", string.punctuation))
+    translation_table = str.maketrans(string.punctuation, " " * len(string.punctuation))
+    clean_text = text.translate(translation_table)
+    return remove_multiple_spaces(clean_text)
+
+
+def make_lowercase(text):
+    """Converts all uppercase letters to lowercase from a string
+
+    Args:
+        text (str): Text string containing lowercase and uppercase letters
+
+    Returns:
+        (str): Same Text string, but all in lowercase
+    """
+
+    return text.lower()
+
+
+def remove_multiple_spaces(text):
+    """Removes multiple spaces in a string and replaces them with a single space.
+
+    Args:
+        text (str): Text string with multiple spaces
+
+    Returns:
+        (str): Same text string, but with multiple spaces replaced by a single space
+    """
+    return re.sub(" +", " ", text)
 
 
 ## Youtube API interactions
@@ -865,9 +899,11 @@ def get_languages(
         (
             vid["snippet"]["defaultAudioLanguage"]
             if "defaultAudioLanguage" in vid["snippet"]
-            else vid["snippet"]["defaultLanguage"]
-            if "defaultLanguage" in vid["snippet"]
-            else "unknown"
+            else (
+                vid["snippet"]["defaultLanguage"]
+                if "defaultLanguage" in vid["snippet"]
+                else "unknown"
+            )
         ).split("-")[
             0
         ]  # strips regional specifiers
