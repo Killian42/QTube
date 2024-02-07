@@ -242,6 +242,7 @@ if need_captions:
 for index, (vid_ID, vid_info) in enumerate(videos.items()):
     # Title
     vid_info.update({"title": titles[index]})
+    vid_info.update({"original title": titles[index]})
 
     # Duration
     vid_info.update({"duration": durations[index]})
@@ -551,7 +552,7 @@ if videos_to_add is not None:  # Checks if there's actually videos to add
         handle_http_errors(verb, add_to_playlist, youtube, playlist_ID, vid_ID)
 
         print2(
-            f"From {vid_info['channel name']}, the video named: {vid_info['title']} was added.",
+            f"From {vid_info['channel name']}, the video named: {vid_info['original title']} has been added.",
             ["all", "videos"],
             verb,
         )
