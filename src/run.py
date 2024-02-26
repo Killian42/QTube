@@ -88,33 +88,34 @@ user_info = handle_http_errors(verb, get_user_info, youtube)
 if not handle_http_errors(verb, check_playlist_id, youtube, user_info, playlist_ID):
     sys.exit()
 
-
-## Dictionnary of subscribed channel names and IDs
+## Dictionnary of subscribed channels names and IDs
 subbed_channels_info = handle_http_errors(verb, get_subscriptions, youtube)
 
-## Adding extra channels
+## Dictionnary of extra channels names and IDs
 include_extra_channels = user_params_dict["include_extra_channels"]
-extra_channel_handles = user_params_dict["extra_channel_handles"]
+extra_channel_handles = user_params_dict.get("extra_channel_handles")
 
+extra_channels_info = {}
 if include_extra_channels:
     for handle in extra_channel_handles:
-        channel_info = get_channel_info(youtube, handle)
-        subbed_channels_info.update(channel_info)
+        extra_channels_info[handle] = get_channel_info(youtube, handle)
 
+## Merging subbed and extra channel dictionnaries
+channels_info = merge_dicts([subbed_channels_info, extra_channels_info])
 
 ## Filtering on channel names
 required_channel_words = user_params_dict.get("required_in_channel_name")
 banned_channel_words = user_params_dict.get("banned_in_channel_name")
 
 if required_channel_words is None and banned_channel_words is None:  # No filtering
-    wanted_channels_info = subbed_channels_info
+    wanted_channels_info = channels_info
 
 elif (
     required_channel_words is not None and banned_channel_words is None
 ):  # Required filtering
     wanted_channels_info = {
         k: v
-        for k, v in subbed_channels_info.items()
+        for k, v in channels_info.items()
         if any(rw in k for rw in required_channel_words)
     }
 
@@ -123,14 +124,14 @@ elif (
 ):  # Banned filtering
     wanted_channels_info = {
         k: v
-        for k, v in subbed_channels_info.items()
+        for k, v in channels_info.items()
         if not any(bw in k for bw in banned_channel_words)
     }
 
 else:  # Required and banned filtering
     wanted_channels_info = {
         k: v
-        for k, v in subbed_channels_info.items()
+        for k, v in channels_info.items()
         if any(rw in k for rw in required_channel_words)
         and not any(bw in k for bw in banned_channel_words)
     }

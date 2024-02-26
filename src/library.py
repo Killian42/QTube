@@ -343,7 +343,9 @@ def check_user_params(params_dict: dict) -> bool:
         isinstance(params_dict.get("include_extra_channels"), bool),
         # Extra channels
         params_dict.get("extra_channel_handles") is None
-        or all(
+        and params_dict.get("include_extra_channels") is False
+        or isinstance(params_dict.get("extra_channel_handles"), list)
+        and all(
             isinstance(item, str) for item in params_dict.get("extra_channel_handles")
         ),
     ]
