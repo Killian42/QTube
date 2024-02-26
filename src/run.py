@@ -92,6 +92,16 @@ if not handle_http_errors(verb, check_playlist_id, youtube, user_info, playlist_
 ## Dictionnary of subscribed channel names and IDs
 subbed_channels_info = handle_http_errors(verb, get_subscriptions, youtube)
 
+## Adding extra channels
+include_extra_channels = user_params_dict["include_extra_channels"]
+extra_channel_handles = user_params_dict["extra_channel_handles"]
+
+if include_extra_channels:
+    for handle in extra_channel_handles:
+        channel_info = get_channel_info(youtube, handle)
+        subbed_channels_info.update(channel_info)
+
+
 ## Filtering on channel names
 required_channel_words = user_params_dict.get("required_in_channel_name")
 banned_channel_words = user_params_dict.get("banned_in_channel_name")

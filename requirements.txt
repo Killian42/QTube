@@ -1,4 +1,4 @@
-google_api_python_client==2.86.0
+google_api_python_client==2.119.0
 google_auth_oauthlib==1.0.0
 isodate==0.6.1
 numpy==1.24.3

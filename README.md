@@ -62,6 +62,8 @@ I would recommend creating a task to execute the program regularly (like once a 
 |--|:--:|:--:|:--:|
 |`required_in_channel_name`|Yes|Words that must be in channel names, typically channel names themselves. Videos from channels not containing any of the words of this list in their name will not be added.|Any string|
 |`banned_in_channel_name`|Yes|Words that must not be in channel names, typically channel names themselves. Videos from channels containing any of the words of this list in their name will not be added.|Any string|
+|`include_extra_channels`|No|Determines whether to include channels the user is not subscribed to.|boolean|
+|`extra_channel_handles`|Yes|Handles of additional channels to be checked. Handles are found at the end of a channel's URL: `https://www.youtube.com/@*handle*`|Any channel handle|
 |`required_in_title`|Yes|Words that must be in video titles. Videos with titles not containing any of the words of this list will not be added.|Any string|
 |`banned_in_title`|Yes|Words that must not be in video titles. Videos with titles containing any of the words of this list will not be added.|Any string|
 |`ignore_title_emojis`|No|Determines whether emojis are ignored in video titles.|boolean|
@@ -98,6 +100,8 @@ Let's say that you don't want to miss any of the less than 15 minutes *$1 vs.* M
 {
 "required_in_channel_name": ["MrBeast"],
 "banned_in_channel_name": null,
+"include_extra_channels": false,
+"extra_channel_handles": null,
 "required_in_title": ["$1 vs."],
 "ignore_title_emojis":false,
 "ignore_title_punctuation":false,

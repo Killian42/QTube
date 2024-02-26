@@ -267,14 +267,10 @@ def check_user_params(params_dict: dict) -> bool:
         all(v in verbosity_options for v in params_dict.get("verbosity", ["failsafe"])),
         # Title
         params_dict.get("required_in_title") is None
-        or all(
-            isinstance(item, str) for item in params_dict.get("required_in_title")
-        ),
+        or all(isinstance(item, str) for item in params_dict.get("required_in_title")),
         # Title
         params_dict.get("banned_in_title") is None
-        or all(
-            isinstance(item, str) for item in params_dict.get("banned_in_title")
-        ),
+        or all(isinstance(item, str) for item in params_dict.get("banned_in_title")),
         # Duration
         params_dict.get("allowed_durations") is None
         or (
@@ -343,6 +339,13 @@ def check_user_params(params_dict: dict) -> bool:
         isinstance(params_dict.get("ignore_title_punctuation"), bool),
         # Title case
         isinstance(params_dict.get("ignore_title_case"), bool),
+        # Extra channels
+        isinstance(params_dict.get("include_extra_channels"), bool),
+        # Extra channels
+        params_dict.get("extra_channel_handles") is None
+        or all(
+            isinstance(item, str) for item in params_dict.get("extra_channel_handles")
+        ),
     ]
 
     ok = all(checks)
@@ -636,6 +639,32 @@ def get_subscriptions(youtube, next_page_token=None) -> dict:
             break
 
     return channels
+
+
+def get_channel_info(youtube, handle: str):
+    """Retrieves basic information about a YT channel
+
+    Args:
+        youtube (Resource): YT API resource
+        handle (str): Handle of the YT channel
+
+    Returns:
+        response (dict): Dictionary containing basic information on the requested YT channel
+    """
+    channel = {}
+
+    response = youtube.channels().list(part="snippet", forHandle=handle).execute()
+
+    if "items" in response.keys():
+        title = response["items"][0]["snippet"]["title"]
+        channel_id = response["items"][0]["id"]
+        channel[title] = channel_id
+    else:
+        print(
+            f"Could not find a YT channel associated with the following handle: {handle}."
+        )
+
+    return channel
 
 
 def get_uploads_playlists(youtube, channel_IDs: list[str]) -> list[str]:

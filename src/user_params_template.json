@@ -7,6 +7,11 @@
         "word1",
         "word2"
     ],
+    "include_extra_channels": false,
+    "extra_channel_handles": [
+        "handle1",
+        "handle2"
+    ],
     "required_in_title": [
         "word1",
         "word2"
@@ -15,9 +20,9 @@
         "word1",
         "word2"
     ],
-    "ignore_title_emojis":false,
-    "ignore_title_punctuation":false,
-    "ignore_title_case":false,
+    "ignore_title_emojis": false,
+    "ignore_title_punctuation": false,
+    "ignore_title_case": false,
     "required_in_description": [
         "word1",
         "word2"
@@ -37,16 +42,26 @@
     "preferred_languages": [
         "en"
     ],
-    "require_captions":false,
-    "caption_options":{
-        "trackKind":["asr","standard"],
-        "language":["en"],
-        "audioTrackType":["primary","unknown"],
-        "isCC":false,
-        "isLarge":false,
-        "isEasyReader":false,
-        "isAutoSynced":false,
-        "status":["serving"]
+    "require_captions": false,
+    "caption_options": {
+        "trackKind": [
+            "asr",
+            "standard"
+        ],
+        "language": [
+            "en"
+        ],
+        "audioTrackType": [
+            "primary",
+            "unknown"
+        ],
+        "isCC": false,
+        "isLarge": false,
+        "isEasyReader": false,
+        "isAutoSynced": false,
+        "status": [
+            "serving"
+        ]
     },
     "allowed_durations": [
         0,
