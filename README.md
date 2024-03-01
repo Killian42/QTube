@@ -96,11 +96,9 @@ See the [requirements](requirements.txt) file.
 
 ## Examples
 This section presents examples of user parameters json files for concrete use-cases.
-<p align="center">
-   <a href="#example-1---every-videos-from-subscribed-channels">Every videos from subscribed channels</a> •
-   <a href="#example-2---higher-quality-videos">Higher quality videos</a> •
-   <a href="#example-3---specific-video-series-from-a-creator">Video series from a creator</a> 
-</p>
+* <a href="#example-1---every-videos-from-subscribed-channels">Every videos from subscribed channels</a>
+* <a href="#example-2---higher-quality-videos">Higher quality videos</a>
+* <a href="#example-3---specific-video-series-from-a-creator">Video series from a creator</a> 
 
 ### Example 1 - Every videos from subscribed channels
 The following *user_params.json* file would add every new videos from channels you are subcribed to.
@@ -123,11 +121,11 @@ The following *user_params.json* file would add every new videos from channels y
 "require_captions":false,
 "caption_options": null,
 "allowed_durations": null,
-"preferred_dimensions": null,
-"preferred_projections": null,
 "lowest_definition": null,
 "lowest_resolution": null,
 "lowest_framerate": null,
+"preferred_dimensions": null,
+"preferred_projections": null,
 "run_frequency":"daily",
 "keep_shorts": true,
 "keep_duplicates": false,
@@ -156,11 +154,11 @@ The following *user_params.json* file would only add videos with good quality.
 "require_captions":false,
 "caption_options": null,
 "allowed_durations": null,
+"lowest_definition": "HD",
+"lowest_resolution": "1080p",
+"lowest_framerate": 60,
 "preferred_dimensions": ["2D"],
 "preferred_projections": ["rectangular"],
-"lowest_definition": "HD",
-"lowest_resolution": null,
-"lowest_framerate": null,
 "run_frequency":"daily",
 "keep_shorts": true,
 "keep_duplicates": false,
@@ -189,11 +187,11 @@ The following *user_params.json* file would only add the *$1 vs.* MrBeast videos
 "require_captions": false,
 "caption_options": null,
 "allowed_durations": null,
-"preferred_dimensions": ["2D"],
-"preferred_projections": ["rectangular"],
 "lowest_definition": "HD",
 "lowest_resolution": null,
 "lowest_framerate": null,
+"preferred_dimensions": ["2D"],
+"preferred_projections": ["rectangular"],
 "run_frequency":"daily",
 "keep_shorts": false,
 "keep_duplicates": false,
