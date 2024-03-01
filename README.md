@@ -20,7 +20,7 @@
    <a href="#about">About</a> •
    <a href="#features">Features</a> •
    <a href="#how-to-use">How To Use</a> •
-   <a href="#example">Example</a> •
+   <a href="#examples">Examples</a> •
    <a href="#faq">FAQ</a> •
    <a href="#contact">Contact</a> •
    <a href="#acknowledgments">Acknowledgments</a> •
@@ -49,7 +49,7 @@ Each of these rules is based on putting some kind of constraint on video propert
 ## How to use
 Before using this software, you first need to get a Youtube API key and create a web app to get a client secrets file (that should look like [this](src/client_secrets_template.json)). This [Corey Schafer video](https://www.youtube.com/watch?v=vQQEaSnQ_bs) goes through the process step by step.
 
-Once that's done, either clone this repository or download the ZIP archive. Then, copy and rename the [user parameters template](src/user_params_template.json) file to *user_params.json*. Modify it so that it fits your needs (more information on how in the [following table](#user-defined-parameters) and in the [example section](#example)).
+Once that's done, either clone this repository or download the ZIP archive. Then, copy and rename the [user parameters template](src/user_params_template.json) file to *user_params.json*. Modify it so that it fits your needs (more information on how in the [following table](#user-defined-parameters) and in the [examples section](#examples)).
 
 Verify that you have all of the dependencies installed (see the [requirements](requirements.txt) file).
 
@@ -94,8 +94,82 @@ For further information about each parameter, check the note associated with the
 ### Requirements
 See the [requirements](requirements.txt) file.
 
-## Example
-Let's say that you don't want to miss any of the less than 15 minutes *$1 vs.* MrBeast videos. Then you would need the following *user_params.json* file:
+## Examples
+This section presents examples of user parameters json files for concrete use-cases.
+<p align="center">
+   <a href="#example-1---every-videos-from-subscribed-channels">Every videos from subscribed channels</a> •
+   <a href="#example-2---higher-quality-videos">Higher quality videos</a> •
+   <a href="#example-3---specific-video-series-from-a-creator">Video series from a creator</a> 
+</p>
+
+### Example 1 - Every videos from subscribed channels
+The following *user_params.json* file would add every new videos from channels you are subcribed to.
+```
+{
+"required_in_channel_name": null,
+"banned_in_channel_name": null,
+"include_extra_channels": false,
+"extra_channel_handles": null,
+"required_in_title": null,
+"banned_in_title": null,
+"ignore_title_emojis": false,
+"ignore_title_punctuation": false,
+"ignore_title_case": false,
+"required_in_description": null,
+"banned_in_description": null,
+"required_tags": null,
+"banned_tags": null,
+"preferred_languages": null,
+"require_captions":false,
+"caption_options": null,
+"allowed_durations": null,
+"preferred_dimensions": null,
+"preferred_projections": null,
+"lowest_definition": null,
+"lowest_resolution": null,
+"lowest_framerate": null,
+"run_frequency":"daily",
+"keep_shorts": true,
+"keep_duplicates": false,
+"upload_playlist_ID": "your_playlist_ID",
+"verbosity": ["credentials","videos"]
+}
+```
+### Example 2 - Higher quality videos
+The following *user_params.json* file would only add videos with good quality.
+```
+{
+"required_in_channel_name": null,
+"banned_in_channel_name": null,
+"include_extra_channels": false,
+"extra_channel_handles": null,
+"required_in_title": null,
+"banned_in_title": null,
+"ignore_title_emojis": false,
+"ignore_title_punctuation": false,
+"ignore_title_case": false,
+"required_in_description": null,
+"banned_in_description": null,
+"required_tags": null,
+"banned_tags": null,
+"preferred_languages": null,
+"require_captions":false,
+"caption_options": null,
+"allowed_durations": null,
+"preferred_dimensions": ["2D"],
+"preferred_projections": ["rectangular"],
+"lowest_definition": "HD",
+"lowest_resolution": null,
+"lowest_framerate": null,
+"run_frequency":"daily",
+"keep_shorts": true,
+"keep_duplicates": false,
+"upload_playlist_ID": "your_playlist_ID",
+"verbosity": ["credentials","videos"]
+}
+```
+### Example 3 - Specific video series from a creator
+The following *user_params.json* file would only add the *$1 vs.* MrBeast videos.
 ```
 {
 "required_in_channel_name": ["MrBeast"],
@@ -103,26 +177,18 @@ Let's say that you don't want to miss any of the less than 15 minutes *$1 vs.* M
 "include_extra_channels": false,
 "extra_channel_handles": null,
 "required_in_title": ["$1 vs."],
-"ignore_title_emojis":false,
-"ignore_title_punctuation":false,
-"ignore_title_case":false,
 "banned_in_title": null,
-"required_in_description":null,
-"banned_in_description":null,
+"ignore_title_emojis": true,
+"ignore_title_punctuation": false,
+"ignore_title_case": true,
+"required_in_description": null,
+"banned_in_description": null,
 "required_tags": null,
 "banned_tags": null,
-"preferred_languages":["en"],
-"require_captions":false,
-"caption_options":{
-    "trackKind":["asr","standard"],
-    "language":["en"],
-    "audioTrackType":["primary","unknown"],
-    "isCC":false,
-    "isLarge":false,
-    "isEasyReader":false,
-    "isAutoSynced":false,
-    "status":["serving"]},
-"allowed_durations": [0,15],
+"preferred_languages": ["en"],
+"require_captions": false,
+"caption_options": null,
+"allowed_durations": null,
 "preferred_dimensions": ["2D"],
 "preferred_projections": ["rectangular"],
 "lowest_definition": "HD",
