@@ -86,6 +86,7 @@ I would recommend creating a task to execute the program regularly (like once a 
 |`keep_shorts`|No|Determines whether to add shorts.|boolean|
 |`keep_duplicates`|No|Determines whether to add videos that are already in the playlist.|boolean|
 |`upload_playlist_ID`|No|ID of the playlist the videos will be added to. Playlist IDs are found at the end of their URL: `https://www.youtube.com/playlist?list=*playlist_ID*`|Playlist ID|
+|`override_json`|No|Allow command line arguments to override user_params.json parameters.|boolean|
 |`verbosity`|No|Controls how much information is shown in the terminal. Options can be combined, so that selecting each option gives the same result as selecting *all*. <br>1: Everything is shown.<br>2: Nothing is shown.<br>3: Only information regarding function execution is shown.<br>4: Only information regarding credentials is shown (loading, retrieving and saving).<br>5: Only information regarding added videos is shown (number, channel names and video titles).|<br>*all*<sup> 1 </sup>, <br>*none*<sup> 2 </sup> , <br>*func*<sup> 3 </sup>, <br>*credentials*<sup> 4 </sup> ,<br>*videos*<sup> 5 </sup>.|
 
 All parameters are case-sensitive by default and if you do not want to use an optional parameter, replace its value with *null* or delete the entry.
@@ -130,6 +131,7 @@ The following *user_params.json* file would add every new videos from channels y
 "keep_shorts": true,
 "keep_duplicates": false,
 "upload_playlist_ID": "your_playlist_ID",
+"override_json":false,
 "verbosity": ["credentials","videos"]
 }
 ```
@@ -163,6 +165,7 @@ The following *user_params.json* file would only add videos with good quality.
 "keep_shorts": true,
 "keep_duplicates": false,
 "upload_playlist_ID": "your_playlist_ID",
+"override_json":false,
 "verbosity": ["credentials","videos"]
 }
 ```
@@ -196,6 +199,7 @@ The following *user_params.json* file would only add the *$1 vs.* MrBeast videos
 "keep_shorts": false,
 "keep_duplicates": false,
 "upload_playlist_ID": "your_playlist_ID",
+"override_json":false,
 "verbosity": ["credentials","videos"]
 }
 ```

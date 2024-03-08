@@ -10,7 +10,7 @@ if version != latest_release and latest_release is not None:
     )
 
 ### User parameters loading
-## File opening
+## JSON parameters file opening
 try:
     user_params_dict = json.load(open("user_params.json"))
 except FileNotFoundError:
@@ -21,6 +21,17 @@ except FileNotFoundError:
 except Exception as e:
     print(f"An unexpected error occurred: {e}")
     sys.exit()
+
+## Command line arguments
+override_json = user_params_dict["override_json"]
+if override_json:
+    args = parse_arguments()
+    formatted_args = format_arguments(args)
+
+    # Rewrites JSON file parameters if provided in the terminal
+    for k, v in formatted_args.items():
+        if v is not None:
+            user_params_dict[k] = v
 
 ## Parameters checking
 if check_user_params(user_params_dict) is not True:
