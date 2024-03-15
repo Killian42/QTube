@@ -6,6 +6,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from pytube import YouTube
 
+import argparse
 import datetime as dt
 import isodate
 import json
@@ -16,7 +17,6 @@ import requests
 import sys
 import time
 import string
-import argparse
 
 
 ### Functions
@@ -1058,6 +1058,24 @@ def get_playlist_content(youtube, playlist_ID: str) -> list[str]:
             break
 
     return videos_IDs
+
+
+def get_playlists_titles(youtube=None, playlist_IDs: list[str] = None):
+    """Retrieves the titles of a list of YT playlists
+
+    Args:
+        youtube (Resource): YT API resource
+        playlists_IDs (list[str]): List of playlist IDs
+
+    Returns:
+        titles (list[str]): List of YT playlist titles
+    """
+    playlist_IDs_str = ",".join(playlist_IDs)
+    response = youtube.playlists().list(part="snippet", id=playlist_IDs_str).execute()
+
+    titles = [playlist["snippet"]["title"] for playlist in response["items"]]
+
+    return titles
 
 
 # Videos

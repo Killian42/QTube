@@ -568,8 +568,13 @@ videos_to_add = {
 }
 
 ## Adding selected videos to a playlist
+playlist_title = get_playlists_titles(youtube, [playlist_ID])
 if videos_to_add is not None:  # Checks if there's actually videos to add
-    print2(f"Number of videos added: {len(videos_to_add)}", ["all", "videos"], verb)
+    print2(
+        f"The following videos will be added to the {playlist_title} playlist:",
+        ["all", "videos"],
+        verb,
+    )
     for vid_ID, vid_info in videos_to_add.items():
         handle_http_errors(verb, add_to_playlist, youtube, playlist_ID, vid_ID)
 
@@ -579,4 +584,8 @@ if videos_to_add is not None:  # Checks if there's actually videos to add
             verb,
         )
 else:
-    print2("No videos from yesterday to add.", ["all", "videos"], verb)
+    print2(
+        f"No videos from yesterday to add to the {playlist_title} playlist.",
+        ["all", "videos"],
+        verb,
+    )
