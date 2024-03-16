@@ -1,8 +1,24 @@
 ### Libraries importation
-from library import *
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+
+import os
+import sys
+import json
+import datetime as dt
+import pickle
+
+import utils.checks
+import utils.helpers
+import utils.parsing
+import utils.youtube.captions
+import utils.youtube.channels
+import utils.youtube.playlists
+import utils.youtube.videos
 
 ### Software version checking
-version, latest_release = check_version()
+version, latest_release = utils.checks.check_version()
 if version != latest_release and latest_release is not None:
     latest_url = "https://github.com/Killian42/QTube/releases/latest"
     print(
@@ -25,8 +41,8 @@ except Exception as e:
 ## Command line arguments
 override_json = user_params_dict["override_json"]
 if override_json:
-    args = parse_arguments()
-    formatted_args = format_arguments(args)
+    args = utils.parsing.parse_arguments()
+    formatted_args = utils.parsing.format_arguments(args)
 
     # Rewrites JSON file parameters if provided in the terminal
     for k, v in formatted_args.items():
@@ -34,7 +50,7 @@ if override_json:
             user_params_dict[k] = v
 
 ## Parameters checking
-if check_user_params(user_params_dict) is not True:
+if utils.checks.check_user_params(user_params_dict) is not True:
     print("User defined parameters are not correct. Check the template and retry.")
     sys.exit()
 else:
@@ -49,22 +65,22 @@ credentials = None
 
 ## token.pickle stores the user's credentials from previously successful logins
 if os.path.exists("token.pickle"):
-    print2("Loading credentials from pickle file...", ["all", "credentials"], verb)
+    utils.helpers.print2("Loading credentials from pickle file...", ["all", "credentials"], verb)
 
     with open("token.pickle", "rb") as token:
         credentials = pickle.load(token)
 
-        print2("Credentials loaded from pickle file", ["all", "credentials"], verb)
+        utils.helpers.print2("Credentials loaded from pickle file", ["all", "credentials"], verb)
 
 ## If there are no valid credentials available, then either refresh the token or log in.
 if not credentials or not credentials.valid:
     if credentials and credentials.expired and credentials.refresh_token:
-        print2("Refreshing access token...", ["all", "credentials"], verb)
+        utils.helpers.print2("Refreshing access token...", ["all", "credentials"], verb)
 
         credentials.refresh(Request())
-        print2("Access token refreshed\n", ["all", "credentials"], verb)
+        utils.helpers.print2("Access token refreshed\n", ["all", "credentials"], verb)
     else:
-        print2("Fetching New Tokens...", ["all", "credentials"], verb)
+        utils.helpers.print2("Fetching New Tokens...", ["all", "credentials"], verb)
         flow = InstalledAppFlow.from_client_secrets_file(
             "client_secrets.json",
             scopes=[
@@ -79,14 +95,14 @@ if not credentials or not credentials.valid:
 
         credentials = flow.credentials
 
-        print2("New token fetched\n", ["all", "credentials"], verb)
+        utils.helpers.print2("New token fetched\n", ["all", "credentials"], verb)
 
         # Save the credentials for the next run
         with open("token.pickle", "wb") as f:
-            print2("Saving Credentials for Future Use...", ["all", "credentials"], verb)
+            utils.helpers.print2("Saving Credentials for Future Use...", ["all", "credentials"], verb)
 
             pickle.dump(credentials, f)
-            print2("Credentials saved\n", ["all", "credentials"], verb)
+            utils.helpers.print2("Credentials saved\n", ["all", "credentials"], verb)
 
 ### Building API resource
 youtube = build("youtube", "v3", credentials=credentials)
@@ -95,12 +111,12 @@ youtube = build("youtube", "v3", credentials=credentials)
 
 ## Checking the playlist ID
 playlist_ID = user_params_dict["upload_playlist_ID"]
-user_info = handle_http_errors(verb, get_user_info, youtube)
-if not handle_http_errors(verb, check_playlist_id, youtube, user_info, playlist_ID):
+user_info = utils.helpers.handle_http_errors(verb, utils.youtube.channels.get_user_info, youtube)
+if not utils.helpers.handle_http_errors(verb, utils.checks.check_playlist_id, youtube, user_info, playlist_ID):
     sys.exit()
 
 ## Dictionnary of subscribed channels names and IDs
-subbed_channels_info = handle_http_errors(verb, get_subscriptions, youtube)
+subbed_channels_info = utils.helpers.handle_http_errors(verb, utils.youtube.channels.get_subscriptions, youtube)
 
 ## Dictionnary of extra channels names and IDs
 include_extra_channels = user_params_dict["include_extra_channels"]
@@ -109,10 +125,10 @@ extra_channel_handles = user_params_dict.get("extra_channel_handles")
 extra_channels_info = {}
 if include_extra_channels:
     for handle in extra_channel_handles:
-        extra_channels_info[handle] = get_channel_info(youtube, handle)
+        extra_channels_info[handle] = utils.channels.get_channel_info(youtube, handle)
 
 ## Merging subbed and extra channel dictionnaries
-channels_info = merge_dicts([subbed_channels_info, extra_channels_info])
+channels_info = utils.helpers.merge_dicts([subbed_channels_info, extra_channels_info])
 
 ## Filtering on channel names
 required_channel_words = user_params_dict.get("required_in_channel_name")
@@ -148,12 +164,12 @@ else:  # Required and banned filtering
     }
 
 ## Dictionnary of channels names and their associated upload playlist
-split_channels = split_dict(wanted_channels_info, 50)
+split_channels = utils.helpers.split_dict(wanted_channels_info, 50)
 
 wanted_channels_upload_playlists = {}
 for sub_dict in split_channels:
-    partial = handle_http_errors(
-        verb, get_uploads_playlists, youtube, list(sub_dict.values())
+    partial = utils.helpers.handle_http_errors(
+        verb, utils.youtube.channels.get_uploads_playlists, youtube, list(sub_dict.values())
     )
     partial_dict = dict(zip(list(sub_dict.keys()), partial))
     wanted_channels_upload_playlists.update(partial_dict)
@@ -162,10 +178,10 @@ for sub_dict in split_channels:
 ## Dictionnary of the latest videos from selected channels
 recent_videos = {}
 for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
-    latest_partial = handle_http_errors(verb, get_recent_videos, youtube, playlist_Id)
+    latest_partial = utils.helpers.handle_http_errors(verb, utils.youtube.playlists.get_recent_videos, youtube, playlist_Id)
 
     if latest_partial == "ignore":
-        print2(f"Channel {ch_name} has no public videos.", ["all", "func"], verb)
+        utils.helpers.print2(f"Channel {ch_name} has no public videos.", ["all", "func"], verb)
         continue
 
     recent_videos.update(
@@ -188,7 +204,7 @@ today = dt.datetime.combine(dt.date.today(), dt.datetime.min.time())
 run_freq = user_params_dict["run_frequency"]
 
 if isinstance(run_freq, int):
-    run_freq_dict = merge_dicts([run_freq_dict, {"custom": run_freq}])
+    run_freq_dict = utils.helpers.merge_dicts([run_freq_dict, {"custom": run_freq}])
     run_freq = "custom"
 
 upload_date_threshold = today - dt.timedelta(days=run_freq_dict[run_freq])
@@ -203,11 +219,11 @@ videos = {
 
 
 ## Additional information retrieving on the videos
-split_videos = split_dict(videos, 50)
+split_videos = utils.helpers.split_dict(videos, 50)
 
 responses = {}
 for sub_dict in split_videos:
-    partial = handle_http_errors(verb, make_video_requests, youtube, sub_dict.keys())
+    partial = utils.helpers.handle_http_errors(verb, utils.youtube.videos.make_video_requests, youtube, sub_dict.keys())
 
     if len(responses) == 0:  # first run of the loop
         responses.update(partial)
@@ -217,47 +233,47 @@ for sub_dict in split_videos:
 
 
 # Titles retrieving
-titles = get_titles(response=responses)
+titles = utils.youtube.videos.get_titles(response=responses)
 
 # Duration retrieving
-durations = get_durations(response=responses)
+durations = utils.youtube.videos.get_durations(response=responses)
 
 # Shorts retrieving
-shorts = is_short(response=responses)
+shorts = utils.youtube.videos.is_short(response=responses)
 
 # Languages retrieving
-languages = get_languages(response=responses)
+languages = utils.youtube.videos.get_languages(response=responses)
 
 # Descriptions retrieving
-descriptions = get_descriptions(response=responses)
+descriptions = utils.youtube.videos.get_descriptions(response=responses)
 
 # Tags retrieving
-tags = get_tags(response=responses)
+tags = utils.youtube.videos.get_tags(response=responses)
 
 # Dimensions retrieving
-dimensions = get_dimensions(response=responses)
+dimensions = utils.youtube.videos.get_dimensions(response=responses)
 
 # Definitions retrieving
-definitions = get_definitions(response=responses)
+definitions = utils.youtube.videos.get_definitions(response=responses)
 
 # Resolutions retrieving (does not use YT API)
 lowest_resolution = user_params_dict.get("lowest_resolution")
 if lowest_resolution is not None:
-    resolutions = get_resolutions(video_IDs=responses.keys())
+    resolutions = utils.youtube.videos.get_resolutions(video_IDs=responses.keys())
 
 # Framerates retrieving (does not use YT API)
 lowest_framerate = user_params_dict.get("lowest_framerate")
 if lowest_framerate is not None:
-    framerates = get_framerates(video_IDs=responses.keys())
+    framerates = utils.youtube.videos.get_framerates(video_IDs=responses.keys())
 
 ## Caption information retrieving
 need_captions = user_params_dict["require_captions"]
 if need_captions:
-    captions_responses = handle_http_errors(
-        verb, make_caption_requests, youtube, videos.keys()
+    captions_responses = utils.helpers.handle_http_errors(
+        verb, utils.youtube.captions.make_caption_requests, youtube, videos.keys()
     )
 
-    captions = get_captions(response=captions_responses)
+    captions = utils.youtube.captions.get_captions(response=captions_responses)
 
 
 ## Videos' information updating
@@ -308,29 +324,29 @@ banned_title_words = user_params_dict.get("banned_in_title")
 
 if no_emojis:
     for vid_info in videos.values():
-        vid_info["title"] = strip_emojis(vid_info["title"])
+        vid_info["title"] = utils.helpers.strip_emojis(vid_info["title"])
     if required_title_words is not None:
-        required_title_words = [strip_emojis(word) for word in required_title_words]
+        required_title_words = [utils.helpers.strip_emojis(word) for word in required_title_words]
     if banned_title_words is not None:
-        banned_title_words = [strip_emojis(word) for word in banned_title_words]
+        banned_title_words = [utils.helpers.strip_emojis(word) for word in banned_title_words]
 
 if no_punctuation:
     for vid_info in videos.values():
-        vid_info["title"] = strip_punctuation(vid_info["title"])
+        vid_info["title"] = utils.helpers.strip_punctuation(vid_info["title"])
     if required_title_words is not None:
         required_title_words = [
-            strip_punctuation(word) for word in required_title_words
+            utils.helpers.strip_punctuation(word) for word in required_title_words
         ]
     if banned_title_words is not None:
-        banned_title_words = [strip_punctuation(word) for word in banned_title_words]
+        banned_title_words = [utils.helpers.strip_punctuation(word) for word in banned_title_words]
 
 if no_case:
     for vid_info in videos.values():
-        vid_info["title"] = make_lowercase(vid_info["title"])
+        vid_info["title"] = utils.helpers.make_lowercase(vid_info["title"])
     if required_title_words is not None:
-        required_title_words = [make_lowercase(word) for word in required_title_words]
+        required_title_words = [utils.helpers.make_lowercase(word) for word in required_title_words]
     if banned_title_words is not None:
-        banned_title_words = [make_lowercase(word) for word in banned_title_words]
+        banned_title_words = [utils.helpers.make_lowercase(word) for word in banned_title_words]
 
 
 ## Additional information filtering
@@ -408,7 +424,7 @@ if user_params_dict["keep_shorts"] is False:
 
 # Duplicates filtering
 if user_params_dict["keep_duplicates"] is False:
-    old_vid_IDs = get_playlist_content(youtube, playlist_ID)
+    old_vid_IDs = utils.youtube.playlists.get_playlist_content(youtube, playlist_ID)
     new_vid_IDs = [
         vid_ID for (vid_ID, vid_info) in videos.items() if vid_info["to add"]
     ]
@@ -568,23 +584,23 @@ videos_to_add = {
 }
 
 ## Adding selected videos to a playlist
-playlist_title = get_playlists_titles(youtube, [playlist_ID])
+playlist_title = utils.youtube.playlists.get_playlists_titles(youtube, [playlist_ID])[0]
 if videos_to_add is not None:  # Checks if there's actually videos to add
-    print2(
+    utils.helpers.print2(
         f"The following videos will be added to the {playlist_title} playlist:",
         ["all", "videos"],
         verb,
     )
     for vid_ID, vid_info in videos_to_add.items():
-        handle_http_errors(verb, add_to_playlist, youtube, playlist_ID, vid_ID)
+        utils.helpers.handle_http_errors(verb, utils.youtube.playlists.add_to_playlist, youtube, playlist_ID, vid_ID)
 
-        print2(
+        utils.helpers.print2(
             f"From {vid_info['channel name']}, the video named: {vid_info['original title']} has been added.",
             ["all", "videos"],
             verb,
         )
 else:
-    print2(
+    utils.helpers.print2(
         f"No videos from yesterday to add to the {playlist_title} playlist.",
         ["all", "videos"],
         verb,

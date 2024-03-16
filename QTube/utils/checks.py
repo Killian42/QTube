@@ -375,7 +375,7 @@ def check_version() -> tuple[str]:
         version, latest_release (tuple[str]): local version and latest release
     """
     setup_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "setup.py")
+        os.path.join("..", "setup.py")
     )
 
     with open(setup_path) as setup_file:
