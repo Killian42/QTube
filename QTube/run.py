@@ -1,13 +1,13 @@
 ### Libraries importation
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
-
-import os
-import sys
-import json
 import datetime as dt
+import json
+import os
 import pickle
+import sys
+
+from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
 
 import utils.checks
 import utils.helpers
@@ -65,12 +65,16 @@ credentials = None
 
 ## token.pickle stores the user's credentials from previously successful logins
 if os.path.exists("token.pickle"):
-    utils.helpers.print2("Loading credentials from pickle file...", ["all", "credentials"], verb)
+    utils.helpers.print2(
+        "Loading credentials from pickle file...", ["all", "credentials"], verb
+    )
 
     with open("token.pickle", "rb") as token:
         credentials = pickle.load(token)
 
-        utils.helpers.print2("Credentials loaded from pickle file", ["all", "credentials"], verb)
+        utils.helpers.print2(
+            "Credentials loaded from pickle file", ["all", "credentials"], verb
+        )
 
 ## If there are no valid credentials available, then either refresh the token or log in.
 if not credentials or not credentials.valid:
@@ -99,7 +103,9 @@ if not credentials or not credentials.valid:
 
         # Save the credentials for the next run
         with open("token.pickle", "wb") as f:
-            utils.helpers.print2("Saving Credentials for Future Use...", ["all", "credentials"], verb)
+            utils.helpers.print2(
+                "Saving Credentials for Future Use...", ["all", "credentials"], verb
+            )
 
             pickle.dump(credentials, f)
             utils.helpers.print2("Credentials saved\n", ["all", "credentials"], verb)
@@ -111,12 +117,18 @@ youtube = build("youtube", "v3", credentials=credentials)
 
 ## Checking the playlist ID
 playlist_ID = user_params_dict["upload_playlist_ID"]
-user_info = utils.helpers.handle_http_errors(verb, utils.youtube.channels.get_user_info, youtube)
-if not utils.helpers.handle_http_errors(verb, utils.checks.check_playlist_id, youtube, user_info, playlist_ID):
+user_info = utils.helpers.handle_http_errors(
+    verb, utils.youtube.channels.get_user_info, youtube
+)
+if not utils.helpers.handle_http_errors(
+    verb, utils.checks.check_playlist_id, youtube, user_info, playlist_ID
+):
     sys.exit()
 
 ## Dictionnary of subscribed channels names and IDs
-subbed_channels_info = utils.helpers.handle_http_errors(verb, utils.youtube.channels.get_subscriptions, youtube)
+subbed_channels_info = utils.helpers.handle_http_errors(
+    verb, utils.youtube.channels.get_subscriptions, youtube
+)
 
 ## Dictionnary of extra channels names and IDs
 include_extra_channels = user_params_dict["include_extra_channels"]
@@ -169,7 +181,10 @@ split_channels = utils.helpers.split_dict(wanted_channels_info, 50)
 wanted_channels_upload_playlists = {}
 for sub_dict in split_channels:
     partial = utils.helpers.handle_http_errors(
-        verb, utils.youtube.channels.get_uploads_playlists, youtube, list(sub_dict.values())
+        verb,
+        utils.youtube.channels.get_uploads_playlists,
+        youtube,
+        list(sub_dict.values()),
     )
     partial_dict = dict(zip(list(sub_dict.keys()), partial))
     wanted_channels_upload_playlists.update(partial_dict)
@@ -178,10 +193,14 @@ for sub_dict in split_channels:
 ## Dictionnary of the latest videos from selected channels
 recent_videos = {}
 for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
-    latest_partial = utils.helpers.handle_http_errors(verb, utils.youtube.playlists.get_recent_videos, youtube, playlist_Id)
+    latest_partial = utils.helpers.handle_http_errors(
+        verb, utils.youtube.playlists.get_recent_videos, youtube, playlist_Id
+    )
 
     if latest_partial == "ignore":
-        utils.helpers.print2(f"Channel {ch_name} has no public videos.", ["all", "func"], verb)
+        utils.helpers.print2(
+            f"Channel {ch_name} has no public videos.", ["all", "func"], verb
+        )
         continue
 
     recent_videos.update(
@@ -223,7 +242,9 @@ split_videos = utils.helpers.split_dict(videos, 50)
 
 responses = {}
 for sub_dict in split_videos:
-    partial = utils.helpers.handle_http_errors(verb, utils.youtube.videos.make_video_requests, youtube, sub_dict.keys())
+    partial = utils.helpers.handle_http_errors(
+        verb, utils.youtube.videos.make_video_requests, youtube, sub_dict.keys()
+    )
 
     if len(responses) == 0:  # first run of the loop
         responses.update(partial)
@@ -326,9 +347,13 @@ if no_emojis:
     for vid_info in videos.values():
         vid_info["title"] = utils.helpers.strip_emojis(vid_info["title"])
     if required_title_words is not None:
-        required_title_words = [utils.helpers.strip_emojis(word) for word in required_title_words]
+        required_title_words = [
+            utils.helpers.strip_emojis(word) for word in required_title_words
+        ]
     if banned_title_words is not None:
-        banned_title_words = [utils.helpers.strip_emojis(word) for word in banned_title_words]
+        banned_title_words = [
+            utils.helpers.strip_emojis(word) for word in banned_title_words
+        ]
 
 if no_punctuation:
     for vid_info in videos.values():
@@ -338,15 +363,21 @@ if no_punctuation:
             utils.helpers.strip_punctuation(word) for word in required_title_words
         ]
     if banned_title_words is not None:
-        banned_title_words = [utils.helpers.strip_punctuation(word) for word in banned_title_words]
+        banned_title_words = [
+            utils.helpers.strip_punctuation(word) for word in banned_title_words
+        ]
 
 if no_case:
     for vid_info in videos.values():
         vid_info["title"] = utils.helpers.make_lowercase(vid_info["title"])
     if required_title_words is not None:
-        required_title_words = [utils.helpers.make_lowercase(word) for word in required_title_words]
+        required_title_words = [
+            utils.helpers.make_lowercase(word) for word in required_title_words
+        ]
     if banned_title_words is not None:
-        banned_title_words = [utils.helpers.make_lowercase(word) for word in banned_title_words]
+        banned_title_words = [
+            utils.helpers.make_lowercase(word) for word in banned_title_words
+        ]
 
 
 ## Additional information filtering
@@ -592,7 +623,9 @@ if videos_to_add is not None:  # Checks if there's actually videos to add
         verb,
     )
     for vid_ID, vid_info in videos_to_add.items():
-        utils.helpers.handle_http_errors(verb, utils.youtube.playlists.add_to_playlist, youtube, playlist_ID, vid_ID)
+        utils.helpers.handle_http_errors(
+            verb, utils.youtube.playlists.add_to_playlist, youtube, playlist_ID, vid_ID
+        )
 
         utils.helpers.print2(
             f"From {vid_info['channel name']}, the video named: {vid_info['original title']} has been added.",
