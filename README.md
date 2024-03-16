@@ -47,13 +47,13 @@ Each of these rules is based on putting some kind of constraint on video propert
 * Duplicate checking
 
 ## How to use
-Before using this software, you first need to get a Youtube API key and create a web app to get a client secrets file (that should look like [this](src/client_secrets_template.json)). This [Corey Schafer video](https://www.youtube.com/watch?v=vQQEaSnQ_bs) goes through the process step by step.
+Before using this software, you first need to get a Youtube API key and create a web app to get a client secrets file (that should look like [this](docs/client_secrets_template.json)). This [Corey Schafer video](https://www.youtube.com/watch?v=vQQEaSnQ_bs) goes through the process step by step.
 
-Once that's done, either clone this repository or download the ZIP archive. Then, copy and rename the [user parameters template](src/user_params_template.json) file to *user_params.json*. Modify it so that it fits your needs (more information on how in the [following table](#user-defined-parameters) and in the [examples section](#examples)).
+Once that's done, either clone this repository or download the ZIP archive. Then, copy and rename the [user parameters template](docs/user_params_template.json) file to *user_params.json*. Modify it so that it fits your needs (more information on how in the [following table](#user-defined-parameters) and in the [examples section](#examples)).
 
 Verify that you have all of the dependencies installed (see the [requirements](requirements.txt) file).
 
-Finally, execute the [run.py](src/run.py) file to start the software.
+Finally, execute the [run.py](QTube/run.py) file to start the software.
 
 I would recommend creating a task to execute the program regularly (like once a day).
 
