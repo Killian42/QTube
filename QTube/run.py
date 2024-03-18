@@ -22,19 +22,22 @@ import utils.youtube.videos
 
 ### Software version checking
 version, latest_release = utils.checks.check_version()
-comp = utils.checks.compare_software_versions(version, latest_release)
 latest_url = "https://github.com/Killian42/QTube/releases/latest"
 
-if comp == "same" and latest_release is not None:
-    print("The latest stable version of the software is currently runnning.\n")
-elif comp == "older" and latest_release is not None:
-    print(
-        f"You are currently running version {version}.\nConsider upgrading to the latest stable release ({latest_release}) at {latest_url}.\n"
-    )
-elif comp == "newer" and latest_release is not None:
-    print(
-        f"You are currently running version {version}.\nThis version is not a stable release. Consider installing the latest stable release ({latest_release}) at {latest_url}.\n"
-    )
+if latest_release is None:
+    print("Failed to check the latest release version:\n")
+else:
+    comp = utils.checks.compare_software_versions(version, latest_release)
+    if comp == "same":
+        print("The latest stable version of the software is currently runnning.\n")
+    elif comp == "older":
+        print(
+            f"You are currently running version {version}.\nConsider upgrading to the latest stable release ({latest_release}) at {latest_url}.\n"
+        )
+    elif comp == "newer":
+        print(
+            f"You are currently running version {version}.\nThis version is not a stable release. Consider installing the latest stable release ({latest_release}) at {latest_url}.\n"
+        )
 
 ### User parameters loading
 ## JSON parameters file opening

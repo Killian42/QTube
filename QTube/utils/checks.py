@@ -390,7 +390,6 @@ def check_version() -> tuple[str]:
             latest_release = tag.split("v")[-1]
         except requests.RequestException as e:
             latest_release = None
-            print(f"Failed to check the latest release version:\n{e}")
 
     return version, latest_release
 
