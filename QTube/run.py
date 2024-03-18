@@ -230,9 +230,9 @@ for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
     )
 
 
-## Upload day filtering
+## Upload datetime filtering
 run_freq_dict = {"daily": 1, "weekly": 7, "monthly": 30}
-today = dt.datetime.combine(dt.date.today(), dt.datetime.min.time())
+today = dt.datetime.now(dt.timezone.utc)
 
 run_freq = user_params_dict["run_frequency"]
 
@@ -243,7 +243,7 @@ if isinstance(run_freq, int):
 upload_date_threshold = today - dt.timedelta(days=run_freq_dict[run_freq])
 
 for vid_ID, vid_info in recent_videos.items():
-    if not (upload_date_threshold <= vid_info["upload day"] <= today):
+    if not (upload_date_threshold <= vid_info["upload datetime"] <= today):
         vid_info.update({"to add": False})
 
 videos = {
@@ -630,7 +630,7 @@ videos_to_add = {
 
 ## Adding selected videos to a playlist
 playlist_title = utils.youtube.playlists.get_playlists_titles(youtube, [playlist_ID])[0]
-if videos_to_add is not None:  # Checks if there's actually videos to add
+if videos_to_add is not None:  # Checks if there are actually videos to add
     utils.helpers.print2(
         f"The following videos will be added to the {playlist_title} playlist:",
         ["all", "videos"],
