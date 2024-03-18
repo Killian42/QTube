@@ -1,14 +1,17 @@
-### Libraries importation
+### Imports
+## Standard library modules
 import datetime as dt
 import json
 import os
 import pickle
 import sys
 
+## Third party librairies
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
+## Local modules
 import utils.checks
 import utils.helpers
 import utils.parsing
@@ -19,10 +22,18 @@ import utils.youtube.videos
 
 ### Software version checking
 version, latest_release = utils.checks.check_version()
-if version != latest_release and latest_release is not None:
-    latest_url = "https://github.com/Killian42/QTube/releases/latest"
+comp = utils.checks.compare_software_versions(version, latest_release)
+latest_url = "https://github.com/Killian42/QTube/releases/latest"
+
+if comp == "same" and latest_release is not None:
+    print("The latest stable version of the software is currently runnning.\n")
+elif comp == "older" and latest_release is not None:
     print(
-        f"You are currently running version {version}.\nConsider upgrading to {latest_release} at {latest_url}."
+        f"You are currently running version {version}.\nConsider upgrading to the latest stable release ({latest_release}) at {latest_url}.\n"
+    )
+elif comp == "newer" and latest_release is not None:
+    print(
+        f"You are currently running version {version}.\nThis version is not a stable release. Consider installing the latest stable release ({latest_release}) at {latest_url}.\n"
     )
 
 ### User parameters loading
@@ -44,7 +55,7 @@ if override_json:
     args = utils.parsing.parse_arguments()
     formatted_args = utils.parsing.format_arguments(args)
 
-    # Rewrites JSON file parameters if provided in the terminal
+    # Rewrites JSON file parameters if options are provided in the terminal
     for k, v in formatted_args.items():
         if v is not None:
             user_params_dict[k] = v

@@ -10,7 +10,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",
-    py_modules=["library", "run"],
+    py_modules=["utils"],
     package_dir={"": "QTube"},
     author="Killian Lebreton",
     author_email="killian.lebreton35@gmail.com",

@@ -374,9 +374,7 @@ def check_version() -> tuple[str]:
     Returns:
         version, latest_release (tuple[str]): local version and latest release
     """
-    setup_path = os.path.abspath(
-        os.path.join("..", "setup.py")
-    )
+    setup_path = os.path.abspath(os.path.join("..", "setup.py"))
 
     with open(setup_path) as setup_file:
         contents = setup_file.read()
@@ -392,6 +390,33 @@ def check_version() -> tuple[str]:
             latest_release = tag.split("v")[-1]
         except requests.RequestException as e:
             latest_release = None
-            print(f"Failed to check the latest release:\n{e}")
+            print(f"Failed to check the latest release version:\n{e}")
 
     return version, latest_release
+
+
+def compare_software_versions(version1, version2):
+    """Compare two software versions, using version2 as the reference against which version1 is compared.
+
+    Args:
+        version1 (str): Software version to be compared (without the v).
+        version2 (str): Reference software version (without the v).
+
+    Returns:
+        (str): A comment on version1's relationship to version2 (i.e., older, newer or same).
+    """
+    arr1 = list(map(int, version1.split(".")))
+    arr2 = list(map(int, version2.split(".")))
+    n = len(arr1)
+    m = len(arr2)
+
+    # Pad the shorter list with zeros
+    arr1 += [0] * (m - n) if m > n else []
+    arr2 += [0] * (n - m) if n > m else []
+
+    for i in range(len(arr1)):
+        if arr1[i] > arr2[i]:
+            return "newer"
+        elif arr2[i] > arr1[i]:
+            return "older"
+    return "same"
