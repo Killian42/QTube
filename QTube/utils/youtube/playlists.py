@@ -2,14 +2,14 @@ import datetime as dt
 
 
 def get_recent_videos(youtube, playlist_ID: str) -> dict:
-    """Retrieves the last 5 videos of a YT playlist
+    """Retrieves the last 5 videos of a YT playlist.
 
     Args:
-        youtube (Resource): YT API resource
-        playlist_ID (str): ID of the playlist
+        youtube (Resource): YT API resource.
+        playlist_ID (str): ID of the playlist.
 
     Returns:
-        recent_vids (dict): Dictionary containing the ID (keys) and upload date (values) of the last 5 videos in the playlist
+        recent_vids (dict): Dictionary containing the ID (keys) and upload date (values) of the last 5 videos in the playlist.
     """
     response = (
         youtube.playlistItems()
@@ -20,7 +20,9 @@ def get_recent_videos(youtube, playlist_ID: str) -> dict:
     recent_vids = {
         item["contentDetails"]["videoId"]: {
             "upload datetime": dt.datetime.fromisoformat(
-                item["contentDetails"]["videoPublishedAt"])        }
+                item["contentDetails"]["videoPublishedAt"]
+            )
+        }
         for item in response.get("items", [])
     }
 
@@ -28,14 +30,14 @@ def get_recent_videos(youtube, playlist_ID: str) -> dict:
 
 
 def get_playlist_content(youtube, playlist_ID: str) -> list[str]:
-    """Retrieves the IDs of videos saved in a YT playlist
+    """Retrieves the IDs of videos saved in a YT playlist.
 
     Args:
-        youtube (Resource): YT API resource
-        playlist_ID (str): ID of the playlist
+        youtube (Resource): YT API resource.
+        playlist_ID (str): ID of the playlist.
 
     Returns:
-        videos_IDs (list[str]): List containing the IDs of the videos saved in the playlist
+        videos_IDs (list[str]): List containing the IDs of the videos saved in the playlist.
     """
     next_page_token = None
     videos_IDs = []
@@ -65,14 +67,14 @@ def get_playlist_content(youtube, playlist_ID: str) -> list[str]:
 
 
 def get_playlists_titles(youtube=None, playlist_IDs: list[str] = None):
-    """Retrieves the titles of a list of YT playlists
+    """Retrieves the titles of a list of YT playlists.
 
     Args:
-        youtube (Resource): YT API resource
-        playlists_IDs (list[str]): List of playlist IDs
+        youtube (Resource): YT API resource.
+        playlists_IDs (list[str]): List of playlist IDs.
 
     Returns:
-        titles (list[str]): List of YT playlist titles
+        titles (list[str]): List of YT playlist titles.
     """
     playlist_IDs_str = ",".join(playlist_IDs)
     response = youtube.playlists().list(part="snippet", id=playlist_IDs_str).execute()
@@ -83,12 +85,12 @@ def get_playlists_titles(youtube=None, playlist_IDs: list[str] = None):
 
 
 def add_to_playlist(youtube, playlist_ID: str, video_ID: str) -> None:
-    """Adds a  YT video to the YT playlist
+    """Adds a  YT video to the YT playlist.
 
     Args:
-        youtube (Resource): YT API resource
-        playlist_ID (str): Playlist ID
-        video_ID (str): Video ID
+        youtube (Resource): YT API resource.
+        playlist_ID (str): Playlist ID.
+        video_ID (str): Video ID.
 
     Returns:
         None

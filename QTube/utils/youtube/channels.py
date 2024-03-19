@@ -1,12 +1,12 @@
 def get_subscriptions(youtube, next_page_token=None) -> dict:
-    """Retrieves the subscriptions of the logged user
+    """Retrieves the subscriptions of the logged user.
 
     Args:
-        youtube (Resource): YT API resource
-        next_page_token (str): Token of the subscription page (optional)
+        youtube (Resource): YT API resource.
+        next_page_token (str): Token of the subscription page (optional).
 
     Returns:
-        channels (dict): Dictionary of channel names (keys) and channel IDs (values)
+        channels (dict): Dictionary of channel names (keys) and channel IDs (values).
     """
     channels = {}
 
@@ -37,14 +37,14 @@ def get_subscriptions(youtube, next_page_token=None) -> dict:
 
 
 def get_channel_info(youtube, handle: str):
-    """Retrieves basic information about a YT channel
+    """Retrieves basic information about a YT channel.
 
     Args:
-        youtube (Resource): YT API resource
-        handle (str): Handle of the YT channel
+        youtube (Resource): YT API resource.
+        handle (str): Handle of the YT channel.
 
     Returns:
-        response (dict): Dictionary containing basic information on the requested YT channel
+        response (dict): Dictionary containing basic information on the requested YT channel.
     """
     channel = {}
 
@@ -63,14 +63,14 @@ def get_channel_info(youtube, handle: str):
 
 
 def get_uploads_playlists(youtube, channel_IDs: list[str]) -> list[str]:
-    """Retrieves the upload playlists of YT channels
+    """Retrieves the upload playlists of YT channels.
 
     Args:
-        youtube (Resource): YT API ressource
-        channel_IDs (list[str]): Channel IDs of YT channels
+        youtube (Resource): YT API ressource.
+        channel_IDs (list[str]): Channel IDs of YT channels.
 
     Returns:
-        upload_pl_ids (list[str]): IDs of the uploads playlist of the YT channels
+        upload_pl_ids (list[str]): IDs of the uploads playlist of the YT channels.
     """
     channel_IDs_str = ",".join(channel_IDs)
     response = (
@@ -89,13 +89,13 @@ def get_uploads_playlists(youtube, channel_IDs: list[str]) -> list[str]:
 
 
 def get_user_info(youtube) -> dict:
-    """Retrieves information about the logged-in user channel
+    """Retrieves information about the logged-in user channel.
 
     Args:
-        youtube (Resource): YT API resource
+        youtube (Resource): YT API resource.
 
     Returns:
-        response (dict): Dictionary containing information on the logged-in user channel
+        response (dict): Dictionary containing information on the logged-in user channel.
     """
     response = (
         youtube.channels()

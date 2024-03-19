@@ -4,13 +4,13 @@ import requests
 
 
 def check_user_params(params_dict: dict) -> bool:
-    """Checks if the user-defined parameters are correctly formatted
+    """Checks if the user-defined parameters are correctly formatted.
 
     Args:
-        params_dict (dict): Dictionary of the user-defined parameters
+        params_dict (dict): Dictionary of the user-defined parameters.
 
     Returns:
-        ok (bool): True if all checks are passed, False otherwise
+        ok (bool): True if all checks are passed, False otherwise.
     """
 
     # Data used for comparison
@@ -339,9 +339,9 @@ def check_playlist_id(youtube, user_info: dict, test_playlist_ID: str) -> bool:
     """Checks if the user can upload the playlist provided in the paramaters file.
 
     Args:
-        youtube (Resource): YT API resource
-        user_info (dict): Dictionary containing information on the logged-in user channel
-        test_playlist_ID (str): YT playlist ID to test
+        youtube (Resource): YT API resource.
+        user_info (dict): Dictionary containing information on the logged-in user channel.
+        test_playlist_ID (str): YT playlist ID to test.
 
     Returns:
         (bool): True if the playlist belongs to the user, False otherwise.
@@ -369,10 +369,10 @@ def check_playlist_id(youtube, user_info: dict, test_playlist_ID: str) -> bool:
 
 
 def check_version() -> tuple[str]:
-    """Checks that the local software version is up to date with the latest GitHub release
+    """Checks that the local software version is up to date with the latest GitHub release.
 
     Returns:
-        version, latest_release (tuple[str]): local version and latest release
+        version, latest_release (tuple[str]): local version and latest release.
     """
     setup_path = os.path.abspath(os.path.join("..", "setup.py"))
 

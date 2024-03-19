@@ -11,13 +11,13 @@ def handle_http_errors(verbosity: list[str], func, *args, **kwargs):
     If after 5 tries, the function could not be executed, it shuts the program down.
 
     Args:
-        verbosity (list[str]): User defined verbosity
-        func (function): Function to be executed, with its arguments and keyword arguments
-        args (any): Arguments of func
-        kwargs (any): Keyword arguments of func
+        verbosity (list[str]): User defined verbosity.
+        func (function): Function to be executed, with its arguments and keyword arguments.
+        args (any): Arguments of func.
+        kwargs (any): Keyword arguments of func.
 
     Returns:
-        res (any): Whatever the function is supposed to return if no http error occur otherwise, it depends on the function
+        res (any): Whatever the function is supposed to return if no http error occur otherwise, it depends on the function.
     """
     for i, t in enumerate(
         [5, 10, 30, 180, 300]
@@ -60,12 +60,12 @@ def handle_http_errors(verbosity: list[str], func, *args, **kwargs):
 
 
 def print2(message: str, verb_level: list, verbosity: list) -> None:
-    """Prints text in the terminal depending on the choosen verbosity
+    """Prints text in the terminal depending on the choosen verbosity.
 
     Args:
-        message (str): Text to be printed in the terminal
-        verb_level (list[str]): Verbosity associated to the text
-        verbosity (list[str]): User defined verbosity
+        message (str): Text to be printed in the terminal.
+        verb_level (list[str]): Verbosity associated to the text.
+        verbosity (list[str]): User defined verbosity.
 
     Returns:
         None
@@ -77,14 +77,14 @@ def print2(message: str, verb_level: list, verbosity: list) -> None:
 
 def split_list(input_list: list, chunk_size: int) -> list:
     """Splits a list into several lists with a specified length.
-    If the number of elements is not divisible by the wanted size, one of the sub-lists will be shorter
+    If the number of elements is not divisible by the wanted size, one of the sub-lists will be shorter.
 
     Args:
-        input_list (list): List to be split
-        chunk_size (int): Wanted length of the sub-lists
+        input_list (list): List to be split.
+        chunk_size (int): Wanted length of the sub-lists.
 
     Returns:
-        (list): List of the sub-lists
+        (list): List of the sub-lists.
     """
     return [
         input_list[i : i + chunk_size] for i in range(0, len(input_list), chunk_size)
@@ -93,14 +93,14 @@ def split_list(input_list: list, chunk_size: int) -> list:
 
 def split_dict(input_dict: dict, chunk_size: int) -> list[dict]:
     """Splits a dictionary into several dictionaries with a specified length.
-    If the number of elements is not divisible by the wanted size, one of the sub-dictionaries will be shorter
+    If the number of elements is not divisible by the wanted size, one of the sub-dictionaries will be shorter.
 
     Args:
-        input_dict (dict): Dictionary to be split
-        chunk_size (int): Wanted length of the sub-dictionaries
+        input_dict (dict): Dictionary to be split.
+        chunk_size (int): Wanted length of the sub-dictionaries.
 
     Returns:
-        (list[dict]): List of the sub-dictionaries
+        (list[dict]): List of the sub-dictionaries.
     """
     items = list(input_dict.items())
     return [
@@ -110,25 +110,25 @@ def split_dict(input_dict: dict, chunk_size: int) -> list[dict]:
 
 
 def merge_dicts(list_of_dicts: list) -> dict:
-    """Merges a list of dictionaries into one
+    """Merges a list of dictionaries into one.
 
     Args:
-        list of dict (list): list of dictionaries to be merged
+        list of dict (list): list of dictionaries to be merged.
 
     Returns:
-        (dict): single dictionary containing the the dictionaries from the list
+        (dict): single dictionary containing the the dictionaries from the list.
     """
     return {key: value for d in list_of_dicts for key, value in d.items()}
 
 
 def strip_emojis(text):
-    """Strips emojis from a string
+    """Strips emojis from a string.
 
     Args:
-        text (str): Text string containing emojis
+        text (str): Text string containing emojis.
 
     Returns:
-        (str): Same Text string, but emojis are replaces by spaces
+        (str): Same Text string, but emojis are replaces by spaces.
     """
     emoji_pattern = re.compile(
         "["
@@ -151,13 +151,13 @@ def strip_emojis(text):
 
 
 def strip_punctuation(text):
-    """Strips punctuation from a string (all of these characters: !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~)
+    """Strips punctuation from a string (all of these characters: !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~).
 
     Args:
-        text (str): Text string containing punctuation
+        text (str): Text string containing punctuation.
 
     Returns:
-        (str): Same text string, but the punctuation is replaced by a space
+        (str): Same text string, but the punctuation is replaced by a space.
     """
     translation_table = str.maketrans(string.punctuation, " " * len(string.punctuation))
     clean_text = text.translate(translation_table)
@@ -165,13 +165,13 @@ def strip_punctuation(text):
 
 
 def make_lowercase(text):
-    """Converts all uppercase letters to lowercase from a string
+    """Converts all uppercase letters to lowercase from a string.
 
     Args:
-        text (str): Text string containing lowercase and uppercase letters
+        text (str): Text string containing lowercase and uppercase letters.
 
     Returns:
-        (str): Same Text string, but all in lowercase
+        (str): Same Text string, but all in lowercase.
     """
 
     return text.lower()
@@ -181,9 +181,9 @@ def remove_multiple_spaces(text):
     """Removes multiple spaces in a string and replaces them with a single space.
 
     Args:
-        text (str): Text string with multiple spaces
+        text (str): Text string with multiple spaces.
 
     Returns:
-        (str): Same text string, but with multiple spaces replaced by a single space
+        (str): Same text string, but with multiple spaces replaced by a single space.
     """
     return re.sub(" +", " ", text)

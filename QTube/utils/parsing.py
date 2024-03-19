@@ -4,13 +4,13 @@ import re
 
 
 def parse_arguments():
-    """Parses command line arguments
+    """Parses command line arguments.
 
     Args:
         None
 
     Returns:
-        (dict): Dictionary of the command line arguments
+        (dict): Dictionary of the command line arguments.
     """
     parser = argparse.ArgumentParser(
         prog="QTube",

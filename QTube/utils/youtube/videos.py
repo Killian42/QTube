@@ -4,14 +4,14 @@ from pytube import YouTube
 
 
 def make_video_requests(youtube, video_IDs: list[str]) -> dict:
-    """Retrieves information on a list of YT videos
+    """Retrieves information on a list of YT videos.
 
     Args:
-        youtube (Resource): YT API resource
-        video_IDs (list[str]): List of video IDs
+        youtube (Resource): YT API resource.
+        video_IDs (list[str]): List of video IDs.
 
     Returns:
-        response (dict[dict]): YT API response
+        response (dict[dict]): YT API response.
     """
     video_IDs_str = ",".join(video_IDs)
     response = (
@@ -26,16 +26,16 @@ def get_titles(
     video_IDs: list[str] = None,
     use_API: bool = False,
 ) -> list[str]:
-    """Retrieves the titles of a list of YT videos
+    """Retrieves the titles of a list of YT videos.
 
     Args:
-        youtube (Resource): YT API resource
-        response (dict[dict]): YT API response from the make_video_request function
-        video_IDs (list[str]): List of video IDs
-        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
 
     Returns:
-        titles (list[str]): List of YT videos titles
+        titles (list[str]): List of YT videos titles.
     """
     if use_API:
         video_IDs_str = ",".join(video_IDs)
@@ -52,16 +52,16 @@ def get_tags(
     video_IDs: list[str] = None,
     use_API: bool = False,
 ) -> list[list[str] | None]:
-    """Retrieves the tags of YT videos
+    """Retrieves the tags of YT videos.
 
     Args:
-        youtube (Resource): YT API resource
-        response (dict[dict]): YT API response from the make_video_request function
-        video_IDs (list[str]): List of video IDs
-        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
 
     Returns:
-        tags (list[list[str]|None]): List of YT videos tags, or None if there are no tags for this video
+        tags (list[list[str]|None]): List of YT videos tags, or None if there are no tags for this video.
     """
     if use_API:
         video_IDs_str = ",".join(video_IDs)
@@ -81,16 +81,16 @@ def get_descriptions(
     video_IDs: list[str] = None,
     use_API: bool = False,
 ) -> list[str]:
-    """Retrieves the descriptions of YT videos
+    """Retrieves the descriptions of YT videos.
 
     Args:
-        youtube (Resource): YT API resource
-        response (dict[dict]): YT API response from the make_video_request function
-        video_IDs (list[str]): List of video IDs
-        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
 
     Returns:
-        description (list[str]): YT videos descriptions
+        description (list[str]): YT videos descriptions.
     """
     if use_API:
         video_IDs_str = ",".join(video_IDs)  # Join the video IDs with commas
@@ -106,16 +106,16 @@ def get_durations(
     video_IDs: list[str] = None,
     use_API: bool = False,
 ) -> list[float]:
-    """Retrieves the duration of YT videos
+    """Retrieves the duration of YT videos.
 
     Args:
-        youtube (Resource): YT API resource
-        response (dict[dict]): YT API response from the make_video_request function
-        video_IDs (list[str]): List of video IDs
-        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
 
     Returns:
-        durations (list[float]): List of YT videos durations in seconds
+        durations (list[float]): List of YT videos durations in seconds.
     """
     if use_API:
         video_IDs_str = ",".join(video_IDs)
@@ -134,16 +134,16 @@ def get_languages(
     video_IDs: list[str] = None,
     use_API: bool = False,
 ) -> list[str]:
-    """Retrieves the original language of YT videos
+    """Retrieves the original language of YT videos.
 
     Args:
-        youtube (Resource): YT API resource
-        response (dict[dict]): YT API response from the make_video_request function
-        video_IDs (list[str]): List of video IDs
-        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
 
     Returns:
-        languages (list[str]): List of YT videos languages
+        languages (list[str]): List of YT videos languages.
     """
     if use_API:
         video_IDs_str = ",".join(video_IDs)
@@ -173,16 +173,16 @@ def get_dimensions(
     video_IDs: list[str] = None,
     use_API: bool = False,
 ) -> list[str]:
-    """Retrieves the dimension of YT videos (2D or 3D)
+    """Retrieves the dimension of YT videos (2D or 3D).
 
     Args:
-        youtube (Resource): YT API resource
-        response (dict[dict]): YT API response from the make_video_request function
-        video_IDs (list[str]): List of video IDs
-        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
 
     Returns:
-        dimensions (list[str]): List of YT videos dimensions
+        dimensions (list[str]): List of YT videos dimensions.
     """
     if use_API:
         video_IDs_str = ",".join(video_IDs)
@@ -200,16 +200,16 @@ def get_definitions(
     video_IDs: list[str] = None,
     use_API: bool = False,
 ) -> list[str]:
-    """Retrieves the definition (sd or hd) of YT videos
+    """Retrieves the definition (sd or hd) of YT videos.
 
     Args:
-        youtube (Resource): YT API resource
-        response (dict[dict]): YT API response from the make_video_request function
-        video_IDs (list[str]): List of video IDs
-        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
 
     Returns:
-        definitions (list[str]): List of YT videos definitions
+        definitions (list[str]): List of YT videos definitions.
     """
     if use_API:
         video_IDs_str = ",".join(video_IDs)
@@ -227,10 +227,10 @@ def get_resolutions(video_IDs: list[str] = None) -> dict[str, list[int]]:
     package (pytube), so it takes longer to run.
 
     Args:
-        video_IDs (list[str]): List of video IDs
+        video_IDs (list[str]): List of video IDs.
 
     Returns:
-        resolutions (dict[str, list[int]]): Dictionary mapping video IDs to the resolutions
+        resolutions (dict[str, list[int]]): Dictionary mapping video IDs to the resolutions.
     """
     base_url = "http://youtube.com/watch?v"
     resolutions = {}
@@ -259,10 +259,10 @@ def get_framerates(video_IDs: list[str] = None) -> dict[str, list[int]]:
     package (pytube), so it takes longer to run.
 
     Args:
-        video_IDs (list[str]): List of video IDs
+        video_IDs (list[str]): List of video IDs.
 
     Returns:
-        framerates (dict[str, list[int]]): Dictionary mapping video IDs to the framerates
+        framerates (dict[str, list[int]]): Dictionary mapping video IDs to the framerates.
     """
     base_url = "http://youtube.com/watch?v"
     framerates = {}
@@ -288,16 +288,16 @@ def get_projections(
     video_IDs: list[str] = None,
     use_API: bool = False,
 ) -> list[str]:
-    """Retrieves the projection (360 or rectangular) of YT videos
+    """Retrieves the projection (360 or rectangular) of YT videos.
 
     Args:
-        youtube (Resource): YT API resource
-        response (dict[dict]): YT API response from the make_video_request function
-        video_IDs (list[str]): List of video IDs
-        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
 
     Returns:
-        projections (list[str]): List of YT videos projections
+        projections (list[str]): List of YT videos projections.
     """
     if use_API:
         video_IDs_str = ",".join(video_IDs)
@@ -315,16 +315,16 @@ def has_captions(
     video_IDs: list[str] = None,
     use_API: bool = False,
 ) -> list[bool]:
-    """Determines if YT videos have captions
+    """Determines if YT videos have captions.
 
     Args:
-        youtube (Resource): YT API resource
-        response (dict[dict]): YT API response from the make_video_request function
-        video_IDs (list[str]): List of video IDs
-        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
 
     Returns:
-        captions (list[bool]): True if the video has captions, False otherwise
+        captions (list[bool]): True if the video has captions, False otherwise.
     """
     if use_API:
         video_IDs_str = ",".join(video_IDs)
@@ -342,16 +342,16 @@ def is_short(
     video_IDs: list[str] = None,
     use_API: bool = False,
 ) -> list[str]:
-    """Determines if videos are a short or not by putting a threshold on video duration
+    """Determines if videos are a short or not by putting a threshold on video duration.
 
     Args:
-        youtube (Resource): YT API resource
-        response (dict[dict]): YT API response from the make_video_request function
-        video_IDs (list[str]): List of video IDs
-        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
 
     Returns:
-        is_short (list[bool]): True if the video is shorter than 65 seconds, False otherwise
+        is_short (list[bool]): True if the video is shorter than 65 seconds, False otherwise.
     """
     durations = get_durations(youtube, response, video_IDs, use_API=use_API)
 

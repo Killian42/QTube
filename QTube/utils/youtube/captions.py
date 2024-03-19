@@ -1,12 +1,12 @@
 def make_caption_requests(youtube, video_IDs: list[str]) -> dict[dict]:
-    """Retrieves API caption responses of a list of YT videos
+    """Retrieves API caption responses of a list of YT videos.
 
     Args:
-        youtube (Resource): YT API resource
-        video_IDs (list[str]): List of video IDs
+        youtube (Resource): YT API resource.
+        video_IDs (list[str]): List of video IDs.
 
     Returns:
-        responses_dict (dict[dict]): Dictionary with video IDs as keys and YT API caption responses as values
+        responses_dict (dict[dict]): Dictionary with video IDs as keys and YT API caption responses as values.
     """
     responses_dict = {
         video_ID: youtube.captions().list(part="snippet", videoId=video_ID).execute()
@@ -22,16 +22,16 @@ def get_captions(
     video_IDs: list[str] = None,
     use_API: bool = False,
 ) -> dict[dict]:
-    """Retrieves the captions of YT videos
+    """Retrieves the captions of YT videos.
 
     Args:
-        youtube (Resource): YT API resource
-        response (dict[dict]): YT API response from the make_caption_request function
-        video_IDs (list[str]): List of video IDs
-        use_API (bool): Determines if a new API request is made or if the response dictionary is used
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_caption_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
 
     Returns:
-        captions_dict (dict[dict]): Dictionary with video IDs as keys and caption dictionaries as values
+        captions_dict (dict[dict]): Dictionary with video IDs as keys and caption dictionaries as values.
     """
     if use_API:
         response = make_caption_requests(youtube, video_IDs)
