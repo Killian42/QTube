@@ -57,6 +57,8 @@ Finally, execute the [run.py](QTube/run.py) file to start the software.
 
 I would recommend creating a task to execute the program regularly (like once a day).
 
+For more versatile uses, you can also use command line arguments with the [run.py](QTube/run.py) file. Enable this option by setting the parameter `override_json` to *True* in your JSON user parameters file. Provided command line arguments will then override what is in your JSON user parameters file.
+
 ### User-defined parameters
 |Parameter|Optional|Description|Possible values|
 |--|:--:|:--:|:--:|
