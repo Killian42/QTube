@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "QTube"
+dynamic = ["version"]
+requires-python = ">=3.8"
+authors = [
+  { name="Killian Lebreton", email="killian.lebreton35@gmail.com" },
+]
+maintainers = [
+  { name="Killian Lebreton", email="killian.lebreton35@gmail.com" },
+]
+description = "Automatically add Youtube videos to a playlist."
+readme = "README.md"
+license = {file = "LICENSE.txt"}
+keywords = ["youtube","videos","playlist","python","python3"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+]
+
+
+[project.urls]
+Homepage = "https://github.com/Killian42/QTube"
+Issues = "https://github.com/Killian42/QTube/issues"
+Repository = "https://github.com/Killian42/QTube"
+
