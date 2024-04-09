@@ -1,6 +1,6 @@
 <h1 align="center">
    <br>
-   <a href="https://github.com/Killian42/QTube/releases/latest"><img src="logo.png" alt="QTube" width="500"></a>
+   <a href="https://github.com/Killian42/QTube/releases/latest"><img src="https://i.postimg.cc/wMLMYv3M/logo.png" alt="QTube" width="500"></a>
    <br>
 </h1>
 
