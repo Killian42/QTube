@@ -5,22 +5,38 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "QTube"
-dynamic = ["version"]
+version = "2.0.0"
 requires-python = ">=3.8"
 authors = [
-  { name="Killian Lebreton", email="killian.lebreton35@gmail.com" },
+    { name = "Killian Lebreton", email = "killian.lebreton35@gmail.com" },
 ]
 maintainers = [
-  { name="Killian Lebreton", email="killian.lebreton35@gmail.com" },
+    { name = "Killian Lebreton", email = "killian.lebreton35@gmail.com" },
 ]
 description = "Automatically add Youtube videos to a playlist."
 readme = "README.md"
-license = {file = "LICENSE.txt"}
-keywords = ["youtube","videos","playlist","python","python3"]
+license = { file = "LICENSE.txt" }
+keywords = ["youtube", "videos", "playlist", "python", "python3"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
-    "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Multimedia :: Video",
+]
+dependencies = [
+    "google_api_python_client>=2.119.0",
+    "google_auth_oauthlib>=1.0.0",
+    "isodate>=0.6.1",
+    "numpy>=1.24.3",
+    "protobuf>=4.25.1",
+    "pytube>=15.0.0",
+    "Requests>=2.31.0",
+    "setuptools>=68.2.2",
 ]
 
 
@@ -29,3 +45,6 @@ Homepage = "https://github.com/Killian42/QTube"
 Issues = "https://github.com/Killian42/QTube/issues"
 Repository = "https://github.com/Killian42/QTube"
 
+
+[project.scripts]
+qtube = "QTube.scripts.qtube:main"

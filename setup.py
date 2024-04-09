@@ -13,10 +13,10 @@ setup(
     author="Killian Lebreton",
     author_email="killian.lebreton35@gmail.com",
     url="https://github.com/Killian42/QTube",
-    project_urls={
-        "Source": "https://github.com/Killian42/QTube"
+    project_urls={"Source": "https://github.com/Killian42/QTube"},
+    entry_points={
+        "console_scripts": [
+            "qtube = QTube.scripts.qtube:main",
+        ]
     },
-
-    py_modules=["utils"],
-    package_dir={"": "QTube"},
 )
