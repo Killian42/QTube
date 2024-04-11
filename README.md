@@ -9,6 +9,7 @@
 <p align="center">
    <a href="https://www.repostatus.org/#active"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." /></a>
    <a href="https://github.com/Killian42/QTube/releases/latest"><img src="https://img.shields.io/github/v/release/Killian42/QTube" alt="Latest Version"></a>
+   <a href="https://pypi.org/project/QTube/"><img src="https://img.shields.io/pypi/dm/QTube.svg?label=PyPI%20downloads" alt="PyPi Downloads"></a>
    <a href="https://github.com/Killian42/QTube/issues"><img src="https://img.shields.io/github/issues/Killian42/QTube" alt="Open Issues"></a>
    <a href="https://github.com/Killian42/QTube/issues?q=is%3Aissue+is%3Aclosed"><img src="https://img.shields.io/github/issues-closed/Killian42/QTube?color=sucess" alt="Closed Issues"></a>
    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green" alt="License"></a>
@@ -49,15 +50,15 @@ Each of these rules is based on putting some kind of constraint on video propert
 ## How to use
 Before using this software, you first need to get a Youtube API key and create a web app to get a client secrets file (that should look like [this](docs/client_secrets_template.json)). This [Corey Schafer video](https://www.youtube.com/watch?v=vQQEaSnQ_bs) goes through the process step by step.
 
-Once that's done, either clone this repository or download the ZIP archive. Then, copy and rename the [user parameters template](docs/user_params_template.json) file to *user_params.json*. Modify it so that it fits your needs (more information on how in the [following table](#user-defined-parameters) and in the [examples section](#examples)).
+Once that's done, download this project or install the package with [PyPI](https://pypi.org/project/QTube/). Then, copy the [user parameters template](docs/user_params_template.json) file to the main QTube directory and rename it to *user_params.json*. Modify it so that it fits your needs (more information on how in the [following table](#user-defined-parameters) and in the [examples section](#examples)).
 
-Verify that you have all of the dependencies installed (see the [requirements](requirements.txt) file).
+Verify that you have all of the dependencies installed (see the [requirements](requirements.txt) file or the [TOML](pyproject.toml) file).
 
-Finally, execute the [run.py](QTube/run.py) file to start the software.
+Finally, execute the [qtube.py](QTube/scripts/qtube.py) file to start the software, either by running the file directly or by using the CLI ***qtube*** in the main directory.
 
 I would recommend creating a task to execute the program regularly (like once a day).
 
-For more versatile uses, you can also use command line arguments with the [run.py](QTube/run.py) file. Enable this option by setting the parameter `override_json` to *True* in your JSON user parameters file. Provided command line arguments will then override what is in your JSON user parameters file.
+For more versatile uses, you can also use command line arguments with the [qtube.py](QTube/scripts/qtube.py) file. Enable this option by setting the parameter `override_json` to *True* in your JSON user parameters file. Provided command line arguments will then override what is in your JSON user parameters file. This is especially useful to manage different types of videos and put them in dedicated playlists (music playlist, gaming playlist, ect...).
 
 ### User-defined parameters
 |Parameter|Optional|Description|Possible values|
@@ -95,7 +96,7 @@ All parameters are case-sensitive by default and if you do not want to use an op
 
 For further information about each parameter, check the note associated with the [release](https://github.com/Killian42/QTube/releases) they were introduced in.
 ### Requirements
-See the [requirements](requirements.txt) file.
+See the [requirements](requirements.txt) file or the [TOML](pyproject.toml) file.
 
 ## Examples
 This section presents examples of user parameters json files for concrete use-cases.
