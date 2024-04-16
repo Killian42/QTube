@@ -669,7 +669,7 @@ def main():
     playlist_title = QTube.utils.youtube.playlists.get_playlists_titles(
         youtube, [playlist_ID]
     )[0]
-    if videos_to_add is not None:  # Checks if there are actually videos to add
+    if len(videos_to_add)!=0:  # Checks if there are actually videos to add
         QTube.utils.helpers.print2(
             f"The following videos will be added to the {playlist_title} playlist:",
             ["all", "videos"],
@@ -691,7 +691,7 @@ def main():
             )
     else:
         QTube.utils.helpers.print2(
-            f"No videos from yesterday to add to the {playlist_title} playlist.",
+            f"No new videos to add to the {playlist_title} playlist.",
             ["all", "videos"],
             verb,
         )
