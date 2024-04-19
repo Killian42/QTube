@@ -399,13 +399,25 @@ def compare_software_versions(version1, version2):
 
     Args:
         version1 (str): Software version to be compared (without the v).
-        version2 (str): Reference software version (without the v).
+        version2 (str): Reference software version, typically the latest stable release (without the v).
 
     Returns:
-        (str): A comment on version1's relationship to version2 (i.e., older, newer or same).
+        (str): A comment on version1's relationship to version2 (i.e., older, newer, same or pre-release).
     """
-    arr1 = list(map(int, version1.split(".")))
-    arr2 = list(map(int, version2.split(".")))
+    #Split version number and pre-release version
+    split_version1 = version1.split('-') 
+    split_version2 = version2.split('-')
+
+    ver_nb1,ver_rel1 = split_version1[0],split_version1[-1]
+    ver_nb2,ver_rel2 = split_version2[0],split_version2[-1]
+
+    if ver_nb1!=ver_rel1:
+        return "pre-release"
+
+    print(ver_nb1, ver_rel1)
+
+    arr1 = list(map(int, ver_nb1.split(".")))
+    arr2 = list(map(int, ver_nb2.split(".")))
     n = len(arr1)
     m = len(arr2)
 
@@ -418,4 +430,5 @@ def compare_software_versions(version1, version2):
             return "newer"
         elif arr2[i] > arr1[i]:
             return "older"
+
     return "same"

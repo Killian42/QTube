@@ -41,6 +41,8 @@ def main():
             print(
                 f"You are currently running version {version}.\nThis version is not a stable release. Consider installing the latest stable release ({latest_release}) at {latest_url}.\n"
             )
+        elif comp == "pre-release":
+            print(f"You are currently running version {version}.\nThis is a pre-release version. Consider installing the latest stable release ({latest_release}) at {latest_url}.\n")
 
     ### User parameters loading
     ## JSON parameters file opening
