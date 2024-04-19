@@ -50,15 +50,15 @@ Each of these rules is based on putting some kind of constraint on video propert
 ## How to use
 Before using this software, you first need to get a Youtube API key and create a web app to get a client secrets file (that should look like [this](docs/client_secrets_template.json)). This [Corey Schafer video](https://www.youtube.com/watch?v=vQQEaSnQ_bs) goes through the process step by step.
 
-Once that's done, download this project or install the package with [PyPI](https://pypi.org/project/QTube/). Then, copy the [user parameters template](docs/user_params_template.json) file to the main QTube directory and rename it to *user_params.json*. Modify it so that it fits your needs (more information on how in the [following table](#user-defined-parameters) and in the [examples section](#examples)).
+Once that's done, download this project or install the package with [PyPI](https://pypi.org/project/QTube/). Then, copy the [user parameters template](docs/user_params_template.json) file to the directory where the project is saved and rename it to *user_params.json*. Modify it so that it fits your needs (more information on how in the [following table](#user-defined-parameters) and in the [examples section](#examples)).
 
 Verify that you have all of the dependencies installed (see the [requirements](requirements.txt) file or the [TOML](pyproject.toml) file).
 
-Finally, execute the [qtube.py](QTube/scripts/qtube.py) file to start the software, either by running the file directly or by using the CLI ***qtube*** in the main directory.
+Finally, execute the [qtube.py](QTube/scripts/qtube.py) file to start the software, either by running the file directly or by using the CLI ***qtube*** in the directory where the project is saved.
 
 I would recommend creating a task to execute the program regularly (like once a day).
 
-For more versatile uses, you can also use command line arguments with the [qtube.py](QTube/scripts/qtube.py) file. Enable this option by setting the parameter `override_json` to *True* in your JSON user parameters file. Provided command line arguments will then override what is in your JSON user parameters file. This is especially useful to manage different types of videos and put them in dedicated playlists (music playlist, gaming playlist, ect...).
+For more versatile uses, you can also use command line arguments with the [qtube.py](QTube/scripts/qtube.py) file. Enable this option by setting the `override_json` parameter to *True* in your JSON user parameters file. Provided command line arguments will then override what is in your JSON user parameters file. This is especially useful to manage different types of videos and put them in dedicated playlists (music playlist, gaming playlist, ect...).
 
 ### User-defined parameters
 |Parameter|Optional|Description|Possible values|

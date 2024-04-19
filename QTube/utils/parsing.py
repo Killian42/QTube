@@ -16,7 +16,7 @@ def parse_arguments():
         prog="QTube",
         description="Automatically add Youtube videos to a playlist.",
         epilog="For more information, check out the Github repo at https://github.com/Killian42/QTube.",
-        usage="python run.py [options]",
+        usage="python qtube.py [options] or qtube [options]",
     )
 
     parser.add_argument(
