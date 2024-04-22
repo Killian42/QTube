@@ -414,8 +414,6 @@ def compare_software_versions(version1, version2):
     if ver_nb1!=ver_rel1:
         return "pre-release"
 
-    print(ver_nb1, ver_rel1)
-
     arr1 = list(map(int, ver_nb1.split(".")))
     arr2 = list(map(int, ver_nb2.split(".")))
     n = len(arr1)
