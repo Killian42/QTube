@@ -23,7 +23,7 @@ import QTube.utils.youtube.videos
 
 ### Software version checking
 def main():
-    """Checks Youtube for new videos and add a selection of these videos based on user defined parameters."""
+    """Checks Youtube for new videos and add a selection of these videos to a playlist, based on user defined parameters."""
     version, latest_release = QTube.utils.checks.check_version()
     latest_url = "https://github.com/Killian42/QTube/releases/latest"
 
