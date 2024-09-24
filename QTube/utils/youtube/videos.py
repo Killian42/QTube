@@ -123,7 +123,7 @@ def get_durations(
             youtube.videos().list(part="contentDetails", id=video_IDs_str).execute()
         )
 
-    durations_iso = [vid["contentDetails"]["duration"] for vid in response["items"]]
+    durations_iso = [vid["contentDetails"].get("duration",'PT0M3.14159265S') for vid in response["items"]] #Set the duration of videos without duration info to pi seconds to identify them without breaking the iso conversion
     durations = [isodate.parse_duration(d).total_seconds() for d in durations_iso]
     return durations
 
@@ -358,3 +358,28 @@ def is_short(
     is_short = [True if length <= 65.0 else False for length in durations]
 
     return is_short
+
+def is_live(
+        youtube=None,
+        response: dict = None,
+        video_IDs: list[str] = None,
+        use_API: bool = False):
+    """Retrieves the live status of YT videos.
+
+    Args:
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
+
+    Returns:
+        live_statuses (list[str]): live if the video is live, upcoming if it is a premiere and none otherwise
+    """
+    if use_API:
+        video_IDs_str = ",".join(video_IDs)
+        response = youtube.videos().list(part="snippet", id=video_IDs_str).execute()
+
+    live_statuses = [vid["snippet"]["liveBroadcastContent"] for vid in response["items"]]
+    
+    return live_statuses
+
