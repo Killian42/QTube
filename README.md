@@ -42,6 +42,8 @@ Each of these rules is based on putting some kind of constraint on video propert
 * Language filtering
 * Caption filtering
 * Duration filtering
+* Livestream filtering
+* Premiere filtering
 * Quality filtering
 * Upload date filtering
 * Shorts filtering
@@ -80,6 +82,8 @@ For more versatile uses, you can also use command line arguments with the [qtube
 |`require_captions`|No|Determines whether to add videos with no captions.|boolean|
 |`caption_options`|Yes|Caption properties such as language, track kind, audio type and accessibility parameters.|See [Youtube captions docs](https://developers.google.com/youtube/v3/docs/captions)|
 |`allowed_durations`|Yes|Minimum and maximum video durations (in minutes).|Two positive integers|
+|`ignore_livestreams`|No|Determines whether currently streaming livestreams are ignored.|boolean|
+|`ignore_premieres`|No|Determines whether upcoming and live premieres are ignored.|boolean|
 |`lowest_definition`|Yes|Minimum definition. Videos with definitions stricly lower than this value will not be added.|*SD* or *HD*|
 |`lowest_resolution`|Yes|Minimum resolution. Videos with resolutions stricly lower than this value will not be added.|Any of [Youtube standard resolutions](https://support.google.com/youtube/answer/6375112)|
 |`lowest_framerate`|Yes|Minimum framerate. Videos with framerates stricly lower than this value will not be added.|Positive integer|
@@ -125,6 +129,8 @@ The following *user_params.json* file would add every new videos from channels y
 "require_captions":false,
 "caption_options": null,
 "allowed_durations": null,
+"ignore_livestreams":false,
+"ignore_premieres":false,
 "lowest_definition": null,
 "lowest_resolution": null,
 "lowest_framerate": null,
@@ -159,6 +165,8 @@ The following *user_params.json* file would only add videos with good quality.
 "require_captions":false,
 "caption_options": null,
 "allowed_durations": null,
+"ignore_livestreams":false,
+"ignore_premieres":false,
 "lowest_definition": "HD",
 "lowest_resolution": "1080p",
 "lowest_framerate": 60,
@@ -193,6 +201,8 @@ The following *user_params.json* file would only add the *$1 vs.* MrBeast videos
 "require_captions": false,
 "caption_options": null,
 "allowed_durations": null,
+"ignore_livestreams":false,
+"ignore_premieres":false,
 "lowest_definition": "HD",
 "lowest_resolution": null,
 "lowest_framerate": null,
