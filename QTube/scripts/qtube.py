@@ -42,7 +42,9 @@ def main():
                 f"You are currently running version {version}.\nThis version is not a stable release. Consider installing the latest stable release ({latest_release}) at {latest_url}.\n"
             )
         elif comp == "pre-release":
-            print(f"You are currently running version {version}.\nThis is a pre-release version. Consider installing the latest stable release ({latest_release}) at {latest_url}.\n")
+            print(
+                f"You are currently running version {version}.\nThis is a pre-release version. Consider installing the latest stable release ({latest_release}) at {latest_url}.\n"
+            )
 
     ### User parameters loading
     ## JSON parameters file opening
@@ -434,8 +436,8 @@ def main():
 
     ## Additional information filtering
     min_max_durations = user_params_dict.get("allowed_durations")
-    ignore_livestreams =  user_params_dict.get("ignore_livestreams")
-    ignore_premieres =  user_params_dict.get("ignore_premieres")
+    ignore_livestreams = user_params_dict.get("ignore_livestreams")
+    ignore_premieres = user_params_dict.get("ignore_premieres")
 
     preferred_languages = user_params_dict.get("preferred_languages")
 
@@ -453,10 +455,12 @@ def main():
         for vid_info in videos.values():
             if vid_info["to add"] is False:
                 continue
-            elif vid_info["live status"]=="live" and ignore_livestreams is False:
+            elif vid_info["live status"] == "live" and ignore_livestreams is False:
                 vid_info.update({"to add": True})
-            elif vid_info["live status"]=="upcoming" and ignore_premieres is False:
+            elif vid_info["live status"] == "upcoming" and ignore_premieres is False:
                 vid_info.update({"to add": True})
+            elif vid_info["duration"] == 3.141593:
+                vid_info.update({"to add": False})
             elif (
                 min_max_durations[0] * 60.0
                 <= vid_info["duration"]
@@ -683,7 +687,7 @@ def main():
     playlist_title = QTube.utils.youtube.playlists.get_playlists_titles(
         youtube, [playlist_ID]
     )[0]
-    if len(videos_to_add)!=0:  # Checks if there are actually videos to add
+    if len(videos_to_add) != 0:  # Checks if there are actually videos to add
         QTube.utils.helpers.print2(
             f"The following videos will be added to the {playlist_title} playlist:",
             ["all", "videos"],
