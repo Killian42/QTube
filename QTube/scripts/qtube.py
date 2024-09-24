@@ -247,7 +247,7 @@ def main():
             }
         )
 
-    ## Upload datetime filtering
+    ## Upload datetime and filtering
     run_freq_dict = {"daily": 1, "weekly": 7, "monthly": 30}
     today = dt.datetime.now(dt.timezone.utc)
 
@@ -313,6 +313,9 @@ def main():
     # Definitions retrieving
     definitions = QTube.utils.youtube.videos.get_definitions(response=responses)
 
+    # Live status retrieving
+    live_statuses = QTube.utils.youtube.videos.is_live(response=responses)
+
     # Resolutions retrieving (does not use YT API)
     lowest_resolution = user_params_dict.get("lowest_resolution")
     if lowest_resolution is not None:
@@ -367,6 +370,9 @@ def main():
 
         # Dimensions
         vid_info.update({"dimension": dimensions[index]})
+
+        # Live statuses
+        vid_info.update({"live status": live_statuses[index]})
 
         # Resolutions
         if lowest_resolution is not None:
@@ -428,6 +434,8 @@ def main():
 
     ## Additional information filtering
     min_max_durations = user_params_dict.get("allowed_durations")
+    ignore_livestreams =  user_params_dict.get("ignore_livestreams")
+    ignore_premieres =  user_params_dict.get("ignore_premieres")
 
     preferred_languages = user_params_dict.get("preferred_languages")
 
@@ -439,6 +447,24 @@ def main():
 
     lowest_definition = user_params_dict.get("lowest_definition")
     preferred_dimensions = user_params_dict.get("preferred_dimensions")
+
+    # Duration filtering
+    if min_max_durations is not None:
+        for vid_info in videos.values():
+            if vid_info["to add"] is False:
+                continue
+            elif vid_info["live status"]=="live" and ignore_livestreams is False:
+                vid_info.update({"to add": True})
+            elif vid_info["live status"]=="upcoming" and ignore_premieres is False:
+                vid_info.update({"to add": True})
+            elif (
+                min_max_durations[0] * 60.0
+                <= vid_info["duration"]
+                <= min_max_durations[-1] * 60.0
+            ):
+                pass
+            else:
+                vid_info.update({"to add": False})
 
     # Title filtering
     if required_title_words is None and banned_title_words is None:  # No filtering
@@ -474,20 +500,6 @@ def main():
                 rw in vid_info["title"] for rw in required_title_words
             ) and not any(bw in vid_info["title"] for bw in banned_title_words):
                 continue
-            else:
-                vid_info.update({"to add": False})
-
-    # Duration filtering
-    if min_max_durations is not None:
-        for vid_info in videos.values():
-            if vid_info["to add"] is False:
-                continue
-            elif (
-                min_max_durations[0] * 60.0
-                <= vid_info["duration"]
-                <= min_max_durations[-1] * 60.0
-            ):
-                pass
             else:
                 vid_info.update({"to add": False})
 
