@@ -93,6 +93,20 @@ def parse_arguments():
     )
 
     parser.add_argument(
+        "-il",
+        "--ignore_livestreams",
+        action="store_true",
+        help="Determines whether currently streaming livestreams are ignored. Default: False",
+    )
+
+    parser.add_argument(
+        "-ip",
+        "--ignore_premieres",
+        action="store_true",
+        help="Determines whether premieres are ignored. Default: False",
+    )
+
+    parser.add_argument(
         "-rd",
         "--required_in_description",
         metavar="",

@@ -328,6 +328,10 @@ def check_user_params(params_dict: dict) -> bool:
         ),
         # Override JSON parameters
         isinstance(params_dict.get("override_json"), bool),
+        # Livestreams
+        isinstance(params_dict.get("ignore_livestreams"), bool),
+        # Premieres
+        isinstance(params_dict.get("ignore_premieres"), bool),
     ]
 
     ok = all(checks)
