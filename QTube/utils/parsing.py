@@ -259,15 +259,50 @@ def parse_arguments():
 
     return vars(parser.parse_args())
 
-
 def format_arguments(args_dict):
-    """Formats the parsed command line arguments
+    """Formats the parsed command line arguments (written with the help of AI, regex is witchcraft to me).
 
     Args:
-        args_dict (dict): Dictionary of parsed command line arguments
+        args_dict (dict): Dictionary of parsed command line arguments.
 
     Returns:
-        args_dict (dict): Formatted dictionary of parsed command line arguments
+        args_dict (dict): Formatted dictionary of parsed command line arguments.
+    """
+    if co_str := args_dict.get("caption_options"):
+        # Define a regex to match lists and split the values inside the brackets
+        co_str2 = re.sub(r'(\w+):\s*\[([^\]]*)\]', 
+                        lambda m: f'"{m.group(1)}": ["' + '", "'.join(m.group(2).split(',')) + '"]', 
+                        co_str)
+
+        # Match booleans
+        co_str2 = re.sub(r'(\w+):\s*(True|False)', r'"\1": \2', co_str2)
+
+        # Match other key-value pairs
+        co_str2 = re.sub(r'(\w+):\s*(\w+)', r'"\1": "\2"', co_str2)
+
+        # Replace single quotes with double quotes to comply with JSON format
+        co_str2 = co_str2.replace("'", '"')
+
+        # Lowercase true/false to comply with JSON format
+        co_str2 = co_str2.replace("True", "true").replace("False", "false")
+
+        # Convert the formatted string to a dictionary
+        co_dict = json.loads(co_str2)
+
+        # Update the dictionary with the parsed caption_options
+        args_dict["caption_options"] = co_dict
+
+    return args_dict
+
+
+def format_arguments_legacy(args_dict):
+    """Formats the parsed command line arguments (legacy function).
+
+    Args:
+        args_dict (dict): Dictionary of parsed command line arguments.
+
+    Returns:
+        args_dict (dict): Formatted dictionary of parsed command line arguments.
     """
     if co_str := args_dict.get("caption_options"):
         co_str1 = re.sub(r"\s+", "", co_str)  # Removes whitespaces
