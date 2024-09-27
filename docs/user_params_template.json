@@ -67,6 +67,8 @@
         0,
         60
     ],
+    "ignore_livestreams": false,
+    "ignore_premieres": false,
     "lowest_definition": "HD",
     "lowest_resolution": null,
     "lowest_framerate": null,
