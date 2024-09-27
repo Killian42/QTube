@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with open("README.md", "r") as f:
     long_description = f.read()
@@ -19,4 +19,5 @@ setup(
             "qtube = QTube.scripts.qtube:main",
         ]
     },
+    packages=find_packages(exclude=("QTube.tests",)),
 )
