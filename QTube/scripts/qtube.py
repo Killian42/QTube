@@ -32,10 +32,10 @@ def main():
     else:
         comp = QTube.utils.checks.compare_software_versions(version, latest_release)
         if comp == "same":
-            print("The latest stable version of the software is currently runnning.\n")
+            print(f"The latest stable version of the software, v{version}, is currently runnning.\n")
         elif comp == "older":
             print(
-                f"You are currently running version {version}.\nConsider upgrading to the latest stable release ({latest_release}) at {latest_url}.\n"
+                f"You are currently running version v{version}.\nConsider upgrading to the latest stable release (v{latest_release}) at {latest_url}.\n"
             )
         elif comp == "newer":
             print(
@@ -43,7 +43,7 @@ def main():
             )
         elif comp == "pre-release":
             print(
-                f"You are currently running version {version}.\nThis is a pre-release version. Consider installing the latest stable release ({latest_release}) at {latest_url}.\n"
+                f"You are currently running version v{version}.\nThis is a pre-release version. Consider installing the latest stable release (v{latest_release}) at {latest_url}.\n"
             )
 
     ### User parameters loading
