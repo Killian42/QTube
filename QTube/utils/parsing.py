@@ -259,6 +259,7 @@ def parse_arguments():
 
     return vars(parser.parse_args())
 
+
 def format_arguments(args_dict):
     """Formats the parsed command line arguments (written with the help of AI, regex is witchcraft to me).
 
@@ -270,15 +271,17 @@ def format_arguments(args_dict):
     """
     if co_str := args_dict.get("caption_options"):
         # Define a regex to match lists and split the values inside the brackets
-        co_str2 = re.sub(r'(\w+):\s*\[([^\]]*)\]', 
-                        lambda m: f'"{m.group(1)}": ["' + '", "'.join(m.group(2).split(',')) + '"]', 
-                        co_str)
+        co_str2 = re.sub(
+            r"(\w+):\s*\[([^\]]*)\]",
+            lambda m: f'"{m.group(1)}": ["' + '", "'.join(m.group(2).split(",")) + '"]',
+            co_str,
+        )
 
         # Match booleans
-        co_str2 = re.sub(r'(\w+):\s*(True|False)', r'"\1": \2', co_str2)
+        co_str2 = re.sub(r"(\w+):\s*(True|False)", r'"\1": \2', co_str2)
 
         # Match other key-value pairs
-        co_str2 = re.sub(r'(\w+):\s*(\w+)', r'"\1": "\2"', co_str2)
+        co_str2 = re.sub(r"(\w+):\s*(\w+)", r'"\1": "\2"', co_str2)
 
         # Replace single quotes with double quotes to comply with JSON format
         co_str2 = co_str2.replace("'", '"')

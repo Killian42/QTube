@@ -77,7 +77,11 @@ def get_playlists_titles(youtube=None, playlist_IDs: list[str] = None):
         titles (list[str]): List of YT playlist titles.
     """
     playlist_IDs_str = ",".join(playlist_IDs)
-    response = youtube.playlists().list(part="snippet", id=playlist_IDs_str).execute(num_retries=5, timeout=10)
+    response = (
+        youtube.playlists()
+        .list(part="snippet", id=playlist_IDs_str)
+        .execute(num_retries=5, timeout=10)
+    )
 
     titles = [playlist["snippet"]["title"] for playlist in response["items"]]
 

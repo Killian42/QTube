@@ -352,7 +352,11 @@ def check_playlist_id(youtube, user_info: dict, test_playlist_ID: str) -> bool:
     """
     user_channel_ID = user_info["items"][0]["id"]
 
-    response = youtube.playlists().list(part="snippet", id=test_playlist_ID).execute(num_retries=5, timeout=10)
+    response = (
+        youtube.playlists()
+        .list(part="snippet", id=test_playlist_ID)
+        .execute(num_retries=5, timeout=10)
+    )
 
     if "items" in response and len(response["items"]) > 0:
         playlist_owner = response["items"][0]["snippet"]["channelId"]
@@ -408,14 +412,14 @@ def compare_software_versions(version1, version2):
     Returns:
         (str): A comment on version1's relationship to version2 (i.e., older, newer, same or pre-release).
     """
-    #Split version number and pre-release version
-    split_version1 = version1.split('-') 
-    split_version2 = version2.split('-')
+    # Split version number and pre-release version
+    split_version1 = version1.split("-")
+    split_version2 = version2.split("-")
 
-    ver_nb1,ver_rel1 = split_version1[0],split_version1[-1]
-    ver_nb2,ver_rel2 = split_version2[0],split_version2[-1]
+    ver_nb1, ver_rel1 = split_version1[0], split_version1[-1]
+    ver_nb2, ver_rel2 = split_version2[0], split_version2[-1]
 
-    if ver_nb1!=ver_rel1:
+    if ver_nb1 != ver_rel1:
         return "pre-release"
 
     arr1 = list(map(int, ver_nb1.split(".")))

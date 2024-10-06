@@ -15,7 +15,9 @@ def make_video_requests(youtube, video_IDs: list[str]) -> dict:
     """
     video_IDs_str = ",".join(video_IDs)
     response = (
-        youtube.videos().list(part="snippet,contentDetails", id=video_IDs_str).execute(num_retries=5, timeout=10)
+        youtube.videos()
+        .list(part="snippet,contentDetails", id=video_IDs_str)
+        .execute(num_retries=5, timeout=10)
     )
     return response
 
@@ -39,7 +41,11 @@ def get_titles(
     """
     if use_API:
         video_IDs_str = ",".join(video_IDs)
-        response = youtube.videos().list(part="snippet", id=video_IDs_str).execute(num_retries=5, timeout=10)
+        response = (
+            youtube.videos()
+            .list(part="snippet", id=video_IDs_str)
+            .execute(num_retries=5, timeout=10)
+        )
 
     titles = [vid["snippet"]["title"] for vid in response["items"]]
 
@@ -65,7 +71,11 @@ def get_tags(
     """
     if use_API:
         video_IDs_str = ",".join(video_IDs)
-        response = youtube.videos().list(part="snippet", id=video_IDs_str).execute(num_retries=5, timeout=10)
+        response = (
+            youtube.videos()
+            .list(part="snippet", id=video_IDs_str)
+            .execute(num_retries=5, timeout=10)
+        )
 
     tags = [
         vid["snippet"]["tags"] if "tags" in vid["snippet"] else None
@@ -94,7 +104,11 @@ def get_descriptions(
     """
     if use_API:
         video_IDs_str = ",".join(video_IDs)  # Join the video IDs with commas
-        response = youtube.videos().list(part="snippet", id=video_IDs_str).execute(num_retries=5, timeout=10)
+        response = (
+            youtube.videos()
+            .list(part="snippet", id=video_IDs_str)
+            .execute(num_retries=5, timeout=10)
+        )
 
     descriptions = [vid["snippet"]["description"] for vid in response.get("items", [])]
     return descriptions
@@ -120,7 +134,9 @@ def get_durations(
     if use_API:
         video_IDs_str = ",".join(video_IDs)
         response = (
-            youtube.videos().list(part="contentDetails", id=video_IDs_str).execute(num_retries=5, timeout=10)
+            youtube.videos()
+            .list(part="contentDetails", id=video_IDs_str)
+            .execute(num_retries=5, timeout=10)
         )
 
     durations_iso = [
@@ -150,7 +166,11 @@ def get_languages(
     """
     if use_API:
         video_IDs_str = ",".join(video_IDs)
-        response = youtube.videos().list(part="snippet", id=video_IDs_str).execute(num_retries=5, timeout=10)
+        response = (
+            youtube.videos()
+            .list(part="snippet", id=video_IDs_str)
+            .execute(num_retries=5, timeout=10)
+        )
 
     languages = [
         (
@@ -190,7 +210,9 @@ def get_dimensions(
     if use_API:
         video_IDs_str = ",".join(video_IDs)
         response = (
-            youtube.videos().list(part="contentDetails", id=video_IDs_str).execute(num_retries=5, timeout=10)
+            youtube.videos()
+            .list(part="contentDetails", id=video_IDs_str)
+            .execute(num_retries=5, timeout=10)
         )
 
     dimensions = [vid["contentDetails"]["dimension"] for vid in response["items"]]
@@ -217,7 +239,9 @@ def get_definitions(
     if use_API:
         video_IDs_str = ",".join(video_IDs)
         response = (
-            youtube.videos().list(part="contentDetails", id=video_IDs_str).execute(num_retries=5, timeout=10)
+            youtube.videos()
+            .list(part="contentDetails", id=video_IDs_str)
+            .execute(num_retries=5, timeout=10)
         )
 
     definitions = [vid["contentDetails"]["definition"] for vid in response["items"]]
@@ -305,7 +329,9 @@ def get_projections(
     if use_API:
         video_IDs_str = ",".join(video_IDs)
         response = (
-            youtube.videos().list(part="contentDetails", id=video_IDs_str).execute(num_retries=5, timeout=10)
+            youtube.videos()
+            .list(part="contentDetails", id=video_IDs_str)
+            .execute(num_retries=5, timeout=10)
         )
 
     projections = [vid["contentDetails"]["projection"] for vid in response["items"]]
@@ -332,7 +358,9 @@ def has_captions(
     if use_API:
         video_IDs_str = ",".join(video_IDs)
         response = (
-            youtube.videos().list(part="contentDetails", id=video_IDs_str).execute(num_retries=5, timeout=10)
+            youtube.videos()
+            .list(part="contentDetails", id=video_IDs_str)
+            .execute(num_retries=5, timeout=10)
         )
 
     captions = [vid["contentDetails"]["caption"] for vid in response["items"]]
@@ -382,7 +410,11 @@ def is_live(
     """
     if use_API:
         video_IDs_str = ",".join(video_IDs)
-        response = youtube.videos().list(part="snippet", id=video_IDs_str).execute(num_retries=5, timeout=10)
+        response = (
+            youtube.videos()
+            .list(part="snippet", id=video_IDs_str)
+            .execute(num_retries=5, timeout=10)
+        )
 
     live_statuses = [
         vid["snippet"]["liveBroadcastContent"] for vid in response["items"]

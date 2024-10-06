@@ -48,7 +48,11 @@ def get_channel_info(youtube, handle: str):
     """
     channel = {}
 
-    response = youtube.channels().list(part="snippet", forHandle=handle).execute(num_retries=5, timeout=10)
+    response = (
+        youtube.channels()
+        .list(part="snippet", forHandle=handle)
+        .execute(num_retries=5, timeout=10)
+    )
 
     if "items" in response.keys():
         title = response["items"][0]["snippet"]["title"]
@@ -74,7 +78,9 @@ def get_uploads_playlists(youtube, channel_IDs: list[str]) -> list[str]:
     """
     channel_IDs_str = ",".join(channel_IDs)
     response = (
-        youtube.channels().list(part="contentDetails", id=channel_IDs_str).execute(num_retries=5, timeout=10)
+        youtube.channels()
+        .list(part="contentDetails", id=channel_IDs_str)
+        .execute(num_retries=5, timeout=10)
     )
     # Create a dictionary to store the mapping between channel IDs and upload playlist IDs
     channel_to_upload_map = {
