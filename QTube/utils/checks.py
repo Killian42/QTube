@@ -352,7 +352,7 @@ def check_playlist_id(youtube, user_info: dict, test_playlist_ID: str) -> bool:
     """
     user_channel_ID = user_info["items"][0]["id"]
 
-    response = youtube.playlists().list(part="snippet", id=test_playlist_ID).execute()
+    response = youtube.playlists().list(part="snippet", id=test_playlist_ID).execute(num_retries=5, timeout=10)
 
     if "items" in response and len(response["items"]) > 0:
         playlist_owner = response["items"][0]["snippet"]["channelId"]

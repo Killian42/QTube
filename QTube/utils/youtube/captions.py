@@ -9,7 +9,7 @@ def make_caption_requests(youtube, video_IDs: list[str]) -> dict[dict]:
         responses_dict (dict[dict]): Dictionary with video IDs as keys and YT API caption responses as values.
     """
     responses_dict = {
-        video_ID: youtube.captions().list(part="snippet", videoId=video_ID).execute()
+        video_ID: youtube.captions().list(part="snippet", videoId=video_ID).execute(num_retries=5, timeout=10)
         for video_ID in video_IDs
     }
 

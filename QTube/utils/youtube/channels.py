@@ -20,7 +20,7 @@ def get_subscriptions(youtube, next_page_token=None) -> dict:
                 order="alphabetical",
                 pageToken=next_page_token,
             )
-            .execute()
+            .execute(num_retries=5, timeout=10)
         )
 
         for item in response.get("items", []):
@@ -48,7 +48,7 @@ def get_channel_info(youtube, handle: str):
     """
     channel = {}
 
-    response = youtube.channels().list(part="snippet", forHandle=handle).execute()
+    response = youtube.channels().list(part="snippet", forHandle=handle).execute(num_retries=5, timeout=10)
 
     if "items" in response.keys():
         title = response["items"][0]["snippet"]["title"]
@@ -74,7 +74,7 @@ def get_uploads_playlists(youtube, channel_IDs: list[str]) -> list[str]:
     """
     channel_IDs_str = ",".join(channel_IDs)
     response = (
-        youtube.channels().list(part="contentDetails", id=channel_IDs_str).execute()
+        youtube.channels().list(part="contentDetails", id=channel_IDs_str).execute(num_retries=5, timeout=10)
     )
     # Create a dictionary to store the mapping between channel IDs and upload playlist IDs
     channel_to_upload_map = {
@@ -100,7 +100,7 @@ def get_user_info(youtube) -> dict:
     response = (
         youtube.channels()
         .list(part="snippet,contentDetails,statistics", mine=True)
-        .execute()
+        .execute(num_retries=5, timeout=10)
     )
 
     return response

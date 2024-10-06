@@ -14,7 +14,7 @@ def get_recent_videos(youtube, playlist_ID: str) -> dict:
     response = (
         youtube.playlistItems()
         .list(part="contentDetails", playlistId=playlist_ID, maxResults=5)
-        .execute()
+        .execute(num_retries=5, timeout=10)
     )
 
     recent_vids = {
@@ -50,7 +50,7 @@ def get_playlist_content(youtube, playlist_ID: str) -> list[str]:
                 maxResults=50,
                 pageToken=next_page_token,
             )
-            .execute()
+            .execute(num_retries=5, timeout=10)
         )
 
         temp_videos_IDs = [
@@ -77,7 +77,7 @@ def get_playlists_titles(youtube=None, playlist_IDs: list[str] = None):
         titles (list[str]): List of YT playlist titles.
     """
     playlist_IDs_str = ",".join(playlist_IDs)
-    response = youtube.playlists().list(part="snippet", id=playlist_IDs_str).execute()
+    response = youtube.playlists().list(part="snippet", id=playlist_IDs_str).execute(num_retries=5, timeout=10)
 
     titles = [playlist["snippet"]["title"] for playlist in response["items"]]
 
@@ -106,6 +106,6 @@ def add_to_playlist(youtube, playlist_ID: str, video_ID: str) -> None:
                 }
             },
         )
-        .execute()
+        .execute(num_retries=5, timeout=10)
     )
     return
