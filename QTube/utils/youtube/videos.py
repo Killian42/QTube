@@ -17,7 +17,7 @@ def make_video_requests(youtube, video_IDs: list[str]) -> dict:
     response = (
         youtube.videos()
         .list(part="snippet,contentDetails", id=video_IDs_str)
-        .execute(num_retries=5, timeout=10)
+        .execute(num_retries=5)
     )
     return response
 
@@ -44,7 +44,7 @@ def get_titles(
         response = (
             youtube.videos()
             .list(part="snippet", id=video_IDs_str)
-            .execute(num_retries=5, timeout=10)
+            .execute(num_retries=5)
         )
 
     titles = [vid["snippet"]["title"] for vid in response["items"]]
@@ -74,7 +74,7 @@ def get_tags(
         response = (
             youtube.videos()
             .list(part="snippet", id=video_IDs_str)
-            .execute(num_retries=5, timeout=10)
+            .execute(num_retries=5)
         )
 
     tags = [
@@ -107,7 +107,7 @@ def get_descriptions(
         response = (
             youtube.videos()
             .list(part="snippet", id=video_IDs_str)
-            .execute(num_retries=5, timeout=10)
+            .execute(num_retries=5)
         )
 
     descriptions = [vid["snippet"]["description"] for vid in response.get("items", [])]
@@ -136,7 +136,7 @@ def get_durations(
         response = (
             youtube.videos()
             .list(part="contentDetails", id=video_IDs_str)
-            .execute(num_retries=5, timeout=10)
+            .execute(num_retries=5)
         )
 
     durations_iso = [
@@ -169,7 +169,7 @@ def get_languages(
         response = (
             youtube.videos()
             .list(part="snippet", id=video_IDs_str)
-            .execute(num_retries=5, timeout=10)
+            .execute(num_retries=5)
         )
 
     languages = [
@@ -212,7 +212,7 @@ def get_dimensions(
         response = (
             youtube.videos()
             .list(part="contentDetails", id=video_IDs_str)
-            .execute(num_retries=5, timeout=10)
+            .execute(num_retries=5)
         )
 
     dimensions = [vid["contentDetails"]["dimension"] for vid in response["items"]]
@@ -241,7 +241,7 @@ def get_definitions(
         response = (
             youtube.videos()
             .list(part="contentDetails", id=video_IDs_str)
-            .execute(num_retries=5, timeout=10)
+            .execute(num_retries=5)
         )
 
     definitions = [vid["contentDetails"]["definition"] for vid in response["items"]]
@@ -331,7 +331,7 @@ def get_projections(
         response = (
             youtube.videos()
             .list(part="contentDetails", id=video_IDs_str)
-            .execute(num_retries=5, timeout=10)
+            .execute(num_retries=5)
         )
 
     projections = [vid["contentDetails"]["projection"] for vid in response["items"]]
@@ -360,7 +360,7 @@ def has_captions(
         response = (
             youtube.videos()
             .list(part="contentDetails", id=video_IDs_str)
-            .execute(num_retries=5, timeout=10)
+            .execute(num_retries=5)
         )
 
     captions = [vid["contentDetails"]["caption"] for vid in response["items"]]
@@ -413,7 +413,7 @@ def is_live(
         response = (
             youtube.videos()
             .list(part="snippet", id=video_IDs_str)
-            .execute(num_retries=5, timeout=10)
+            .execute(num_retries=5)
         )
 
     live_statuses = [

@@ -355,7 +355,7 @@ def check_playlist_id(youtube, user_info: dict, test_playlist_ID: str) -> bool:
     response = (
         youtube.playlists()
         .list(part="snippet", id=test_playlist_ID)
-        .execute(num_retries=5, timeout=10)
+        .execute(num_retries=5)
     )
 
     if "items" in response and len(response["items"]) > 0:

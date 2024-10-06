@@ -11,7 +11,7 @@ def make_caption_requests(youtube, video_IDs: list[str]) -> dict[dict]:
     responses_dict = {
         video_ID: youtube.captions()
         .list(part="snippet", videoId=video_ID)
-        .execute(num_retries=5, timeout=10)
+        .execute(num_retries=5)
         for video_ID in video_IDs
     }
 
