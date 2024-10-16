@@ -23,31 +23,6 @@ import QTube.utils.youtube.videos
 
 def main():
     """Checks Youtube for new videos and add a selection of these videos to a playlist, based on user defined parameters."""
-    ### Software version checking
-    version, latest_release = QTube.utils.checks.check_version()
-    latest_url = "https://github.com/Killian42/QTube/releases/latest"
-
-    if latest_release is None:
-        print("Failed to check the latest release version:\n")
-    else:
-        comp = QTube.utils.checks.compare_software_versions(version, latest_release)
-        if comp == "same":
-            print(
-                f"The latest stable version of the software, v{version}, is currently runnning.\n"
-            )
-        elif comp == "older":
-            print(
-                f"You are currently running version v{version}.\nConsider upgrading to the latest stable release (v{latest_release}) at {latest_url}.\n"
-            )
-        elif comp == "newer":
-            print(
-                f"You are currently running version {version}.\nThis version is not a stable release. Consider installing the latest stable release ({latest_release}) at {latest_url}.\n"
-            )
-        elif comp == "pre-release":
-            print(
-                f"You are currently running version v{version}.\nThis is a pre-release version. Consider installing the latest stable release (v{latest_release}) at {latest_url}.\n"
-            )
-
     ### User parameters loading
     ## JSON parameters file opening
     try:
@@ -74,14 +49,90 @@ def main():
 
     ## Parameters checking
     if QTube.utils.checks.check_user_params(user_params_dict) is not True:
-        print("User defined parameters are not correct. Check the template and retry.")
+        print(
+            "User defined parameters are not correctly formatted. Check the template and retry."
+        )
         sys.exit()
-    else:
-        print("The user defined parameters are correctly formatted.\n")
 
-    ## Verbosity options
+    ## Verbosity and fancy text options loading
+    fancy = user_params_dict["fancy_mode"]
     verb = user_params_dict["verbosity"]
-    print(f"The following verbosity options are enabled: {verb}.\n")
+
+    ### Software version checking
+    version, latest_release = QTube.utils.checks.check_version()
+    latest_url = "https://github.com/Killian42/QTube/releases/latest"
+
+    QTube.utils.helpers.print2(
+        f"QTube v{version}\n", fancy, "info", ["internal"], ["internal"]
+    )
+
+    if latest_release is None:
+        QTube.utils.helpers.print2(
+            "Failed to check the latest release version:\n",
+            fancy,
+            "fail",
+            ["internal"],
+            ["internal"],
+        )
+    else:
+        comp = QTube.utils.checks.compare_software_versions(version, latest_release)
+        if comp == "same":
+            QTube.utils.helpers.print2(
+                f"The latest stable version of the software, v{version}, is currently runnning.\n",
+                fancy,
+                "success",
+                ["internal"],
+                ["internal"],
+            )
+        elif comp == "older":
+            QTube.utils.helpers.print2(
+                f"You are currently running version v{version}.\nConsider upgrading to the latest stable release (v{latest_release}) at {latest_url}.\n",
+                fancy,
+                "warning",
+                ["internal"],
+                ["internal"],
+            )
+        elif comp == "newer":
+            QTube.utils.helpers.print2(
+                f"You are currently running version {version}.\nThis version is not a stable release. Consider installing the latest stable release ({latest_release}) at {latest_url}.\n",
+                fancy,
+                "warning",
+                ["internal"],
+                ["internal"],
+            )
+        elif comp == "pre-release":
+            QTube.utils.helpers.print2(
+                f"You are currently running version v{version}.\nThis is a pre-release version. Consider installing the latest stable release (v{latest_release}) at {latest_url}.\n",
+                fancy,
+                "warning",
+                ["internal"],
+                ["internal"],
+            )
+
+    ## Verbosity and fancy text options displaying
+    if fancy:
+        QTube.utils.helpers.print2(
+            f"The fancy text option is enabled.",
+            fancy,
+            "info",
+            ["internal"],
+            ["internal"],
+        )
+    else:
+        QTube.utils.helpers.print2(
+            f"The fancy text option is disabled.",
+            fancy,
+            "info",
+            ["internal"],
+            ["internal"],
+        )
+    QTube.utils.helpers.print2(
+        f"The following verbosity options are enabled: {verb}.\n",
+        fancy,
+        "info",
+        ["internal"],
+        ["internal"],
+    )
 
     ### Youtube API login
     credentials = None
@@ -89,30 +140,46 @@ def main():
     ## token.pickle stores the user's credentials from previously successful logins
     if os.path.exists("token.pickle"):
         QTube.utils.helpers.print2(
-            "Loading credentials from pickle file...", ["all", "credentials"], verb
+            "Loading credentials from pickle file...",
+            fancy,
+            "info",
+            ["all", "credentials"],
+            verb,
         )
 
         with open("token.pickle", "rb") as token:
             credentials = pickle.load(token)
 
             QTube.utils.helpers.print2(
-                "Credentials loaded from pickle file", ["all", "credentials"], verb
+                "Credentials loaded from pickle file",
+                fancy,
+                "success",
+                ["all", "credentials"],
+                verb,
             )
 
     ## If there are no valid credentials available, then either refresh the token or log in.
     if not credentials or not credentials.valid:
         if credentials and credentials.expired and credentials.refresh_token:
             QTube.utils.helpers.print2(
-                "Refreshing access token...", ["all", "credentials"], verb
+                "Refreshing access token...",
+                fancy,
+                "info",
+                ["all", "credentials"],
+                verb,
             )
 
             credentials.refresh(Request())
             QTube.utils.helpers.print2(
-                "Access token refreshed\n", ["all", "credentials"], verb
+                "Access token refreshed\n",
+                fancy,
+                "success",
+                ["all", "credentials"],
+                verb,
             )
         else:
             QTube.utils.helpers.print2(
-                "Fetching New Tokens...", ["all", "credentials"], verb
+                "Fetching New Tokens...", fancy, "info", ["all", "credentials"], verb
             )
             flow = InstalledAppFlow.from_client_secrets_file(
                 "client_secrets.json",
@@ -129,18 +196,26 @@ def main():
             credentials = flow.credentials
 
             QTube.utils.helpers.print2(
-                "New token fetched\n", ["all", "credentials"], verb
+                "New token fetched\n", fancy, "success", ["all", "credentials"], verb
             )
 
             # Save the credentials for the next run
             with open("token.pickle", "wb") as f:
                 QTube.utils.helpers.print2(
-                    "Saving Credentials for Future Use...", ["all", "credentials"], verb
+                    "Saving Credentials for Future Use...",
+                    fancy,
+                    "info",
+                    ["all", "credentials"],
+                    verb,
                 )
 
                 pickle.dump(credentials, f)
                 QTube.utils.helpers.print2(
-                    "Credentials saved\n", ["all", "credentials"], verb
+                    "Credentials saved\n",
+                    fancy,
+                    "success",
+                    ["all", "credentials"],
+                    verb,
                 )
 
     ### Building API resource
@@ -151,16 +226,21 @@ def main():
     ## Checking the playlist ID
     playlist_ID = user_params_dict["upload_playlist_ID"]
     user_info = QTube.utils.helpers.handle_http_errors(
-        verb, QTube.utils.youtube.channels.get_user_info, youtube
+        verb, fancy, QTube.utils.youtube.channels.get_user_info, youtube
     )
     if not QTube.utils.helpers.handle_http_errors(
-        verb, QTube.utils.checks.check_playlist_id, youtube, user_info, playlist_ID
+        verb,
+        fancy,
+        QTube.utils.checks.check_playlist_id,
+        youtube,
+        user_info,
+        playlist_ID,
     ):
         sys.exit()
 
     ## Dictionnary of subscribed channels names and IDs
     subbed_channels_info = QTube.utils.helpers.handle_http_errors(
-        verb, QTube.utils.youtube.channels.get_subscriptions, youtube
+        verb, fancy, QTube.utils.youtube.channels.get_subscriptions, youtube
     )
 
     ## Dictionnary of extra channels names and IDs
@@ -219,6 +299,7 @@ def main():
     for sub_dict in split_channels:
         partial = QTube.utils.helpers.handle_http_errors(
             verb,
+            fancy,
             QTube.utils.youtube.channels.get_uploads_playlists,
             youtube,
             list(sub_dict.values()),
@@ -230,12 +311,20 @@ def main():
     recent_videos = {}
     for ch_name, playlist_Id in wanted_channels_upload_playlists.items():
         latest_partial = QTube.utils.helpers.handle_http_errors(
-            verb, QTube.utils.youtube.playlists.get_recent_videos, youtube, playlist_Id
+            verb,
+            fancy,
+            QTube.utils.youtube.playlists.get_recent_videos,
+            youtube,
+            playlist_Id,
         )
 
         if latest_partial == "ignore":
             QTube.utils.helpers.print2(
-                f"Channel {ch_name} has no public videos.", ["all", "func"], verb
+                f"Channel {ch_name} has no public videos.",
+                fancy,
+                "warning",
+                ["all", "func"],
+                verb,
             )
             continue
 
@@ -282,6 +371,7 @@ def main():
     for sub_dict in split_videos:
         partial = QTube.utils.helpers.handle_http_errors(
             verb,
+            fancy,
             QTube.utils.youtube.videos.make_video_requests,
             youtube,
             sub_dict.keys(),
@@ -339,6 +429,7 @@ def main():
     if need_captions:
         captions_responses = QTube.utils.helpers.handle_http_errors(
             verb,
+            fancy,
             QTube.utils.youtube.captions.make_caption_requests,
             youtube,
             videos.keys(),
@@ -692,12 +783,15 @@ def main():
     if len(videos_to_add) != 0:  # Checks if there are actually videos to add
         QTube.utils.helpers.print2(
             f"The following videos will be added to the {playlist_title} playlist:",
+            fancy,
+            "info",
             ["all", "videos"],
             verb,
         )
         for vid_ID, vid_info in videos_to_add.items():
             QTube.utils.helpers.handle_http_errors(
                 verb,
+                fancy,
                 QTube.utils.youtube.playlists.add_to_playlist,
                 youtube,
                 playlist_ID,
@@ -706,12 +800,16 @@ def main():
 
             QTube.utils.helpers.print2(
                 f"From {vid_info['channel name']}, the video named: {vid_info['original title']} has been added.",
+                fancy,
+                "video",
                 ["all", "videos"],
                 verb,
             )
     else:
         QTube.utils.helpers.print2(
             f"No new videos to add to the {playlist_title} playlist.",
+            fancy,
+            "info",
             ["all", "videos"],
             verb,
         )

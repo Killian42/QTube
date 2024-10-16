@@ -4,14 +4,16 @@ import sys
 import time
 
 from googleapiclient.errors import HttpError
+from colorama import Fore, Style
 
 
-def handle_http_errors(verbosity: list[str], func, *args, **kwargs):
+def handle_http_errors(verbosity: list[str],fancy, func, *args, **kwargs):
     """Handles http errors when making API queries.
     If after 5 tries, the function could not be executed, it shuts the program down.
 
     Args:
         verbosity (list[str]): User defined verbosity.
+        fancy (bool): Determines wether the text is fancyfied (emoji+color).
         func (function): Function to be executed, with its arguments and keyword arguments.
         args (any): Arguments of func.
         kwargs (any): Keyword arguments of func.
@@ -25,7 +27,7 @@ def handle_http_errors(verbosity: list[str], func, *args, **kwargs):
         try:
             res = func(*args, **kwargs)
             print2(
-                f"{func.__name__} successfully executed.", ["all", "func"], verbosity
+                f"{func.__name__} successfully executed.",fancy,"success", ["all", "func"], verbosity
             )
             return res  # Return the response if no error occurs
         except HttpError as err:
@@ -59,20 +61,54 @@ def handle_http_errors(verbosity: list[str], func, *args, **kwargs):
             sys.exit()  # Exit the program after 5 retries
 
 
-def print2(message: str, verb_level: list, verbosity: list) -> None:
-    """Prints text in the terminal depending on the choosen verbosity.
+def fancify_text(text, color, style, emoji):
+    """Modifies the color and content of a string.
+
+    Args:
+        text (str): Original string.
+        color (colorama color): Colorama color to be applied to the text.
+        style (colorama style): Colorama style to be applied to the text.
+        emoji (str): Emoji to add at the beginning of the text.
+
+    Returns:
+        fancy_text (str): Fancified text.
+    """
+    fancy_text = f"{emoji}{style}{' - '}{color}{text}{Style.RESET_ALL}"
+
+    return fancy_text
+
+
+def print2(
+    message: str, fancy: bool, fancy_type: None, verb_level: list, verbosity: list
+) -> None:
+    """Prints text in the terminal depending on the choosen verbosity and fancy type.
 
     Args:
         message (str): Text to be printed in the terminal.
+        fancy (bool): Determines wether the text is fancyfied (emoji+color).
+        fancy_type (str): Determines how the message is fancified (success, fail, warning, info or video).
         verb_level (list[str]): Verbosity associated to the text.
         verbosity (list[str]): User defined verbosity.
 
     Returns:
         None
     """
-
     if any(v in verb_level for v in verbosity):
-        print(message)
+        if fancy:
+            if fancy_type == "success":
+                print(fancify_text(message, Fore.GREEN, Style.BRIGHT, "✅"))
+            elif fancy_type == "fail":
+                print(fancify_text(message, Fore.RED, Style.BRIGHT, "❌"))
+            elif fancy_type == "warning":
+                print(fancify_text(message, Fore.YELLOW, Style.NORMAL, "⚠️"))
+            elif fancy_type == "info":
+                print(fancify_text(message, Fore.WHITE, Style.BRIGHT,"📢"))
+            elif fancy_type == "video":
+                print(fancify_text(message, Fore.BLUE, Style.BRIGHT, "🎞️"))
+            else:
+                print(message)
+        else:
+            print(message)
 
 
 def split_list(input_list: list, chunk_size: int) -> list:

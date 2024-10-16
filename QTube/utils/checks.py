@@ -332,6 +332,8 @@ def check_user_params(params_dict: dict) -> bool:
         isinstance(params_dict.get("ignore_livestreams"), bool),
         # Premieres
         isinstance(params_dict.get("ignore_premieres"), bool),
+        # Fancy text
+        isinstance(params_dict.get("fancy_mode"), bool),
     ]
 
     ok = all(checks)
