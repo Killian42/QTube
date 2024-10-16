@@ -83,6 +83,7 @@
     "keep_duplicates": false,
     "upload_playlist_ID": "your_playlist_ID",
     "override_json": false,
+    "fancy_mode":true,
     "verbosity": [
         "credentials",
         "videos"
