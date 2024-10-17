@@ -780,31 +780,61 @@ def main():
     playlist_title = QTube.utils.youtube.playlists.get_playlists_titles(
         youtube, [playlist_ID]
     )[0]
-    if len(videos_to_add) != 0:  # Checks if there are actually videos to add
-        QTube.utils.helpers.print2(
-            f"The following videos will be added to the {playlist_title} playlist:",
-            fancy,
-            "info",
-            ["all", "videos"],
-            verb,
-        )
-        for vid_ID, vid_info in videos_to_add.items():
-            QTube.utils.helpers.handle_http_errors(
-                verb,
-                fancy,
-                QTube.utils.youtube.playlists.add_to_playlist,
-                youtube,
-                playlist_ID,
-                vid_ID,
-            )
+    playlist_video_count = QTube.utils.youtube.playlists.get_playlists_video_counts(
+        youtube, [playlist_ID]
+    )[0]
 
+    if len(videos_to_add) != 0:  # Checks if there are actually videos to add
+        if (
+            playlist_video_count + len(videos_to_add) > 5000
+        ):  # Checks if current video count + new videos would exceed 5k (YT playlist size limit)
             QTube.utils.helpers.print2(
-                f"From {vid_info['channel name']}, the video named: {vid_info['original title']} has been added.",
+                f"The {playlist_title} playlist would reach or exceed the 5000 size limit if the following videos were added to it:",
                 fancy,
-                "video",
+                "fail",
                 ["all", "videos"],
                 verb,
             )
+            for vid_ID, vid_info in videos_to_add.items():
+                QTube.utils.helpers.print2(
+                    f"From {vid_info['channel name']}, the video named: {vid_info['original title']} would have been added.\n It is available at: https://www.youtube.com/watch?v={vid_ID}",
+                    fancy,
+                    "video",
+                    ["all", "videos"],
+                    verb,
+                )
+            QTube.utils.helpers.print2(
+                f"Remove at least {len(videos_to_add)} videos from the {playlist_title} playlist so that the new one(s) can be added.",
+                fancy,
+                "warning",
+                ["all", "videos"],
+                verb,
+            )
+        else:
+            QTube.utils.helpers.print2(
+                f"The following videos will be added to the {playlist_title} playlist:",
+                fancy,
+                "info",
+                ["all", "videos"],
+                verb,
+            )
+            for vid_ID, vid_info in videos_to_add.items():
+                QTube.utils.helpers.handle_http_errors(
+                    verb,
+                    fancy,
+                    QTube.utils.youtube.playlists.add_to_playlist,
+                    youtube,
+                    playlist_ID,
+                    vid_ID,
+                )
+
+                QTube.utils.helpers.print2(
+                    f"From {vid_info['channel name']}, the video named: {vid_info['original title']} has been added.",
+                    fancy,
+                    "video",
+                    ["all", "videos"],
+                    verb,
+                )
     else:
         QTube.utils.helpers.print2(
             f"No new videos to add to the {playlist_title} playlist.",

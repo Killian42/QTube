@@ -88,6 +88,28 @@ def get_playlists_titles(youtube=None, playlist_IDs: list[str] = None):
     return titles
 
 
+def get_playlists_video_counts(youtube=None, playlist_IDs: list[str] = None):
+    """Retrieves the number of videos of a list of YT playlists.
+
+    Args:
+        youtube (Resource): YT API resource.
+        playlists_IDs (list[str]): List of playlist IDs.
+
+    Returns:
+        counts (list[int]): List of YT playlist video counts.
+    """
+    playlist_IDs_str = ",".join(playlist_IDs)
+    response = (
+        youtube.playlists()
+        .list(part="contentDetails", id=playlist_IDs_str)
+        .execute(num_retries=5)
+    )
+
+    counts = [playlist["contentDetails"]["itemCount"] for playlist in response["items"]]
+
+    return counts
+
+
 def add_to_playlist(youtube, playlist_ID: str, video_ID: str) -> None:
     """Adds a  YT video to the YT playlist.
 
