@@ -249,6 +249,14 @@ def parse_arguments():
     )
 
     parser.add_argument(
+        "-fm",
+        "--fancy_mode",
+        metavar="",
+        type=str,
+        help="Enables fancy mode (colors and emojis) for terminal output. Default: True",
+    )
+
+    parser.add_argument(
         "-v",
         "--verbosity",
         metavar="",
