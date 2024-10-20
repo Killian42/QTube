@@ -2,6 +2,7 @@ import isodate
 
 from pytube import YouTube
 
+from QTube.utils import helpers
 
 def make_video_requests(youtube, video_IDs: list[str]) -> dict:
     """Retrieves information on a list of YT videos.
@@ -16,7 +17,7 @@ def make_video_requests(youtube, video_IDs: list[str]) -> dict:
     video_IDs_str = ",".join(video_IDs)
     response = (
         youtube.videos()
-        .list(part="snippet,contentDetails", id=video_IDs_str)
+        .list(part="snippet,contentDetails,statistics", id=video_IDs_str)
         .execute(num_retries=5)
     )
     return response
@@ -337,6 +338,152 @@ def get_projections(
     projections = [vid["contentDetails"]["projection"] for vid in response["items"]]
     return projections
 
+
+def get_view_counts(
+    youtube=None,
+    response: dict = None,
+    video_IDs: list[str] = None,
+    use_API: bool = False,
+) -> list[str]:
+    """Retrieves the number of views of a list of YT videos.
+
+    Args:
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
+
+    Returns:
+        views (list[int]): List of YT videos views.
+    """
+    if use_API:
+        video_IDs_str = ",".join(video_IDs)
+        response = (
+            youtube.videos()
+            .list(part="statistics", id=video_IDs_str)
+            .execute(num_retries=5)
+        )
+
+    views = [int(vid["statistics"]["viewCount"]) for vid in response["items"]]
+
+    return views
+
+
+def get_like_counts(
+    youtube=None,
+    response: dict = None,
+    video_IDs: list[str] = None,
+    use_API: bool = False,
+) -> list[str]:
+    """Retrieves the number of likes of a list of YT videos.
+
+    Args:
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
+
+    Returns:
+        likes (list[int]): List of YT videos likes.
+    """
+    if use_API:
+        video_IDs_str = ",".join(video_IDs)
+        response = (
+            youtube.videos()
+            .list(part="statistics", id=video_IDs_str)
+            .execute(num_retries=5)
+        )
+
+    likes = [int(vid["statistics"]["likeCount"]) for vid in response["items"]]
+
+    return likes
+
+
+def get_comment_counts(
+    youtube=None,
+    response: dict = None,
+    video_IDs: list[str] = None,
+    use_API: bool = False,
+) -> list[str]:
+    """Retrieves the number of comments of a list of YT videos.
+
+    Args:
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
+
+    Returns:
+        comment_counts (list[int]): List of YT videos comment counts.
+    """
+    if use_API:
+        video_IDs_str = ",".join(video_IDs)
+        response = (
+            youtube.videos()
+            .list(part="statistics", id=video_IDs_str)
+            .execute(num_retries=5)
+        )
+
+    comment_counts = [
+        int(vid["statistics"]["commentCount"]) for vid in response["items"]
+    ]
+
+    return comment_counts
+
+
+def get_likes_to_views_ratio(likes, views,
+    youtube=None,
+    response: dict = None,
+    video_IDs: list[str] = None,
+    use_API: bool = False,
+) -> list[str]:
+    """Retrieves the likes to views ratio of a list of YT videos.
+
+    Args:
+        likes (list[int]): List of the number of likes.
+        views (list[int]): List of the number of views.
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
+
+    Returns:
+        ratio (list[int|float]): List of YT videos' likes to views ratios.
+    """
+    if use_API:
+        views=get_view_counts(youtube,response,video_IDs,use_API)
+        likes=get_like_counts(youtube,response,video_IDs,use_API)
+
+    ratio = helpers.divide_lists(likes,views,False)
+
+    return ratio
+
+def get_comments_to_views_ratio(likes, views,
+    youtube=None,
+    response: dict = None,
+    video_IDs: list[str] = None,
+    use_API: bool = False,
+) -> list[str]:
+    """Retrieves the comments to views ratio of a list of YT videos.
+
+    Args:
+        comments (list[int]): List of the number of comments.
+        views (list[int]): List of the number of views.
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
+
+    Returns:
+        views (list[int|float]): List of YT videos' comments to views ratios.
+    """
+    if use_API:
+        views=get_view_counts(youtube,response,video_IDs,use_API)
+        comments=get_comment_counts(youtube,response,video_IDs,use_API)
+
+    ratio = helpers.divide_lists(comments,views,False)
+
+    return ratio
 
 def has_captions(
     youtube=None,
