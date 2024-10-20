@@ -7,7 +7,7 @@ from googleapiclient.errors import HttpError
 from colorama import Fore, Style
 
 
-def handle_http_errors(verbosity: list[str],fancy, func, *args, **kwargs):
+def handle_http_errors(verbosity: list[str], fancy, func, *args, **kwargs):
     """Handles http errors when making API queries.
     If after 5 tries, the function could not be executed, it shuts the program down.
 
@@ -27,7 +27,11 @@ def handle_http_errors(verbosity: list[str],fancy, func, *args, **kwargs):
         try:
             res = func(*args, **kwargs)
             print2(
-                f"{func.__name__} successfully executed.",fancy,"success", ["all", "func"], verbosity
+                f"{func.__name__} successfully executed.",
+                fancy,
+                "success",
+                ["all", "func"],
+                verbosity,
             )
             return res  # Return the response if no error occurs
         except HttpError as err:
@@ -102,7 +106,7 @@ def print2(
             elif fancy_type == "warning":
                 print(fancify_text(message, Fore.YELLOW, Style.BRIGHT, "⚠️ "))
             elif fancy_type == "info":
-                print(fancify_text(message, Fore.WHITE, Style.BRIGHT,"📢"))
+                print(fancify_text(message, Fore.WHITE, Style.BRIGHT, "📢"))
             elif fancy_type == "video":
                 print(fancify_text(message, Fore.BLUE, Style.BRIGHT, "🎞️"))
             else:
@@ -224,7 +228,8 @@ def remove_multiple_spaces(text):
     """
     return re.sub(" +", " ", text)
 
-def divide_lists(list1, list2, percentage:False):
+
+def divide_lists(list1, list2, percentage: False):
     """Divides two python lists element-wise.
 
     Args:
@@ -234,9 +239,9 @@ def divide_lists(list1, list2, percentage:False):
 
     Returns:
         res (lst[int|float]): List containing the results of the element-wise division.
-    """    
+    """
     if percentage:
-        res = [(a / b)*100 if b != 0 else None for a, b in zip(list1, list2)]
+        res = [(a / b) * 100 if b != 0 else None for a, b in zip(list1, list2)]
     else:
         res = [a / b if b != 0 else None for a, b in zip(list1, list2)]
     return res

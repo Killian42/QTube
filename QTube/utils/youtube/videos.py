@@ -4,6 +4,7 @@ from pytube import YouTube
 
 from QTube.utils import helpers
 
+
 def make_video_requests(youtube, video_IDs: list[str]) -> dict:
     """Retrieves information on a list of YT videos.
 
@@ -431,7 +432,9 @@ def get_comment_counts(
     return comment_counts
 
 
-def get_likes_to_views_ratio(likes, views,
+def get_likes_to_views_ratio(
+    likes,
+    views,
     youtube=None,
     response: dict = None,
     video_IDs: list[str] = None,
@@ -451,14 +454,17 @@ def get_likes_to_views_ratio(likes, views,
         ratio (list[int|float]): List of YT videos' likes to views ratios.
     """
     if use_API:
-        views=get_view_counts(youtube,response,video_IDs,use_API)
-        likes=get_like_counts(youtube,response,video_IDs,use_API)
+        views = get_view_counts(youtube, response, video_IDs, use_API)
+        likes = get_like_counts(youtube, response, video_IDs, use_API)
 
-    ratio = helpers.divide_lists(likes,views,False)
+    ratio = helpers.divide_lists(likes, views, False)
 
     return ratio
 
-def get_comments_to_views_ratio(likes, views,
+
+def get_comments_to_views_ratio(
+    likes,
+    views,
     youtube=None,
     response: dict = None,
     video_IDs: list[str] = None,
@@ -478,12 +484,13 @@ def get_comments_to_views_ratio(likes, views,
         views (list[int|float]): List of YT videos' comments to views ratios.
     """
     if use_API:
-        views=get_view_counts(youtube,response,video_IDs,use_API)
-        comments=get_comment_counts(youtube,response,video_IDs,use_API)
+        views = get_view_counts(youtube, response, video_IDs, use_API)
+        comments = get_comment_counts(youtube, response, video_IDs, use_API)
 
-    ratio = helpers.divide_lists(comments,views,False)
+    ratio = helpers.divide_lists(comments, views, False)
 
     return ratio
+
 
 def has_captions(
     youtube=None,
