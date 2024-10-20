@@ -42,6 +42,7 @@ Each of these rules is based on putting some kind of constraint on video propert
 * Language filtering
 * Caption filtering
 * Duration filtering
+* Views, likes & comments counts filtering
 * Livestream filtering
 * Premiere filtering
 * Quality filtering
@@ -89,6 +90,11 @@ For more versatile uses, you can also use command line arguments with the [qtube
 |`lowest_framerate`|Yes|Minimum framerate. Videos with framerates stricly lower than this value will not be added.|Positive integer|
 |`preferred_dimensions`|Yes|Dimension the videos need to be in.|*2D*, *3D* or both|
 |`preferred_projections`|Yes|Projection the videos need to be in.|*rectangular*, *360* or both|
+|`views_threshold`|No|Minimum number of times videos have been viewed.|Positive integer|
+|`likes_threshold`|No|Minimum number of times videos have been liked.|Positive integer|
+|`comments_threshold`|No|Minimum number of times videos have been commented on.|Positive integer|
+|`likes_to_views_ratio`|No|Minimum likes to views ratio.|Positive float between 0 & 1|
+|`comments_to_views_ratio`|No|Minimum comments to views ratio.|Positive float between 0 & 1|
 |`run_frequency`|No|Defines the duration, in days, of the timeframe considered by the software. Can be interpreted as the frequency the program should be run.|*daily*, *weekly*, *monthly* or any positive integer|
 |`keep_shorts`|No|Determines whether to add shorts.|boolean|
 |`keep_duplicates`|No|Determines whether to add videos that are already in the playlist.|boolean|
@@ -137,6 +143,11 @@ The following *user_params.json* file would add every new videos from channels y
 "lowest_framerate": null,
 "preferred_dimensions": null,
 "preferred_projections": null,
+"views_threshold": 0,
+"likes_threshold": 0,
+"comments_threshold": 0,
+"likes_to_views_ratio": 0,
+"comments_to_views_ratio": 0,
 "run_frequency":"daily",
 "keep_shorts": true,
 "keep_duplicates": false,
@@ -174,6 +185,11 @@ The following *user_params.json* file would only add videos with good quality.
 "lowest_framerate": 60,
 "preferred_dimensions": ["2D"],
 "preferred_projections": ["rectangular"],
+"views_threshold": 0,
+"likes_threshold": 0,
+"comments_threshold": 0,
+"likes_to_views_ratio": 0,
+"comments_to_views_ratio": 0,
 "run_frequency":"daily",
 "keep_shorts": true,
 "keep_duplicates": false,
@@ -211,6 +227,11 @@ The following *user_params.json* file would only add the *$1 vs.* MrBeast videos
 "lowest_framerate": null,
 "preferred_dimensions": ["2D"],
 "preferred_projections": ["rectangular"],
+"views_threshold": 0,
+"likes_threshold": 0,
+"comments_threshold": 0,
+"likes_to_views_ratio": 0,
+"comments_to_views_ratio": 0,
 "run_frequency":"daily",
 "keep_shorts": false,
 "keep_duplicates": false,
