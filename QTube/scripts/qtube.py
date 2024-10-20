@@ -410,6 +410,25 @@ def main():
     # Live status retrieving
     live_statuses = QTube.utils.youtube.videos.is_live(response=responses)
 
+    # View counts retrieving
+    view_counts = QTube.utils.youtube.videos.get_view_counts(response=responses)
+
+    # Like counts retrieving
+    like_counts = QTube.utils.youtube.videos.get_like_counts(response=responses)
+
+    # Comment counts retrieving
+    comment_counts = QTube.utils.youtube.videos.get_comment_counts(response=responses)
+
+    # Likes/views ratio retrieving
+    likes_to_views_ratio = QTube.utils.youtube.videos.get_likes_to_views_ratio(
+        like_counts, view_counts
+    )
+
+    # Comments/views ratio retrieving
+    comments_to_views_ratio = QTube.utils.youtube.videos.get_likes_to_views_ratio(
+        comment_counts, view_counts
+    )
+
     # Resolutions retrieving (does not use YT API)
     lowest_resolution = user_params_dict.get("lowest_resolution")
     if lowest_resolution is not None:
@@ -468,6 +487,21 @@ def main():
 
         # Live statuses
         vid_info.update({"live status": live_statuses[index]})
+
+        # Views
+        vid_info.update({"views": view_counts[index]})
+
+        # Likes
+        vid_info.update({"likes": like_counts[index]})
+
+        # Comments
+        vid_info.update({"comments": comment_counts[index]})
+
+        # Likes/views
+        vid_info.update({"likes_to_views_ratio": likes_to_views_ratio[index]})
+
+        # Comments/views
+        vid_info.update({"comments_to_views_ratio": comments_to_views_ratio[index]})
 
         # Resolutions
         if lowest_resolution is not None:
@@ -542,6 +576,12 @@ def main():
 
     lowest_definition = user_params_dict.get("lowest_definition")
     preferred_dimensions = user_params_dict.get("preferred_dimensions")
+
+    views_threshold = user_params_dict.get("views_threshold")
+    likes_threshold = user_params_dict.get("likes_threshold")
+    comments_threshold = user_params_dict.get("comments_threshold")
+    likes_to_views_ratio_threshold = user_params_dict.get("likes_to_views_ratio")
+    comments_to_views_ratio_threshold = user_params_dict.get("comments_to_views_ratio")
 
     # Duration filtering
     if min_max_durations is not None:
@@ -768,6 +808,43 @@ def main():
                     )
                 )
                 for caption in captions
+            ):
+                vid_info.update({"to add": False})
+
+    # Views filtering
+    if views_threshold > 0:
+        for vid_ID, vid_info in videos.items():
+            if vid_info["to add"] and vid_info["views"] < views_threshold:
+                vid_info.update({"to add": False})
+
+    # Likes Filtering
+    if likes_threshold > 0:
+        for vid_ID, vid_info in videos.items():
+            if vid_info["to add"] and vid_info["likes"] < likes_threshold:
+                vid_info.update({"to add": False})
+
+    # Comments filtering
+    if comments_threshold > 0:
+        for vid_ID, vid_info in videos.items():
+            if vid_info["to add"] and vid_info["comments"] < comments_threshold:
+                vid_info.update({"to add": False})
+
+    # Likes/views ratio filtering
+    if likes_to_views_ratio_threshold > 0:
+        for vid_ID, vid_info in videos.items():
+            if (
+                vid_info["to add"]
+                and vid_info["likes_to_views_ratio"] < likes_to_views_ratio_threshold
+            ):
+                vid_info.update({"to add": False})
+
+    # Comments/views ratio filtering
+    if comments_to_views_ratio_threshold > 0:
+        for vid_ID, vid_info in videos.items():
+            if (
+                vid_info["to add"]
+                and vid_info["comments_to_views_ratio"]
+                < comments_to_views_ratio_threshold
             ):
                 vid_info.update({"to add": False})
 
