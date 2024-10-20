@@ -100,7 +100,7 @@ def print2(
             elif fancy_type == "fail":
                 print(fancify_text(message, Fore.RED, Style.BRIGHT, "❌"))
             elif fancy_type == "warning":
-                print(fancify_text(message, Fore.YELLOW, Style.NORMAL, "⚠️"))
+                print(fancify_text(message, Fore.YELLOW, Style.BRIGHT, "⚠️ "))
             elif fancy_type == "info":
                 print(fancify_text(message, Fore.WHITE, Style.BRIGHT,"📢"))
             elif fancy_type == "video":
@@ -223,3 +223,20 @@ def remove_multiple_spaces(text):
         (str): Same text string, but with multiple spaces replaced by a single space.
     """
     return re.sub(" +", " ", text)
+
+def divide_lists(list1, list2, percentage:False):
+    """Divides two python lists element-wise.
+
+    Args:
+        list1 (lst[int|float]): Dividend list.
+        list2 (lst[inf|float]): Divisor list.
+        percentage (bool): Determines if the result of the division is expressed as a percentage.
+
+    Returns:
+        res (lst[int|float]): List containing the results of the element-wise division.
+    """    
+    if percentage:
+        res = [(a / b)*100 if b != 0 else None for a, b in zip(list1, list2)]
+    else:
+        res = [a / b if b != 0 else None for a, b in zip(list1, list2)]
+    return res
