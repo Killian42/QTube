@@ -334,6 +334,21 @@ def check_user_params(params_dict: dict) -> bool:
         isinstance(params_dict.get("ignore_premieres"), bool),
         # Fancy text
         isinstance(params_dict.get("fancy_mode"), bool),
+        # Views
+        isinstance(params_dict.get("views_threshold"), int)
+        and params_dict.get("views_threshold") >= 0,
+        # Likes
+        isinstance(params_dict.get("likes_threshold"), int)
+        and params_dict.get("likes_threshold") >= 0,
+        # Comments
+        isinstance(params_dict.get("comments_threshold"), int)
+        and params_dict.get("comments_threshold") >= 0,
+        # Likes/views ratio
+        isinstance(params_dict.get("likes_to_views_ratio"), (int, float))
+        and 0 <= params_dict.get("likes_to_views_ratio") <= 1,
+        # Comments/views ratio
+        isinstance(params_dict.get("comments_to_views_ratio"), (int, float))
+        and 0 <= params_dict.get("comments_to_views_ratio") <= 1,
     ]
 
     ok = all(checks)
