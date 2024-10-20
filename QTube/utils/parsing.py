@@ -218,6 +218,46 @@ def parse_arguments():
     )
 
     parser.add_argument(
+        "-vt",
+        "--views_threshold",
+        metavar="",
+        type=int,
+        help="Minimum number of views. Default: 0",
+    )
+
+    parser.add_argument(
+        "-lt",
+        "--likes_threshold",
+        metavar="",
+        type=int,
+        help="Minimum number of likes. Default: 0",
+    )
+
+    parser.add_argument(
+        "-ct",
+        "--comments_threshold",
+        metavar="",
+        type=int,
+        help="Minimum number of comments. Default: 0",
+    )
+
+    parser.add_argument(
+        "-lvr",
+        "--likes_to_views_ratio",
+        metavar="",
+        type=float,
+        help="Minimum ratio of likes to views. Default: 0",
+    )
+
+    parser.add_argument(
+        "-cvr",
+        "--comments_to_views_ratio",
+        metavar="",
+        type=float,
+        help="Minimum ratio of comments to views. Default: 0",
+    )
+
+    parser.add_argument(
         "-rf",
         "--run_frequency",
         metavar="",
