@@ -78,12 +78,17 @@
     "preferred_projections": [
         "rectangular"
     ],
+    "views_threshold": 0,
+    "likes_threshold": 0,
+    "comments_threshold": 0,
+    "likes_to_views_ratio": 0,
+    "comments_to_views_ratio": 0,
     "run_frequency": "daily",
     "keep_shorts": false,
     "keep_duplicates": false,
     "upload_playlist_ID": "your_playlist_ID",
     "override_json": false,
-    "fancy_mode":true,
+    "fancy_mode": true,
     "verbosity": [
         "credentials",
         "videos"
