@@ -104,7 +104,7 @@ def print2(
             elif fancy_type == "fail":
                 print(fancify_text(message, Fore.RED, Style.BRIGHT, "❌"))
             elif fancy_type == "warning":
-                print(fancify_text(message, Fore.YELLOW, Style.BRIGHT, "⚠️ "))
+                print(fancify_text(message, Fore.YELLOW, Style.BRIGHT, "⚠️"))
             elif fancy_type == "info":
                 print(fancify_text(message, Fore.WHITE, Style.BRIGHT, "📢"))
             elif fancy_type == "video":
