@@ -3,7 +3,7 @@ import json
 import re
 
 
-def parse_arguments():
+def parse_arguments() -> dict:
     """Parses command line arguments.
 
     Args:
@@ -308,7 +308,7 @@ def parse_arguments():
     return vars(parser.parse_args())
 
 
-def format_arguments(args_dict):
+def format_arguments(args_dict) -> dict:
     """Formats the parsed command line arguments (written with the help of AI, regex is witchcraft to me).
 
     Args:
@@ -346,7 +346,7 @@ def format_arguments(args_dict):
     return args_dict
 
 
-def format_arguments_legacy(args_dict):
+def format_arguments_legacy(args_dict) -> dict:
     """Formats the parsed command line arguments (legacy function).
 
     Args:

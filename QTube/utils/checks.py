@@ -419,7 +419,7 @@ def check_version() -> tuple[str]:
     return version, latest_release
 
 
-def compare_software_versions(version1, version2):
+def compare_software_versions(version1, version2) -> str:
     """Compare two software versions, using version2 as the reference against which version1 is compared.
 
     Args:

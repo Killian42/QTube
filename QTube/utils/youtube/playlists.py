@@ -66,7 +66,7 @@ def get_playlist_content(youtube, playlist_ID: str) -> list[str]:
     return videos_IDs
 
 
-def get_playlists_titles(youtube=None, playlist_IDs: list[str] = None):
+def get_playlists_titles(youtube=None, playlist_IDs: list[str] = None) -> list[str]:
     """Retrieves the titles of a list of YT playlists.
 
     Args:
@@ -88,7 +88,9 @@ def get_playlists_titles(youtube=None, playlist_IDs: list[str] = None):
     return titles
 
 
-def get_playlists_video_counts(youtube=None, playlist_IDs: list[str] = None):
+def get_playlists_video_counts(
+    youtube=None, playlist_IDs: list[str] = None
+) -> list[int]:
     """Retrieves the number of videos of a list of YT playlists.
 
     Args:

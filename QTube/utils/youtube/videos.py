@@ -345,7 +345,7 @@ def get_view_counts(
     response: dict = None,
     video_IDs: list[str] = None,
     use_API: bool = False,
-) -> list[str]:
+) -> list[int]:
     """Retrieves the number of views of a list of YT videos.
 
     Args:
@@ -375,7 +375,7 @@ def get_like_counts(
     response: dict = None,
     video_IDs: list[str] = None,
     use_API: bool = False,
-) -> list[str]:
+) -> list[int]:
     """Retrieves the number of likes of a list of YT videos.
 
     Args:
@@ -405,7 +405,7 @@ def get_comment_counts(
     response: dict = None,
     video_IDs: list[str] = None,
     use_API: bool = False,
-) -> list[str]:
+) -> list[int]:
     """Retrieves the number of comments of a list of YT videos.
 
     Args:
@@ -439,7 +439,7 @@ def get_likes_to_views_ratio(
     response: dict = None,
     video_IDs: list[str] = None,
     use_API: bool = False,
-) -> list[str]:
+) -> list[int | float]:
     """Retrieves the likes to views ratio of a list of YT videos.
 
     Args:
@@ -469,7 +469,7 @@ def get_comments_to_views_ratio(
     response: dict = None,
     video_IDs: list[str] = None,
     use_API: bool = False,
-) -> list[str]:
+) -> list[int | float]:
     """Retrieves the comments to views ratio of a list of YT videos.
 
     Args:
@@ -526,7 +526,7 @@ def is_short(
     response: dict = None,
     video_IDs: list[str] = None,
     use_API: bool = False,
-) -> list[str]:
+) -> list[bool]:
     """Determines if videos are a short or not by putting a threshold on video duration.
 
     Args:
@@ -550,7 +550,7 @@ def is_live(
     response: dict = None,
     video_IDs: list[str] = None,
     use_API: bool = False,
-):
+) -> list[str]:
     """Retrieves the live status of YT videos.
 
     Args:

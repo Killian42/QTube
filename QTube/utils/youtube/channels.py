@@ -36,7 +36,7 @@ def get_subscriptions(youtube, next_page_token=None) -> dict:
     return channels
 
 
-def get_channel_info(youtube, handle: str):
+def get_channel_info(youtube, handle: str) -> dict:
     """Retrieves basic information about a YT channel.
 
     Args:
@@ -49,9 +49,7 @@ def get_channel_info(youtube, handle: str):
     channel = {}
 
     response = (
-        youtube.channels()
-        .list(part="snippet", forHandle=handle)
-        .execute(num_retries=5)
+        youtube.channels().list(part="snippet", forHandle=handle).execute(num_retries=5)
     )
 
     if "items" in response.keys():

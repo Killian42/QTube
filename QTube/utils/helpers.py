@@ -65,7 +65,7 @@ def handle_http_errors(verbosity: list[str], fancy, func, *args, **kwargs):
             sys.exit()  # Exit the program after 5 retries
 
 
-def fancify_text(text, color, style, emoji):
+def fancify_text(text, color, style, emoji) -> str:
     """Modifies the color and content of a string.
 
     Args:
@@ -161,7 +161,7 @@ def merge_dicts(list_of_dicts: list) -> dict:
     return {key: value for d in list_of_dicts for key, value in d.items()}
 
 
-def strip_emojis(text):
+def strip_emojis(text) -> str:
     """Strips emojis from a string.
 
     Args:
@@ -190,7 +190,7 @@ def strip_emojis(text):
     return remove_multiple_spaces(clean_text)
 
 
-def strip_punctuation(text):
+def strip_punctuation(text) -> str:
     """Strips punctuation from a string (all of these characters: !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~).
 
     Args:
@@ -204,7 +204,7 @@ def strip_punctuation(text):
     return remove_multiple_spaces(clean_text)
 
 
-def make_lowercase(text):
+def make_lowercase(text) -> str:
     """Converts all uppercase letters to lowercase from a string.
 
     Args:
@@ -217,7 +217,7 @@ def make_lowercase(text):
     return text.lower()
 
 
-def remove_multiple_spaces(text):
+def remove_multiple_spaces(text) -> str:
     """Removes multiple spaces in a string and replaces them with a single space.
 
     Args:
@@ -229,7 +229,7 @@ def remove_multiple_spaces(text):
     return re.sub(" +", " ", text)
 
 
-def divide_lists(list1, list2, percentage: False):
+def divide_lists(list1, list2, percentage: False) -> list[int | float]:
     """Divides two python lists element-wise.
 
     Args:
