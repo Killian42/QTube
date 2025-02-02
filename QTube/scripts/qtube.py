@@ -127,7 +127,7 @@ def main():
             ["internal"],
         )
     QTube.utils.helpers.print2(
-        f"The following verbosity options are enabled: {verb}.\n",
+        f"The following verbosity options are enabled: {", ".join(verb)}.\n",
         fancy,
         "info",
         ["internal"],
