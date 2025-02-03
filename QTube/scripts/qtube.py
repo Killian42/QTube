@@ -383,6 +383,8 @@ def main():
             vid_dicts = partial["items"]
             responses["items"].extend(vid_dicts)
 
+    video_IDs_lst = [vid["id"] for vid in responses["items"]]
+
     # Titles retrieving
     titles = QTube.utils.youtube.videos.get_titles(response=responses)
 
@@ -390,7 +392,9 @@ def main():
     durations = QTube.utils.youtube.videos.get_durations(response=responses)
 
     # Shorts retrieving
-    shorts = QTube.utils.youtube.videos.is_short(response=responses)
+    shorts = QTube.utils.youtube.videos.is_short(
+        response=responses, video_IDs=video_IDs_lst
+    )
 
     # Languages retrieving
     languages = QTube.utils.youtube.videos.get_languages(response=responses)
@@ -430,11 +434,13 @@ def main():
     )
 
     # Paid promotions retrieving
-    paid_advertising = QTube.utils.youtube.videos.has_paid_advertising(response=responses)
+    paid_advertising = QTube.utils.youtube.videos.has_paid_advertising(
+        response=responses
+    )
 
     # Made for Kids retrieving
     made_for_kids = QTube.utils.youtube.videos.is_made_for_kids(response=responses)
-    
+
     # Resolutions retrieving (does not use YT API)
     lowest_resolution = user_params_dict.get("lowest_resolution")
     if lowest_resolution is not None:
