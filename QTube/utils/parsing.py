@@ -274,6 +274,13 @@ def parse_arguments() -> dict:
     )
 
     parser.add_argument(
+    "-app",
+    "--allow_paid_promotions",
+    action="store_false",
+    help="Allow videos containing paid advertising. Default: True",
+    )
+
+    parser.add_argument(
         "-kd",
         "--keep_duplicates",
         action="store_true",

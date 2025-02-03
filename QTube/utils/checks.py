@@ -349,6 +349,8 @@ def check_user_params(params_dict: dict) -> bool:
         # Comments/views ratio
         isinstance(params_dict.get("comments_to_views_ratio"), (int, float))
         and 0 <= params_dict.get("comments_to_views_ratio") <= 1,
+        # Paid promotions
+        isinstance(params_dict.get("allow_paid_promotions"), bool),
     ]
 
     ok = all(checks)

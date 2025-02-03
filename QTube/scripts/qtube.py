@@ -429,6 +429,9 @@ def main():
         comment_counts, view_counts
     )
 
+    # Paid promotions retrieving
+    paid_advertising = QTube.utils.youtube.videos.has_paid_advertising(response=responses)
+    
     # Resolutions retrieving (does not use YT API)
     lowest_resolution = user_params_dict.get("lowest_resolution")
     if lowest_resolution is not None:
@@ -502,6 +505,9 @@ def main():
 
         # Comments/views
         vid_info.update({"comments_to_views_ratio": comments_to_views_ratio[index]})
+
+        # Paid promotions
+        vid_info.update({"has_paid_ad": paid_advertising[index]})
 
         # Resolutions
         if lowest_resolution is not None:
@@ -660,6 +666,14 @@ def main():
         for vid_ID in old_vid_IDs:
             if vid_ID in new_vid_IDs:
                 videos[vid_ID].update({"to add": False})
+
+    # Paid advertisement filtering
+    if user_params_dict["allow_paid_promotions"] is False:
+        for vid_ID, vid_info in videos.items():
+            if vid_info["to add"] is False:
+                continue
+            elif vid_info["has_paid_ad"]:
+                vid_info.update({"to add": False})
 
     # Language filtering
     if preferred_languages is not None:

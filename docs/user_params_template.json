@@ -85,6 +85,7 @@
     "comments_to_views_ratio": 0,
     "run_frequency": "daily",
     "keep_shorts": false,
+    "allow_paid_promotions": true,
     "keep_duplicates": false,
     "upload_playlist_ID": "your_playlist_ID",
     "override_json": false,

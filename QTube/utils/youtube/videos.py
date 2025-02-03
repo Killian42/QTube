@@ -18,7 +18,10 @@ def make_video_requests(youtube, video_IDs: list[str]) -> dict:
     video_IDs_str = ",".join(video_IDs)
     response = (
         youtube.videos()
-        .list(part="snippet,contentDetails,statistics", id=video_IDs_str)
+        .list(
+            part="snippet,contentDetails,statistics,paidProductPlacementDetails",
+            id=video_IDs_str,
+        )
         .execute(num_retries=5)
     )
     return response
@@ -583,3 +586,35 @@ def is_live(
     ]
 
     return live_statuses
+
+
+def has_paid_advertising(
+    youtube=None,
+    response: dict = None,
+    video_IDs: list[str] = None,
+    use_API: bool = False,
+):
+    """Determines if a video contains paid advertising.
+
+    Args:
+        youtube (Resource): YT API resource.
+        response (dict[dict]): YT API response from the make_video_request function.
+        video_IDs (list[str]): List of video IDs.
+        use_API (bool): Determines if a new API request is made or if the response dictionary is used.
+
+    Returns:
+        list(bool): True if the video contains paid advertising, False otherwise.
+    """
+
+    if use_API:
+        video_IDs_str = ",".join(video_IDs)
+        response = (
+            youtube.videos()
+            .list(part="paidProductPlacementDetails", id=video_IDs_str)
+            .execute(num_retries=5)
+        )
+
+    return [
+        vid["paidProductPlacementDetails"]["hasPaidProductPlacement"]
+        for vid in response["items"]
+    ]

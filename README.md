@@ -48,6 +48,7 @@ Each of these rules is based on putting some kind of constraint on video propert
 * Quality filtering
 * Upload date filtering
 * Shorts filtering
+* Paid promotion filtering
 * Duplicate checking
 
 ## How to use
@@ -97,6 +98,7 @@ For more versatile uses, you can also use command line arguments with the [qtube
 |`comments_to_views_ratio`|No|Minimum comments to views ratio.|Positive float between 0 & 1|
 |`run_frequency`|No|Defines the duration, in days, of the timeframe considered by the software. Can be interpreted as the frequency the program should be run.|*daily*, *weekly*, *monthly* or any positive integer|
 |`keep_shorts`|No|Determines whether to add shorts.|boolean|
+|`allow_paid_promotions`|No|Determines whether to add videos containing paid advertisement.|boolean|
 |`keep_duplicates`|No|Determines whether to add videos that are already in the playlist.|boolean|
 |`upload_playlist_ID`|No|ID of the playlist the videos will be added to. Playlist IDs are found at the end of their URL: `https://www.youtube.com/playlist?list=*playlist_ID*`|Playlist ID|
 |`override_json`|No|Allow command line arguments to override user_params.json parameters.|boolean|
@@ -150,6 +152,7 @@ The following *user_params.json* file would add every new videos from channels y
 "comments_to_views_ratio": 0,
 "run_frequency":"daily",
 "keep_shorts": true,
+"allow_paid_promotions": true,
 "keep_duplicates": false,
 "upload_playlist_ID": "your_playlist_ID",
 "override_json":false,
@@ -192,6 +195,7 @@ The following *user_params.json* file would only add videos with good quality.
 "comments_to_views_ratio": 0,
 "run_frequency":"daily",
 "keep_shorts": true,
+"allow_paid_promotions": true,
 "keep_duplicates": false,
 "upload_playlist_ID": "your_playlist_ID",
 "override_json":false,
@@ -234,6 +238,7 @@ The following *user_params.json* file would only add the *$1 vs.* MrBeast videos
 "comments_to_views_ratio": 0,
 "run_frequency":"daily",
 "keep_shorts": false,
+"allow_paid_promotions": true,
 "keep_duplicates": false,
 "upload_playlist_ID": "your_playlist_ID",
 "override_json":false,
