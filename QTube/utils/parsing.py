@@ -281,6 +281,13 @@ def parse_arguments() -> dict:
     )
 
     parser.add_argument(
+    "-mfk",
+    "--only_made_for_kids",
+    action="store_true",
+    help="Determines whether to only add videos that are made for kids, based on Youtube and FTC guidelines. Default: False",
+    )
+
+    parser.add_argument(
         "-kd",
         "--keep_duplicates",
         action="store_true",

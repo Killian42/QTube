@@ -86,6 +86,7 @@
     "run_frequency": "daily",
     "keep_shorts": false,
     "allow_paid_promotions": true,
+    "only_made_for_kids": false,
     "keep_duplicates": false,
     "upload_playlist_ID": "your_playlist_ID",
     "override_json": false,

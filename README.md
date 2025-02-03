@@ -49,6 +49,7 @@ Each of these rules is based on putting some kind of constraint on video propert
 * Upload date filtering
 * Shorts filtering
 * Paid promotion filtering
+* Made for Kids filtering
 * Duplicate checking
 
 ## How to use
@@ -99,6 +100,7 @@ For more versatile uses, you can also use command line arguments with the [qtube
 |`run_frequency`|No|Defines the duration, in days, of the timeframe considered by the software. Can be interpreted as the frequency the program should be run.|*daily*, *weekly*, *monthly* or any positive integer|
 |`keep_shorts`|No|Determines whether to add shorts.|boolean|
 |`allow_paid_promotions`|No|Determines whether to add videos containing paid advertisement.|boolean|
+|`only_made_for_kids`|No|Determines whether to only add videos that are *Made for Kids* (based on [Youtube and FTC guidelines](https://support.google.com/youtube/answer/9528076)).|boolean|
 |`keep_duplicates`|No|Determines whether to add videos that are already in the playlist.|boolean|
 |`upload_playlist_ID`|No|ID of the playlist the videos will be added to. Playlist IDs are found at the end of their URL: `https://www.youtube.com/playlist?list=*playlist_ID*`|Playlist ID|
 |`override_json`|No|Allow command line arguments to override user_params.json parameters.|boolean|
@@ -153,6 +155,7 @@ The following *user_params.json* file would add every new videos from channels y
 "run_frequency":"daily",
 "keep_shorts": true,
 "allow_paid_promotions": true,
+"only_made_for_kids": false,
 "keep_duplicates": false,
 "upload_playlist_ID": "your_playlist_ID",
 "override_json":false,
@@ -196,6 +199,7 @@ The following *user_params.json* file would only add videos with good quality.
 "run_frequency":"daily",
 "keep_shorts": true,
 "allow_paid_promotions": true,
+"only_made_for_kids": false,
 "keep_duplicates": false,
 "upload_playlist_ID": "your_playlist_ID",
 "override_json":false,
@@ -239,6 +243,7 @@ The following *user_params.json* file would only add the *$1 vs.* MrBeast videos
 "run_frequency":"daily",
 "keep_shorts": false,
 "allow_paid_promotions": true,
+"only_made_for_kids": false,
 "keep_duplicates": false,
 "upload_playlist_ID": "your_playlist_ID",
 "override_json":false,

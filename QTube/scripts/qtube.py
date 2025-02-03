@@ -431,6 +431,9 @@ def main():
 
     # Paid promotions retrieving
     paid_advertising = QTube.utils.youtube.videos.has_paid_advertising(response=responses)
+
+    # Made for Kids retrieving
+    made_for_kids = QTube.utils.youtube.videos.is_made_for_kids(response=responses)
     
     # Resolutions retrieving (does not use YT API)
     lowest_resolution = user_params_dict.get("lowest_resolution")
@@ -508,6 +511,9 @@ def main():
 
         # Paid promotions
         vid_info.update({"has_paid_ad": paid_advertising[index]})
+
+        # Made for kids
+        vid_info.update({"made_for_kids": made_for_kids[index]})
 
         # Resolutions
         if lowest_resolution is not None:
@@ -673,6 +679,14 @@ def main():
             if vid_info["to add"] is False:
                 continue
             elif vid_info["has_paid_ad"]:
+                vid_info.update({"to add": False})
+
+    # Made for kids filtering
+    if user_params_dict["only_made_for_kids"] is True:
+        for vid_ID, vid_info in videos.items():
+            if vid_info["to add"] is False:
+                continue
+            elif not vid_info["made_for_kids"]:
                 vid_info.update({"to add": False})
 
     # Language filtering
