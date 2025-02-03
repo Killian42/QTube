@@ -455,3 +455,18 @@ def compare_software_versions(version1, version2) -> str:
             return "older"
 
     return "same"
+
+
+def check_URL_redirect(url: str, redirect_code: int):
+    """Checks if the provided URL redirects to another page.
+
+    Args:
+        url (str): URL to check for redirection
+        redirect_code (int): Status code to check for (3xx)
+
+    Returns:
+        (bool): True if the URL redirects to another page with the correct status code, False otherwise.
+    """
+    r = requests.get(url)
+
+    return any([resp.status_code == redirect_code for resp in r.history])

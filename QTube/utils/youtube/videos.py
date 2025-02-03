@@ -2,7 +2,7 @@ import isodate
 
 from pytube import YouTube
 
-from QTube.utils import helpers
+from QTube.utils import helpers, checks
 
 
 def make_video_requests(youtube, video_IDs: list[str]) -> dict:
@@ -527,7 +527,7 @@ def is_short(
     video_IDs: list[str] = None,
     use_API: bool = False,
 ) -> list[bool]:
-    """Determines if videos are a short or not by putting a threshold on video duration.
+    """Determines if videos are a short or not by putting a threshold on video duration and checking for a redirection at the youtube.com/shorts/*vid_ID* URL.
 
     Args:
         youtube (Resource): YT API resource.
@@ -536,13 +536,21 @@ def is_short(
         use_API (bool): Determines if a new API request is made or if the response dictionary is used.
 
     Returns:
-        is_short (list[bool]): True if the video is shorter than 65 seconds, False otherwise.
+        is_a_short (list[bool]): True if the video is shorter than 181 seconds and there is no URL redirection, False otherwise.
     """
     durations = get_durations(youtube, response, video_IDs, use_API=use_API)
 
-    is_short = [True if length <= 65.0 else False for length in durations]
+    is_short_vid = [
+        True if length <= 181 else False for length in durations
+    ]  # Shorts cannot last over 3 minutes.
 
-    return is_short
+    is_not_redirected = [
+        not checks.check_URL_redirect("https://www.youtube.com/shorts/" + vid_ID, 303)
+        for vid_ID in video_IDs
+    ]  # Shorts do not trigger a redirection.
+
+    is_a_short = is_short_vid and is_not_redirected
+    return is_a_short
 
 
 def is_live(
