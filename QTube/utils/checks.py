@@ -459,7 +459,7 @@ def compare_software_versions(version1, version2) -> str:
     return "same"
 
 
-def check_URL_redirect(url: str, redirect_code: int):
+def check_URL_redirect(url: str, redirect_code: int) -> bool:
     """Checks if the provided URL redirects to another page.
 
     Args:
