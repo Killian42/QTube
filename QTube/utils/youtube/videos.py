@@ -593,7 +593,7 @@ def has_paid_advertising(
     response: dict = None,
     video_IDs: list[str] = None,
     use_API: bool = False,
-):
+)-> list[bool]:
     """Determines if a video contains paid advertising.
 
     Args:
@@ -603,7 +603,7 @@ def has_paid_advertising(
         use_API (bool): Determines if a new API request is made or if the response dictionary is used.
 
     Returns:
-        list(bool): True if the video contains paid advertising, False otherwise.
+        (list[bool]): True if the video contains paid advertising, False otherwise.
     """
 
     if use_API:
@@ -625,7 +625,7 @@ def is_made_for_kids(
     response: dict = None,
     video_IDs: list[str] = None,
     use_API: bool = False,
-):
+)-> list[bool]:
     """Determines if a video is appropriate for children (based on YT's guidelines).
 
     Args:
@@ -635,7 +635,7 @@ def is_made_for_kids(
         use_API (bool): Determines if a new API request is made or if the response dictionary is used.
 
     Returns:
-        list(bool): True if the video is made for kids, False otherwise.
+        (list(bool)): True if the video is made for kids, False otherwise.
     """
 
     if use_API:
