@@ -11,6 +11,7 @@ upload_to_PyPI.ps1
 logo.psd
 
 *.code-workspace
+.git_old
 
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
