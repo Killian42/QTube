@@ -21,7 +21,7 @@ def get_recent_videos(youtube, playlist_ID: str, vid_nb: int) -> dict:
     recent_vids = {
         item["contentDetails"]["videoId"]: {
             "upload datetime": dt.datetime.fromisoformat(
-                item["contentDetails"]["videoPublishedAt"]
+                item["contentDetails"]["videoPublishedAt"].replace("Z", "+00:00") # Z for UTC time
             )
         }
         for item in response.get("items", [])
