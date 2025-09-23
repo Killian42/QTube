@@ -215,7 +215,7 @@ def check_user_params(params_dict: dict) -> bool:
     projections_options = ["rectangular", "360"]
     caption_options = [
         "trackKind",
-        "languages",
+        "language",
         "audioTrackType",
         "isCC",
         "isLarge",
