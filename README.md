@@ -29,12 +29,15 @@
 </p>
 
 ## About
+
 The reason for the existence of this software is Youtube's seemingly random behavior when it comes to notifying people that a new video has been published (late or missing notifications, useless notification bell, videos not appearing in the subscription tab, ...).
 
 With this software, you can set a number of rules that determine which videos are added to a dedicated playlist, so you won't miss any new uploads!
 
 ## Features
+
 Each of these rules is based on putting some kind of constraint on video properties. Currently, the following features are available:
+
 * Channel name filtering
 * Title filtering
 * Description filtering
@@ -53,6 +56,7 @@ Each of these rules is based on putting some kind of constraint on video propert
 * Duplicate checking
 
 ## How to use
+
 Before using this software, you first need to get a Youtube API key and create a web app to get a client secrets file (that should look like [this](docs/client_secrets_template.json)). This [Corey Schafer video](https://www.youtube.com/watch?v=vQQEaSnQ_bs) goes through the process step by step. Rename this file to *client_secrets.json*.
 
 Once that's done, download this project or install the package with [PyPI](https://pypi.org/project/QTube/). Then, copy the [user parameters template](docs/user_params_template.json) file to the directory where the project is saved and rename it to *user_params.json*. Modify it so that it fits your needs (more information on how in the [following table](#user-defined-parameters) and in the [examples section](#examples)). Also, add the *client_secrets.json* file to the directory in which the project is saved.
@@ -66,6 +70,7 @@ I would recommend creating a task to execute the program regularly (like once a 
 For more versatile uses, you can also use command line arguments with the [qtube.py](QTube/scripts/qtube.py) file. Enable this option by setting the `override_json` parameter to *True* in your JSON user parameters file. Provided command line arguments will then override what is in your JSON user parameters file. This is especially useful to manage different types of videos and put them in dedicated playlists (music playlist, gaming playlist, ect...).
 
 ### User-defined parameters
+
 |Parameter|Optional|Description|Possible values|
 |--|:--:|:--:|:--:|
 |`required_in_channel_name`|Yes|Words that must be in channel names, typically channel names themselves. Videos from channels not containing any of the words of this list in their name will not be added.|Any string|
@@ -111,18 +116,24 @@ For more versatile uses, you can also use command line arguments with the [qtube
 All parameters are case-sensitive by default and if you do not want to use an optional parameter, replace its value with *null* or delete the entry.
 
 For further information about each parameter, check the note associated with the [release](https://github.com/Killian42/QTube/releases) they were introduced in.
+
 ### Requirements
+
 See the [requirements](requirements.txt) file or the [TOML](pyproject.toml) file.
 
 ## Examples
+
 This section presents examples of user parameters json files for concrete use-cases.
+
 * <a href="#example-1---every-videos-from-subscribed-channels">Every videos from subscribed channels</a>
 * <a href="#example-2---higher-quality-videos">Higher quality videos</a>
-* <a href="#example-3---specific-video-series-from-a-creator">Video series from a creator</a> 
+* <a href="#example-3---specific-video-series-from-a-creator">Video series from a creator</a>
 
 ### Example 1 - Every videos from subscribed channels
+
 The following *user_params.json* file would add every new videos from channels you are subcribed to.
-```
+
+```python
 {
 "required_in_channel_name": null,
 "banned_in_channel_name": null,
@@ -165,9 +176,12 @@ The following *user_params.json* file would add every new videos from channels y
 "verbosity": ["credentials","videos"]
 }
 ```
+
 ### Example 2 - Higher quality videos
+
 The following *user_params.json* file would only add videos with good quality.
-```
+
+```python
 {
 "required_in_channel_name": null,
 "banned_in_channel_name": null,
@@ -210,9 +224,12 @@ The following *user_params.json* file would only add videos with good quality.
 "verbosity": ["credentials","videos"]
 }
 ```
+
 ### Example 3 - Specific video series from a creator
+
 The following *user_params.json* file would only add the *$1 vs.* MrBeast videos.
-```
+
+```python
 {
 "required_in_channel_name": ["MrBeast"],
 "banned_in_channel_name": null,
@@ -257,13 +274,17 @@ The following *user_params.json* file would only add the *$1 vs.* MrBeast videos
 ```
 
 ## FAQ
+
 There are none yet. But don't hesitate to ask by sending me an [email](mailto:killian.lebreton35@gmail.com).
 
 ## Contact
+
 You can reach me by [email](mailto:killian.lebreton35@gmail.com). Please put *QTube* in the subject line.
 
 ## Acknowledgments
+
 Big thanks [Corey Schafer](https://github.com/CoreyMSchafer) for his great tutorials, as well as for providing the OAuth snippets used in this software.
 
 ## License
+
 This project is licensed under the [MIT License](LICENSE.txt).
