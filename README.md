@@ -53,9 +53,9 @@ Each of these rules is based on putting some kind of constraint on video propert
 * Duplicate checking
 
 ## How to use
-Before using this software, you first need to get a Youtube API key and create a web app to get a client secrets file (that should look like [this](docs/client_secrets_template.json)). This [Corey Schafer video](https://www.youtube.com/watch?v=vQQEaSnQ_bs) goes through the process step by step.
+Before using this software, you first need to get a Youtube API key and create a web app to get a client secrets file (that should look like [this](docs/client_secrets_template.json)). This [Corey Schafer video](https://www.youtube.com/watch?v=vQQEaSnQ_bs) goes through the process step by step. Rename this file to *client_secrets.json*.
 
-Once that's done, download this project or install the package with [PyPI](https://pypi.org/project/QTube/). Then, copy the [user parameters template](docs/user_params_template.json) file to the directory where the project is saved and rename it to *user_params.json*. Modify it so that it fits your needs (more information on how in the [following table](#user-defined-parameters) and in the [examples section](#examples)).
+Once that's done, download this project or install the package with [PyPI](https://pypi.org/project/QTube/). Then, copy the [user parameters template](docs/user_params_template.json) file to the directory where the project is saved and rename it to *user_params.json*. Modify it so that it fits your needs (more information on how in the [following table](#user-defined-parameters) and in the [examples section](#examples)). Also, add the *client_secrets.json* file to the directory in which the project is saved.
 
 Verify that you have all of the dependencies installed (see the [requirements](requirements.txt) file or the [TOML](pyproject.toml) file).
 
