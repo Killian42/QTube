@@ -369,7 +369,9 @@ def main():
     ## Additional information retrieving on the videos
     split_videos = QTube.utils.helpers.split_dict(videos, 50)
 
-    responses = {}
+    responses = {
+        "items": []
+    }  # Initialize with expected structure to handle empty videos dict case
     for sub_dict in split_videos:
         partial = QTube.utils.helpers.handle_http_errors(
             verb,
@@ -379,7 +381,7 @@ def main():
             sub_dict.keys(),
         )
 
-        if len(responses) == 0:  # first run of the loop
+        if len(responses["items"]) == 0:  # first run of the loop
             responses.update(partial)
         else:
             vid_dicts = partial["items"]
