@@ -5,9 +5,6 @@ tests
 
 token.pickle
 
-merge_to_main.ps1
-upload_to_PyPI.ps1
-
 logo.psd
 
 *.code-workspace
