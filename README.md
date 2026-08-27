@@ -20,6 +20,7 @@
 <p align="center">
    <a href="#about">About</a> •
    <a href="#features">Features</a> •
+   <a href="#installation">Installation</a> •
    <a href="#how-to-use">How To Use</a> •
    <a href="#examples">Examples</a> •
    <a href="#faq">FAQ</a> •
@@ -54,6 +55,10 @@ Each of these rules is based on putting some kind of constraint on video propert
 * Paid promotion filtering
 * Made for Kids filtering
 * Duplicate checking
+
+## Installation
+
+In an empty directory, use the `git clone` command with the github link of the project. Then, move to the *QTube* directory inside. Create the virtual environment with the `python -m venv .venv` command and activate it with one of the scripts from the *Scripts* subdirectory. Finally, install the project and its required dependecies with the `pip install .` command.
 
 ## How to use
 
@@ -110,7 +115,7 @@ For more versatile uses, you can also use command line arguments with the [qtube
 |`keep_duplicates`|No|Determines whether to add videos that are already in the playlist.|boolean|
 |`upload_playlist_ID`|No|ID of the playlist the videos will be added to. Playlist IDs are found at the end of their URL: `https://www.youtube.com/playlist?list=*playlist_ID*`|Playlist ID|
 |`override_json`|No|Allow command line arguments to override user_params.json parameters.|boolean|
-|`fancy_mode`|No|Enables fancy mode (colors and emojis) for terminal output. |boolean|
+|`fancy_mode`|No|Enables fancy mode (colors and emojis) for terminal output.|boolean|
 |`verbosity`|No|Controls how much information is shown in the terminal. Options can be combined, so that selecting each option gives the same result as selecting *all*. <br>1: Everything is shown.<br>2: Nothing is shown.<br>3: Only information regarding function execution is shown.<br>4: Only information regarding credentials is shown (loading, retrieving and saving).<br>5: Only information regarding added videos is shown (number, channel names and video titles).|<br>*all*<sup> 1 </sup>, <br>*none*<sup> 2 </sup> , <br>*func*<sup> 3 </sup>, <br>*credentials*<sup> 4 </sup> ,<br>*videos*<sup> 5 </sup>.|
 
 All parameters are case-sensitive by default and if you do not want to use an optional parameter, replace its value with *null* or delete the entry.
